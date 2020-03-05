@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Identity Sample</title>
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css"></link>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/bootstrap-grid.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+</head>
+<body class="mdc-typography">
+    <div id="content" class="container body-login-content">
+        <div class="mdc-card text-center main-card">
+            <img src="@ViewData["LogoUri"]" class="main-card-logo" />
+            @RenderBody()
+        </div>
+    </div>
+    <script src="//ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"></script>
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    @*
+    <script src="//ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/bootstrap.min.js"></script>*@
+    <script src="~/js/site.min.js" asp-append-version="true"></script>
+    <script>
+    window.mdc.autoInit(document.getElementById('content'))
+    </script>
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

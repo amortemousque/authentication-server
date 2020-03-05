@@ -1,0 +1,71 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using AuthorizationServer.Resources
+
+@inject IHtmlLocalizer<SharedResource> Localizer
+@model IndexViewModel
+@{
+    ViewData["Title"] = "Manage your account";
+}
+@if (ViewData["StatusMessage"] != ""){
+    <div class="mdc-card main-card success-message">
+        @ViewData["StatusMessage"]
+    </div>
+}
+
+<h2 class="mdc-typography--headline4 mb-1">@Localizer["Personal informations"]</h2>
+<div class="management-block d-flex flex-column flex-md-row align-items-stretch">
+    <div class="management-info">
+        @Localizer["Managing general information, such as your name, e-mail address, and phone number, allows others to find you on various QuarksupOne products and to contact you."]
+    </div>
+    <div class="management-content">
+        <div class="mdc-card text-center main-card p-0">
+            <div class="app-dataview dataview-list">
+                <div class="dataview-row">
+                    <div class="content-label">
+                        <h3>@Localizer["Name"]</h3>
+                    </div>
+                    <div class="dataview-info">
+                        @Model.Name
+                    </div>
+                </div>
+                <div class="dataview-row">
+                    <div class="content-label">
+                        <h3>@Localizer["Email address"]</h3>
+                    </div>
+                    <div class="dataview-info">
+                        @Model.Email
+                    </div>
+                </div>
+                <div class="dataview-row">
+                    <div class="content-label">
+                        <h3>@Localizer["Password"]</h3>
+                    </div>
+
+                    <div class="dataview-info">
+                        @if (Model.HasPassword)
+                        {
+                            <text><a asp-controller="Manage" asp-action="ChangePassword" class="mdc-button">@Localizer["Change"]</a></text>
+                        }
+                        else
+                        {
+                            <text><a asp-controller="Manage" asp-action="SetPassword" class="mdc-button">@Localizer["Create"]</a></text>
+                        }
+                    </div>
+                </div>
+                <div class="dataview-row">
+                    <div class="content-label">
+                        <h3>@Localizer["Phone"]</h3>
+                    </div>
+                    <div class="dataview-info">
+                        @Model.Phone
+                    </div>
+                </div>
+                <div class="dataview-row">
+                    <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
+                        <button type="submit" class="mdc-button">@Localizer["Log off"]</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

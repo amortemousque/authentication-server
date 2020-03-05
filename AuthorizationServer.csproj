@@ -1,0 +1,129 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>aspnet-IdentityServerWithAspNetIdentity-04C6939F-E672-4E56-B4A5-5F064EB67F23</UserSecretsId>
+    <DockerComposeProjectPath>../../docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.0.0" />
+    <PackageReference Include="Lamar" Version="2.1.0" />
+    <PackageReference Include="Lamar.Microsoft.DependencyInjection" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3"><PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
+<Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
+</PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="2.1.1" />
+    <PackageReference Include="Rebus.MongoDb" Version="5.0.0" />
+    <PackageReference Include="Serilog" Version="2.6.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
+    <PackageReference Include="IdentityServer4" Version="2.2.0" />
+    <PackageReference Include="MediatR" Version="5.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="5.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.LinkedIn" Version="1.0.1" />
+    <PackageReference Include="Rebus.ServiceProvider" Version="4.0.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.1" />
+    <PackageReference Include="Rebus" Version="5.2.1" />
+    <PackageReference Include="Rebus.RabbitMq" Version="5.0.1" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
+    <PackageReference Include="MongoDB.Bson" Version="2.9.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\" />
+    <Folder Include="Configuration\" />
+    <Folder Include="Resources\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="Authorization\" />
+    <Folder Include="Infrastructure\" />
+    <Folder Include="Infrastructure\Context\" />
+    <Folder Include="Infrastructure\ExceptionHandling\" />
+    <Folder Include="Infrastructure\IdentityManagers\" />
+    <Folder Include="Infrastructure\IdentityServer\" />
+    <Folder Include="Infrastructure\Message\" />
+    <Folder Include="Infrastructure\Repositories\" />
+    <Folder Include="Infrastructure\SharedResources\" />
+    <Folder Include="Infrastructure\Storage\" />
+    <Folder Include="Application\" />
+    <Folder Include="Application\CommandHandlers\" />
+    <Folder Include="Application\Commands\" />
+    <Folder Include="Application\EventHandlers\" />
+    <Folder Include="Application\Events\" />
+    <Folder Include="Application\Queries\" />
+    <Folder Include="Application\Sagas\" />
+    <Folder Include="Application\Security\" />
+    <Folder Include="Domain\" />
+    <Folder Include="Domain\AccountInviteAggregate\" />
+    <Folder Include="Domain\ApiAggregate\" />
+    <Folder Include="Domain\ClientAggregate\" />
+    <Folder Include="Domain\Contracts\" />
+    <Folder Include="Domain\PermissionAggregate\" />
+    <Folder Include="Domain\RessourceAggregate\" />
+    <Folder Include="Domain\RoleAggregate\" />
+    <Folder Include="Domain\SeedWork\" />
+    <Folder Include="Domain\Services\" />
+    <Folder Include="Domain\Shared\" />
+    <Folder Include="Domain\TenantAggregate\" />
+    <Folder Include="Domain\UserAggregate\" />
+    <Folder Include="IntegrationEvents\" />
+    <Folder Include="IntegrationEvents\Directory\" />
+    <Folder Include="IntegrationEvents\User\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Controllers.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Controllers.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Controllers.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Controllers.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Resources2.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources2.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Resources.SharedResource.fr.resx">
+      <LastGenOutput>Resources.SharedResource.fr.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="IntegrationEvents\UserDeletedEvent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\Controllers.Designer.cs">
+      <DependentUpon>Controllers.AccountController.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Resources.Designer.cs">
+      <DependentUpon>Resources.SharedResource.fr.resx</DependentUpon>
+    </Compile>
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Resources\Resources.SharedResource.fr.Designer.cs">
+      <DependentUpon>Resources.SharedResource.fr.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>

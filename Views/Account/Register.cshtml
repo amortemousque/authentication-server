@@ -1,0 +1,46 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using AuthorizationServer.Resources
+
+@inject IHtmlLocalizer<SharedResource> Localizer
+@model RegisterViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
+}
+
+<form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+    <div class="mdc-typography--headline6 text-uppercase">@Localizer["Create a new account"]</div>
+    <section class="card-content">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		
+        <input asp-for="InviteId" class="mdc-text-field__input" style="display: none">
+        
+        <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </p>
+
+        <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+            <input asp-for="Password" type="password" class="mdc-text-field__input">
+            <label asp-for="Password" class="mdc-floating-label">@Localizer["Password"]</label>
+            <div class="mdc-line-ripple"></div>
+        </div>
+        <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </p>
+
+        <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+            <input asp-for="ConfirmPassword" type="password" class="mdc-text-field__input">
+            <label asp-for="ConfirmPassword" class="mdc-floating-label control-label">@Localizer["Confirm Password"]</label>
+            <div class="mdc-line-ripple"></div>
+        </div>
+        <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </p>
+        <div class="mt-3">
+            <button type="submit" name="button" class="mdc-button  mdc-button--raised" value="login">@Localizer["Register"]</button>
+        </div>
+    </section>
+</form>
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+
