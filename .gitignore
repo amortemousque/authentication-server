@@ -4,6 +4,8 @@
 .env
 docker-compose.override.yml
 appsettings.Development.json
+mono_*.json
+
 # Created by https://www.gitignore.io/api/aspnetcore
 
 ### ASPNETCore ###
