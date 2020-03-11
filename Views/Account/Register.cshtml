@@ -1,19 +1,21 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
-@using AuthorizationServer.Resources
+@using AuthorizationServer.Models.AccountViewModels
+@using AuthorizationServer.Resources;
+
 
 @inject IHtmlLocalizer<SharedResource> Localizer
 @model RegisterViewModel
 @{
-    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
+    Layout = "~/Pages/Shared/_LayoutAccount.cshtml";
 }
 
-<form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+<form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewBag.ReturnUrl" method="post" class="form-horizontal" role="form">
     <div class="mdc-typography--headline6 text-uppercase">@Localizer["Create a new account"]</div>
     <section class="card-content">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-		
+
         <input asp-for="InviteId" class="mdc-text-field__input" style="display: none">
-        
+
         <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
             <span asp-validation-for="Password" class="text-danger"></span>
         </p>

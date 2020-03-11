@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
-using AuthorizationServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using AuthorizationServer.Models;
 
 namespace AuthorizationServer.Controllers
 {

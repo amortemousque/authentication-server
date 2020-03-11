@@ -1,10 +1,12 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization
-@using AuthorizationServer.Resources
+﻿@using AuthorizationServer.Models.AccountViewModels
+@using Microsoft.AspNetCore.Mvc.Localization
+@using AuthorizationServer.Resources;
+
 
 @inject IHtmlLocalizer<SharedResource> Localizer
 @{
     Layout = "~/Views/Shared/_LayoutAccount.cshtml";
-    ViewData["Title"] = "Locked out";
+    ViewBag.Title = "Locked out";
 }
 <header>
     <h1 class="text-danger">@Localizer["Locked out."]</h1>

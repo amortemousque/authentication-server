@@ -7,10 +7,11 @@ using IntegrationEvents.User.Commands;
 using AuthorizationServer.Domain.Contracts;
 using AuthorizationServer.Domain.Services;
 using AuthorizationServer.Domain.UserAggregate;
-using AuthorizationServer.Infrastructure.SharedResources;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Rebus.Bus;
+using AuthorizationServer.Resources;
+using Microsoft.Extensions.Localization;
 
 namespace AuthorizationServer.Infrastructure.Message
 {
@@ -19,16 +20,16 @@ namespace AuthorizationServer.Infrastructure.Message
         private readonly IBus _bus;
         private readonly IHttpContextAccessor _accessor;
         private readonly IUrlHelper _urlHelper;
-        private readonly ISharedResource _sharedResource;
+        private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly ITenantRepository _repository;
 
 
-        public AuthMessageSender(IBus bus, IHttpContextAccessor accessor, IUrlHelper urlHelper, ISharedResource sharedResource, ITenantRepository repository) 
+        public AuthMessageSender(IBus bus, IHttpContextAccessor accessor, IUrlHelper urlHelper, IStringLocalizer<SharedResource> localizer, ITenantRepository repository) 
         {
             _bus = bus;
             _accessor = accessor;
             _urlHelper = urlHelper;
-            _sharedResource = sharedResource;
+            _localizer = localizer;
             _repository = repository;
         }
 
@@ -48,8 +49,8 @@ namespace AuthorizationServer.Infrastructure.Message
             var tenantName = (await _repository.GetById(user.TenantId)).Name;
             callbackUrl = ReplaceTenantDomaine(callbackUrl, tenantName);
             await this.SendEmailAsync(user.Email,
-                                      _sharedResource.GetResourceValueByKey("Confirm your account."),
-                                      _sharedResource.GetResourceValueByKey("Please confirm your account by clicking this link: {0}", " <a href=\"" + callbackUrl + "\">link</a>"));
+                                      _localizer.GetString("Confirm your account."),
+                                      _localizer.GetString("Please confirm your account by clicking this link: {0}", " <a href=\"" + callbackUrl + "\">link</a>"));
         }
 
 
@@ -66,7 +67,7 @@ namespace AuthorizationServer.Infrastructure.Message
         public async Task SendEmaiSecurityCode(IdentityUser user, string code)
         {
             var message = "Your security code is: " + code;
-            await this.SendEmailAsync(user.Email, _sharedResource.GetResourceValueByKey("Security Code"), message);
+            await this.SendEmailAsync(user.Email, _localizer.GetString("Security Code"), message);
         }
 
         public Task SendSmsAsync(string number, string message)

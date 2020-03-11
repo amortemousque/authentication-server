@@ -9,7 +9,6 @@ using Rebus.Bus;
 using IntegrationEvents.User.Account;
 using IntegrationEvents.User.Invitation;
 using AuthorizationServer.Application.Events;
-using AuthorizationServer.Domain.UserAggregate;
 using AuthorizationServer.Domain.Contracts;
 using AuthorizationServer.Domain.Services;
 using AuthorizationServer.Application.Security;

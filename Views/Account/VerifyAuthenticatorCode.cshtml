@@ -1,13 +1,16 @@
-﻿@model VerifyAuthenticatorCodeViewModel
+﻿@using AuthorizationServer.Models.AccountViewModels
+@using AuthorizationServer.Resources;
+
+@model VerifyAuthenticatorCodeViewModel
 @{
-    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
-    ViewData["Title"] = "Verify";
+    Layout = "~/Pages/Shared/_LayoutAccount.cshtml";
+    ViewBag.Title = "Verify";
 }
-<h2>@ViewData["Title"].</h2>
-<form asp-controller="Account" asp-action="VerifyAuthenticatorCode" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+<h2>@ViewBag.Title.</h2>
+<form asp-controller="Account" asp-action="VerifyAuthenticatorCode" asp-route-returnurl="ViewBag.ReturnUrl" method="post" class="form-horizontal" role="form">
     <div asp-validation-summary="All" class="text-danger"></div>
     <input asp-for="RememberMe" type="hidden" />
-    <h4>@ViewData["Status"]</h4>
+    <h4>@ViewBag.Status</h4>
     <hr />
     <div class="form-group">
         <label asp-for="Code" class="col-md-2 control-label"></label>

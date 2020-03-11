@@ -14,7 +14,7 @@ using IdentityUser = AuthorizationServer.Domain.UserAggregate.IdentityUser;
 
 namespace AuthorizationServer.Infrastructure.Repositories
 {
-    public class UserRepository : IUserRepository,
+    public class UserRepository : IUserRepository, IUserStore<IdentityUser>,
             IUserPasswordStore<IdentityUser>,
             IUserRoleStore<IdentityUser>,
             IUserLoginStore<IdentityUser>,

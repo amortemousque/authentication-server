@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 namespace AuthorizationServer.Domain.RoleAggregate
 {
 
-    public class IdentityRole
+    public class IdentityRole : IdentityRole<string>
 	{
 		public static class NormalizedNames
 		{

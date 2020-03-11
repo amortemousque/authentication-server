@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using AuthorizationServer.Models.ManageViewModels;
+using AuthorizationServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using AuthorizationServer.Application.Queries;
 using AuthorizationServer.Domain.Services;
 using AuthorizationServer.Domain.TenantAggregate;
+using AuthorizationServer.Models;
+using AuthorizationServer.Models.ManageViewModels;
 
 namespace AuthorizationServer.Controllers
 {
@@ -51,7 +53,7 @@ namespace AuthorizationServer.Controllers
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            ViewData["LogoUri"] = GetCurrentTenant().LogoUri;
+            ViewBag.LogoUri = GetCurrentTenant().LogoUri;
         }
 
 
@@ -60,7 +62,7 @@ namespace AuthorizationServer.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(ManageMessageId? message = null)
         {
-            ViewData["StatusMessage"] =
+            ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
                 : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."

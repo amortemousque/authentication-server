@@ -1,0 +1,30 @@
+﻿@page
+@using Microsoft.AspNetCore.Mvc.Localization
+@using AuthorizationServer.Resources;
+
+@inject IHtmlLocalizer<SharedResource> Localizer
+@{
+    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
+}
+
+<section class="card-content">
+    <div class="text-center">
+        <div id="circle-loader" class="circle-loader">
+            <div id="checkmark" class="checkmark draw" style="display:none;"></div>
+        </div>
+    </div>
+    <div class="mdc-typography--headline6 text-uppercase">@Localizer["Email confirmed"]</div>
+    <br />
+
+    <div class="mt-3">
+        <p>
+            @Localizer["Thank you for confirming your email. Please"] <a asp-controller="Account" asp-action="Login" class="link">@Localizer["Click here to Log in"]</a>.
+        </p>
+    </div>
+    <br />
+    <br />
+</section>
+<script type="text/javascript">setTimeout(() => {
+        document.getElementById("circle-loader").classList.add("load-complete");
+        document.getElementById("checkmark").style.display = "";
+    }, 900)</script>

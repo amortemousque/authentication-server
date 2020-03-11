@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 namespace AuthorizationServer.Controllers
 {
     [ApiVersion("1")]
+    [ApiController]
     [Produces("application/json")]
     [Route("v{version:apiVersion}/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

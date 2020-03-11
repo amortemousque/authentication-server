@@ -1,8 +1,6 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AuthorizationServer.Models;
-using AuthorizationServer.Models.AccountViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +17,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 namespace AuthorizationServer.Controllers
 {
     [ApiVersion("1")]
+    [ApiController]
     [Produces("application/json")]
     [Route("v{version:apiVersion}/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

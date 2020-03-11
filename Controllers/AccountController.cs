@@ -10,8 +10,6 @@ using AuthorizationServer.Domain.Services;
 using AuthorizationServer.Domain.TenantAggregate;
 using AuthorizationServer.Exceptions;
 using AuthorizationServer.Infrastructure.IdentityServer.Extensions;
-using AuthorizationServer.Models.AccountViewModels;
-using AuthorizationServer.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -22,6 +20,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Model = AuthorizationServer.Domain.UserAggregate;
+using AuthorizationServer.Models.AccountViewModels;
+using AuthorizationServer.Resources;
 
 namespace AuthorizationServer.Controllers
 {
@@ -62,7 +62,8 @@ namespace AuthorizationServer.Controllers
         }
 
 
-        public Tenant GetCurrentTenant() {
+        public Tenant GetCurrentTenant()
+        {
             var tenantName = HttpContext.Request.GetTenantNameFromHost();
             var tenant = _tenantQueries.GetTenantByNameAsync(tenantName).Result;
             return tenant;
@@ -71,12 +72,12 @@ namespace AuthorizationServer.Controllers
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            try 
+            try
             {
                 var tenant = GetCurrentTenant();
-                ViewData["LogoUri"] = tenant.LogoUri;
-            } 
-            catch (Exception) 
+                ViewBag.LogoUri = tenant.LogoUri;
+            }
+            catch (Exception ex)
             {
                 context.Result = StatusCode(404);
             }
@@ -88,7 +89,7 @@ namespace AuthorizationServer.Controllers
         [AllowAnonymous]
         public IActionResult Login(string returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
@@ -99,7 +100,7 @@ namespace AuthorizationServer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            ViewBag.ReturnUrl = returnUrl;
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
@@ -136,19 +137,19 @@ namespace AuthorizationServer.Controllers
         [AllowAnonymous]
         public IActionResult Register(Guid inviteId, string returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
-            return View(new RegisterViewModel{InviteId = inviteId});
+            ViewBag.ReturnUrl = returnUrl;
+            return View(new RegisterViewModel { InviteId = inviteId });
         }
 
         //
         // POST: /Account/Register
         [HttpPost]
-		[ActionName("Register")]
+        [ActionName("Register")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            ViewBag.ReturnUrl = returnUrl;
             if (ModelState.IsValid)
             {
                 var rqf = Request.HttpContext.Features.Get<IRequestCultureFeature>();
@@ -159,22 +160,23 @@ namespace AuthorizationServer.Controllers
                 var createUserCommand = new CreateUserCommand
                 {
                     Email = invite.Email,
-					PersonId = invite.InviteeId,
+                    PersonId = invite.InviteeId,
                     Password = model.Password,
                     EmailConfirmed = true,
                     Culture = rqf.RequestCulture.Culture.Name,
-                    Roles = new List<string>{ invite.Role },
-					InviteId = model.InviteId
+                    Roles = new List<string> { invite.Role },
+                    InviteId = model.InviteId
                 };
-                try {
+                try
+                {
                     var user = await _mediator.Send(createUserCommand);
                     return RedirectToLocal(returnUrl);
-                }  
+                }
                 catch (ConflictException exception)
                 {
                     ModelState.AddModelError(string.Empty, exception.Message.Split('\n').First());
                 }
-                catch (ArgumentException exception) 
+                catch (ArgumentException exception)
                 {
                     ModelState.AddModelError(string.Empty, exception.Message.Split('\n').First());
                 }
@@ -252,8 +254,8 @@ namespace AuthorizationServer.Controllers
                     return View("ForgotPasswordConfirmation");
                 }
 
-                 //For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
-                 //Send an email with this link
+                //For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
+                //Send an email with this link
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 await _emailSender.SendEmailResetPassword(user, code);
 
@@ -297,7 +299,7 @@ namespace AuthorizationServer.Controllers
             IdentityResult result;
             try
             {
-	            result = await _mediator.Send(new ResetUserPasswordCommand{Email = model.Email, Password = model.Password, Code = model.Code});
+                result = await _mediator.Send(new ResetUserPasswordCommand { Email = model.Email, Password = model.Password, Code = model.Code });
             }
             catch (NotFoundException)
             {

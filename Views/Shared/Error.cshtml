@@ -1,6 +1,10 @@
-﻿@model ErrorViewModel
+﻿@using Models
+@using AuthorizationServer.Resources
+
+
+@model ErrorViewModel
 @{
-    ViewData["Title"] = "Error";
+    ViewBag.Title = "Error";
 }
 
 
@@ -13,23 +17,23 @@
         <p>An error occurred while processing your request.</p>
         @if (Model != null && Model.ShowRequestId)
         {
-        <p>
-            <strong>Request ID:</strong> <code>@Model.RequestId</code>
-        </p>
+            <p>
+                <strong>Request ID:</strong> <code>@Model.RequestId</code>
+            </p>
         }
-        
-        @foreach (var modelState in ViewData.ModelState.Values)
+
+        @foreach (var modelState in ViewBag.ModelState.Values)
         {
             foreach (var error in modelState.Errors)
             {
-            <p>@error.ErrorMessage</p> 
+                <p>@error.ErrorMessage</p>
             }
         }
     </section>
 
 
     <div class="mdc-card__actions  error-card-actions">
-       <button class="mdc-button mdc-button--raised mdc-card__action mdc-card__action--button">Dismiss</button>
+        <button class="mdc-button mdc-button--raised mdc-card__action mdc-card__action--button">Dismiss</button>
     </div>
 </div>
 

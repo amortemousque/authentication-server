@@ -20,8 +20,15 @@ namespace AuthorizationServer.Infrastructure.Managers
                                    IUserClaimsPrincipalFactory<Model.IdentityUser> claimsFactory, 
                                    IOptions<IdentityOptions> optionsAccessor, 
                                    ILogger<SignInManager<Model.IdentityUser>> logger, 
-                                   IAuthenticationSchemeProvider schemes)
-            : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemes)
+                                   IAuthenticationSchemeProvider schemes,
+                                   IUserConfirmation<Model.IdentityUser> confirmations)
+            : base(userManager,
+                   contextAccessor,
+                   claimsFactory,
+                   optionsAccessor,
+                   logger,
+                   schemes,
+                   confirmations)
         {
             if (userManager == null)
                 throw new ArgumentNullException(nameof(userManager));

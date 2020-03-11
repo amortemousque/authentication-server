@@ -1,12 +1,15 @@
-﻿@model UseRecoveryCodeViewModel
+﻿@using AuthorizationServer.Models.AccountViewModels
+@using AuthorizationServer.Resources;
+
+@model UseRecoveryCodeViewModel
 @{
-    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
-    ViewData["Title"] = "Use recovery code";
+    Layout = "~/Pages/Shared/_LayoutAccount.cshtml";
+    ViewBag.Title = "Use recovery code";
 }
-<h2>@ViewData["Title"].</h2>
-<form asp-controller="Account" asp-action="UseRecoveryCode" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+<h2>@ViewBag.Title.</h2>
+<form asp-controller="Account" asp-action="UseRecoveryCode" asp-route-returnurl="ViewBag.ReturnUrl" method="post" class="form-horizontal" role="form">
     <div asp-validation-summary="All" class="text-danger"></div>
-    <h4>@ViewData["Status"]</h4>
+    <h4>@ViewBag.Status</h4>
     <hr />
     <div class="form-group">
         <label asp-for="Code" class="col-md-2 control-label"></label>

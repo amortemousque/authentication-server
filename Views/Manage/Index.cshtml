@@ -1,14 +1,18 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Models.ManageViewModels
 @using AuthorizationServer.Resources
+
+
 
 @inject IHtmlLocalizer<SharedResource> Localizer
 @model IndexViewModel
 @{
-    ViewData["Title"] = "Manage your account";
+    ViewBag.Title = "Manage your account";
 }
-@if (ViewData["StatusMessage"] != ""){
+@if (ViewBag.StatusMessage != "")
+{
     <div class="mdc-card main-card success-message">
-        @ViewData["StatusMessage"]
+        @ViewBag.StatusMessage
     </div>
 }
 

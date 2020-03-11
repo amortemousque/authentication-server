@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AuthorizationServer.Resources {
+namespace my_new_app.Resources {
     using System;
     using System.Reflection;
     
@@ -125,12 +125,6 @@ namespace AuthorizationServer.Resources {
             }
         }
         
-        internal static string Forgot_your_password_ {
-            get {
-                return ResourceManager.GetString("Forgot your password?", resourceCulture);
-            }
-        }
-        
         internal static string Create_new_account {
             get {
                 return ResourceManager.GetString("Create new account", resourceCulture);
@@ -208,6 +202,12 @@ namespace AuthorizationServer.Resources {
         internal static string Unsuccessful_login_with_service_ {
             get {
                 return ResourceManager.GetString("Unsuccessful login with service.", resourceCulture);
+            }
+        }
+        
+        internal static string Forgot_your_password_ {
+            get {
+                return ResourceManager.GetString("Forgot your password?", resourceCulture);
             }
         }
         

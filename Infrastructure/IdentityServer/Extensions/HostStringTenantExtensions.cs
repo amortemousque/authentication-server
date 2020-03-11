@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System.Text;
 using System.IO;
-using Microsoft.AspNetCore.Http.Internal;
 using Newtonsoft.Json.Linq;
 
 namespace AuthorizationServer.Infrastructure.IdentityServer.Extensions
@@ -21,7 +20,7 @@ namespace AuthorizationServer.Infrastructure.IdentityServer.Extensions
         public static Guid? GetTenantIdFromBody(this HttpRequest request)
         {
             Guid? tenantId = null;
-            request.EnableRewind();
+            HttpRequestRewindExtensions.EnableBuffering(request);
             using (var reader = new StreamReader(request.Body, Encoding.UTF8, true, 128, true))
             {
                 var body = reader.ReadToEnd();

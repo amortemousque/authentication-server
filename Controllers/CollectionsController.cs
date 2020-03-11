@@ -4,14 +4,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using AuthorizationServer.Application.Queries;
 using Microsoft.Extensions.Localization;
-using AuthorizationServer.Resources;
 using AuthorizationServer.Domain;
 using AuthorizationServer.Domain.SeedWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AuthorizationServer.Resources;
 
 namespace AuthorizationServer.Controllers
 {
     [ApiVersion("1")]
+    [ApiController]
     [Produces("application/json")]
     [Route("v{version:apiVersion}/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

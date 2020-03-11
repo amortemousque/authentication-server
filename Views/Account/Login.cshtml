@@ -1,8 +1,11 @@
+@using AuthorizationServer.Models.AccountViewModels
+@using Microsoft.AspNetCore.Identity;
 @using System.Collections.Generic
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Mvc.Localization
-@using AuthorizationServer.Resources
+@using AuthorizationServer.Resources;
+
 
 @inject IHtmlLocalizer<SharedResource> Localizer
 
@@ -14,7 +17,7 @@
 }
 <div class="mdc-typography--headline6 text-uppercase">@Localizer["Login to your account"]</div>
 <section class="card-content">
-    <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+    <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewBag.ReturnUrl" method="post" class="form-horizontal" role="form">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
@@ -73,7 +76,7 @@
 </section>
 
 
-@*<h2>@ViewData["Title"].</h2>*@
+@*<h2>@ViewBag.Title.</h2>*@
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using Rebus.Bus;
 using AuthorizationServer.Domain.Contracts;
 using AuthorizationServer.Domain.TenantAggregate;
-using AuthorizationServer.Infrastructure.Storage;
 using AuthorizationServer.Infrastructure.Context;
 
 namespace AuthorizationServer.Application.CommandHandlers
@@ -20,14 +19,12 @@ namespace AuthorizationServer.Application.CommandHandlers
     {
         private readonly ITenantRepository _repository;
         private readonly IBus _bus;
-        private readonly IStorageManager _storageManager;
         private readonly IApplicationContext _applicationContext;
 
-        public TenantHandlers(ITenantRepository repository, IBus bus, IStorageManager storageManager, IApplicationContext applicationContext)
+        public TenantHandlers(ITenantRepository repository, IBus bus, IApplicationContext applicationContext)
         {
             _repository = repository;
             _bus = bus;
-            _storageManager = storageManager;
             _applicationContext = applicationContext;
         }
 
@@ -38,7 +35,6 @@ namespace AuthorizationServer.Application.CommandHandlers
             tenant.CreatedAt = DateTime.Now;
             tenant.CreatedBy = _applicationContext.User?.Id??new Guid();
             await _repository.Add(tenant);
-            await _storageManager.CreateStorageContainers(tenant.Name);
 
             return tenant;
         }

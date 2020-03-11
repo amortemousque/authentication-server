@@ -14,12 +14,47 @@ using MongoDB.Driver;
 using System;
 using System.Threading.Tasks;
 using AuthorizationServer.Domain.AccountInviteAggregate;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace AuthorizationServer.Infrastructure.Context
 {
-    public class ApplicationDbContext : IDisposable
+    public class ApplicationDbContext : IdentityDbContext, IDisposable
     {
         private readonly IMongoDatabase _database;
+
+
+        public ApplicationDbContext(IMongoDatabase database)
+        {
+	        _database = database;
+        }
+
+        public ApplicationDbContext(string connectionString)
+        {
+            if (connectionString == null) 
+                throw new ArgumentNullException(nameof(connectionString), "MongoDBConfiguration cannot be null."); 
+ 
+            var mongoDbMementoDatabaseName = MongoUrl.Create(connectionString).DatabaseName;
+            var databaseName = MongoUrl.Create(connectionString).DatabaseName; 
+ 
+            var client = new MongoClient(connectionString);
+            _database = client.GetDatabase(databaseName);
+        }
+
+        public async Task AddClient(Client entity)
+        {
+            await Clients.InsertOneAsync(entity);
+        }
+
+        public async Task AddIdentityResource(IdentityResource entity)
+        {
+            await IdentityResources.InsertOneAsync(entity);
+        }
+
+        public async Task AddApiResource(ApiResource entity)
+        {
+            await ApiResources.InsertOneAsync(entity);
+        }
+
 
         public IMongoCollection<Tenant> Tenants
         {
@@ -90,39 +125,6 @@ namespace AuthorizationServer.Infrastructure.Context
         }
 
         public IMongoCollection<AccountInvite> Invites => _database.GetCollection<AccountInvite>("AccountInvites");
-
-
-        public ApplicationDbContext(IMongoDatabase database)
-        {
-	        _database = database;
-        }
-
-        public ApplicationDbContext(string connectionString)
-        {
-            if (connectionString == null) 
-                throw new ArgumentNullException(nameof(connectionString), "MongoDBConfiguration cannot be null."); 
- 
-            var mongoDbMementoDatabaseName = MongoUrl.Create(connectionString).DatabaseName;
-            var databaseName = MongoUrl.Create(connectionString).DatabaseName; 
- 
-            var client = new MongoClient(connectionString);
-            _database = client.GetDatabase(databaseName);
-        }
-
-        public async Task AddClient(Client entity)
-        {
-            await Clients.InsertOneAsync(entity);
-        }
-
-        public async Task AddIdentityResource(IdentityResource entity)
-        {
-            await IdentityResources.InsertOneAsync(entity);
-        }
-
-        public async Task AddApiResource(ApiResource entity)
-        {
-            await ApiResources.InsertOneAsync(entity);
-        }
 
         public void Dispose()
         {
