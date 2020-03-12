@@ -1,0 +1,50 @@
+<form [formGroup]="formGroup" fxLayout="column" (ngSubmit)="onSubmit()" [appLoadingForm]="loading">
+  <mat-card>
+    <mat-card-header>
+      <h2 i18n>Settings</h2>
+    </mat-card-header>
+    <mat-form-field class="mb-1 pb-1" appearance="fill">
+      <mat-label i18n>Tenant</mat-label>
+      <input matInput [value]="user.tenantId | reference:'tenants' | async" disabled>
+    </mat-form-field>
+    <mat-form-field class="mb-0">
+      <input matInput i18n-placeholder placeholder="Email" formControlName="email" required>
+      <mat-icon matSuffix color="warn" *ngIf="!user.emailConfirmed" i18n-matTooltip matTooltip="User has not confirmed his email address in his mailbox">warning</mat-icon>
+      <mat-error *ngIf="formGroup.controls['email'].errors?.notUnique" i18n>An other user has the same name.</mat-error>
+    </mat-form-field>
+    <div class="mb-3 font-italic" i18n>The email is used as login.</div>
+    <mat-form-field class="mb-1">
+      <input matInput i18n-placeholder placeholder="Given name" formControlName="givenName" required>
+    </mat-form-field>
+    <mat-form-field class="mb-1">
+      <input matInput i18n-placeholder placeholder="Family name" formControlName="familyName" required>
+    </mat-form-field>
+
+    <!-- <mat-form-field class="mb-1">
+        <input matInput i18n-placeholder placeholder="Roles" formControlName="roles" required>
+        <mat-error *ngIf="formGroup.controls['name'].errors?.notUnique" i18n>An other user has the same name.</mat-error>
+      </mat-form-field> -->
+
+    <mat-form-field i18n-placeholder placeholder="Roles">
+      <mat-chip-list #chipList>
+        <mat-chip *ngFor="let role of formGroup?.value.roles">
+          {{role}}
+        </mat-chip>
+        <input formControlName="roles" placeholder="Roles" #roleInput [formControl]="roleCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList"
+          matChipInputAddOnBlur="false">
+      </mat-chip-list>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option *ngFor="let role of roles$ | async" [value]="role.name">
+          {{role.normalizedName}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-card-actions>
+      <button mat-button mat-dialog-close i18n>Cancel</button>
+      <button mat-raised-button color="accent" type="submit">
+        <mat-spinner diameter="20"></mat-spinner>
+        <ng-container i18n>Save</ng-container>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

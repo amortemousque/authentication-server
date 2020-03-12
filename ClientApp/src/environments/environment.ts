@@ -1,9 +1,20 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
+import { getHost } from "../app/core/utils/global.utils";
+
+const baseUri = getHost();
+const baseUriNoPort = getHost(false);
 
 export const environment = {
-  production: false
+  production: false,
+  baseUri: baseUri,
+  adminApiUrl: `${baseUriNoPort}:5001/user/v1`,
+  blobApiUrl: 'https://lgroupeservices.blob.core.windows.net/lnh/',
+  authConfig: {
+    clientId: '60D0SPSVOBHAJOLGLHK1I8UUCO5MM249',
+    issuer: `${baseUriNoPort}:5001/user`,
+    audience: 'quarksupone_api',
+    redirectUri: `${baseUri}/admin/callback`,
+    scope: `openid email profile role permission tenant quarksupone_api`
+  }
 };
 
 /*

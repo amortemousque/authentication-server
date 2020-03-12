@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Warning</h2>
+<button type="button" app-dialog-close mat-dialog-close qup-ghost-icon-button>
+  <mat-icon>close</mat-icon>
+</button>
+<mat-dialog-content>
+  <p>{{message}}</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button qup-outline-button (click)="onCancel()"><span>Cancel</span></button>
+  <button qup-outline-button (click)="onIgnore()"><span>OK</span></button>
+  <button qup-button color="primary" cdkFocusInitial (click)="onSave()"><span>Save</span></button>
+</mat-dialog-actions>

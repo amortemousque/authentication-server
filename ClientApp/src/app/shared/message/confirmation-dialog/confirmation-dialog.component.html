@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Confirm</h2>
+<button type="button" qup-dialog-close mat-dialog-close qup-ghost-icon-button>
+  <mat-icon>close</mat-icon>
+</button>
+<mat-dialog-content>
+  <p>{{message}}</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button qup-outline-button (click)="onNoClick()"><span>No</span></button>
+  <button qup-button color="primary" [mat-dialog-close]="true" cdkFocusInitial><span>Yes</span></button>
+</mat-dialog-actions>
