@@ -1,0 +1,224 @@
+@import "~@angular/material/theming";
+
+.app-sidebar {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 180px;
+  height: calc(100vh - 64px);
+  transition-timing-function: ease-in-out;
+  transition-duration: 150ms;
+  transition-property: transform, width, min-width, max-width;
+}
+.app-sidebar-inner {
+  overflow: auto;
+  height: 100%;
+}
+.app-sidebar:not(.open) {
+  width: 0px;
+}
+
+.app-sidebar-side.app-sidebar-minimal:not(.open) {
+  width: 70px;
+}
+
+.app-sidebar-over {
+  position: absolute;
+  z-index: 1000;
+
+  &.open + .app-sidebar-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    background: rgba(0, 0, 0, 0.32);
+  }
+
+  .app-sidebar-left:not(.open) {
+    transform: translateX(-100%);
+  }
+
+  .app-sidebar-right {
+    right: 0;
+    &:not(.open) {
+      transform: translateX(100%);
+    }
+  }
+}
+
+// border
+.app-sidebar-left:before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+  margin: auto;
+  width: 2px;
+  height: calc(100% - 60px);
+  background-color: #d5d5d5;
+  content: " ";
+}
+
+.app-sidebar-right:before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  margin: auto;
+  width: 2px;
+  height: calc(100% - 60px);
+  background-color: #d5d5d5;
+  content: " ";
+}
+
+// hide menu title for minimal sidebar
+
+.app-sidebar .mat-list-item .mat-icon + span {
+  transition-timing-function: ease-in-out;
+  transition-duration: 150ms;
+  transition-property: opacity;
+}
+
+.app-sidebar.open .mat-list-item .mat-icon + span {
+  opacity: 1;
+}
+
+.app-sidebar:not(.open) .mat-list-item .mat-icon + span {
+  opacity: 0;
+}
+
+
+
+
+
+
+
+
+$menu-item-height: 44px;
+$menu-item-height-padding: 24px;
+$menu-item-height-margin: 16px;
+
+$spacing-between-items: 20px;
+
+
+
+
+
+
+
+footer {
+  flex-shrink: 0;
+  padding: 0 30px 30px;
+}
+
+.app-sidebar {
+  flex: 1 0 auto;
+}
+
+// main list into the drawer
+.app-sidebar {
+  .mat-list-base {
+    padding-top: 0px;
+  }
+
+  .mat-nav-list .mat-list-item .mat-list-item-content {
+    display: block;
+    overflow: hidden;
+    padding: 0;
+    max-height: $menu-item-height;
+    height: auto;
+    -webkit-transition: max-height 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+    -moz-transition: max-height 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+    transition: max-height 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+  }
+
+  .mat-nav-list .mat-list-item {
+    margin-bottom: $spacing-between-items;
+    height: auto;
+    background-color: transparent;
+    -webkit-transition: background-color 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+    -moz-transition: background-color 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+    transition: background-color 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+  }
+
+  .mat-list-item.open > .mat-list-item-content {
+    max-height: 2000px;
+  }
+
+  .mat-list-item {
+    background-color: inherit;
+  }
+
+  .mat-list-item.open,
+  .mat-list-item:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .mat-list-item a {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    padding: 0 $menu-item-height-padding;
+    height: $menu-item-height;
+  }
+
+  .sub-menu {
+    overflow: hidden;
+    padding-top: 0;
+    max-height: 0;
+    transition: 0.5s max-height cubic-bezier(0.35, 0, 0.25, 1);
+    transform: translateZ(0) !important;
+  }
+  .sub-menu a {
+    padding-left: 48px;
+  }
+
+  .sub-menu .sub-menu a {
+    padding-left: 48px + 16px;
+  }
+
+  .sub-menu .sub-menu .sub-menu a {
+    padding-left: 48px + 32px;
+  }
+
+  .sub-menu .sub-menu .sub-menu .sub-menu a {
+    padding-left: 48px + $menu-item-height;
+  }
+  .navigation-title {
+    min-width: 130px;
+  }
+  mat-icon:not(.menu-caret) + .navigation-title {
+    display: inline-block;
+    margin-left: $menu-item-height-margin;
+  }
+  .menu-caret {
+    display: inline-block;
+    margin-left: 0.3125rem;
+    text-align: center;
+    transition: transform 300ms cubic-bezier(0.7, 0, 0.3, 1);
+  }
+  .open > .mat-list-item-content > [qupAccordionToggle] > .menu-caret {
+    transform: rotate(-180deg);
+  }
+  .menu-badge {
+    display: inline-block;
+    padding: 0 4px;
+    min-width: 10px;
+    height: 16px;
+    border-radius: 16px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 10px;
+    line-height: 18px;
+  }
+  .open > .mat-list-item-content > .sub-menu {
+    max-height: 2000px;
+  }
+}

@@ -1,0 +1,21 @@
+@mixin app-bar-theme($theme) {
+  $primary: map-get($theme, primary);
+
+
+  .app-bar {
+    background-color: mat-color($primary);
+    color: mat-color($primary, default-contrast);
+
+    .button,
+    .ghost-button,
+    .outline-button,
+    .mat-icon {
+      color: mat-color($primary, default-contrast);
+    }
+  }
+}
+
+@mixin app-bar-typography($config) {
+  .app-bar {
+  }
+}

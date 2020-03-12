@@ -1,0 +1,24 @@
+<div class="app mat-typography">
+    <app-bar>
+        <button (click)="toggleSidebar()" mat-icon-button>
+            <mat-icon>menu</mat-icon>
+        </button>
+        <img appBarLogo src="./assets/images/logo.svg" alt="" />
+        <div appBarHeadline appTranslate>hiring.recruitment</div>
+        <!-- <app-avatar appBarAvatar [matMenuTriggerFor]="user" class="ml-48" matRipple [src]="currentUser.picture.url"></app-avatar> -->
+        <mat-menu #user="matMenu" x-position="before" y-position="after">
+            <a mat-menu-item (click)="logoff()">
+                <ng-container><span appTranslate>global.logout</span></ng-container>
+            </a>
+        </mat-menu>
+    </app-bar>
+
+    <div class="app-inner">
+        <app-sidebar class="sidebar" name="sidebar" [minimal]="true" mode="side" [open]="true">
+            <app-menu></app-menu>
+          </app-sidebar>
+        <main role="main">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+</div>

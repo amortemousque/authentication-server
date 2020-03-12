@@ -1,0 +1,6 @@
+<div class="app-sidebar" [ngStyle]="{'width': width}" [ngClass]="{'app-sidebar-minimal': minimal, 'app-sidebar-over': mode == 'over', 'app-sidebar-side': mode == 'side', 'open': opened.getValue(), 'app-sidebar-left': position == 'left', 'app-sidebar-right': position == 'right'}">
+    <div class="app-sidebar-inner">
+        <ng-content></ng-content>
+    </div>
+</div>
+<div class="app-sidebar-overlay" (click)="toggle()"></div>

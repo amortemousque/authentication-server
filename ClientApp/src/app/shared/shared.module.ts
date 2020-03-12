@@ -33,6 +33,7 @@ import { AppMessageModule } from './message/message.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { LoadingFormDirective } from './loading-form/loading-form.directive';
 import { ReferencePipe, ReferencesPipe, ParenthesisPipe } from './pipes';
+import { LayoutModule } from './layout/layout.module';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { ReferencePipe, ReferencesPipe, ParenthesisPipe } from './pipes';
     MatButtonModule,
     AppMessageModule,
     NgxDatatableModule,
+    LayoutModule
   ],
   exports: [
     MatIconModule,
@@ -113,6 +115,7 @@ import { ReferencePipe, ReferencesPipe, ParenthesisPipe } from './pipes';
     ReferencePipe,
     ReferencesPipe,
     ParenthesisPipe,
+    LayoutModule
   ]
 })
 export class SharedModule {}

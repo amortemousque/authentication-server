@@ -1,0 +1,37 @@
+@mixin app-sidebar-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  $accent: map-get($theme, accent);
+  /* $sidebar-panel
+    ------------------------------------------*/
+  .app-sidebar {
+    background-color: mat-color($background, background);
+  }
+  .app-sidebar {
+    .mat-list-item.open > a {
+      border-right: 2px solid mat-color($accent);
+    }
+
+    .mat-list-item a {
+      color: mat-color($foreground, hint-text);
+    }
+
+    .mat-list-item.open > .mat-list-item-content > a:not([qupaccordiontoggle]) {
+      border-right: 2px solid mat-color($accent);
+    }
+    .mat-list-item.open > .mat-list-item-content > a,
+    .mat-list-item:hover > .mat-list-item-content > a {
+      color: mat-color($foreground, text);
+    }
+  }
+}
+
+
+
+@mixin app-sidebar-typography($config) {
+  .app-sidebar {
+    .mat-list-item {
+      font-size: mat-font-size($config, body-1);
+    }
+  }
+}

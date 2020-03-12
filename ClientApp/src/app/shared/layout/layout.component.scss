@@ -1,0 +1,19 @@
+$mat-toolbar-height-desktop: 70px !default;
+
+.app-inner {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  max-width: 100%;
+  width: 100%;
+  height: calc(100vh - #{$mat-toolbar-height-desktop});
+}
+
+main {
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  flex: 1;
+
+  scroll-behavior: smooth;
+}

@@ -1,0 +1,45 @@
+<mat-nav-list appAccordion class="navigation app-navigation">
+  <mat-list-item *appRoleGuard="['ROOT']" appAccordionLink>
+    <a class="relative" [routerLink]="['/client']">
+      <mat-icon>web</mat-icon>
+      <span i18n>Clients</span>
+      <span fxFlex></span>
+    </a>
+  </mat-list-item>
+  <mat-list-item *appRoleGuard="['ROOT']" appAccordionLink>
+    <a class="relative" [routerLink]="['/api']">
+      <mat-icon>view_list</mat-icon>
+      <span i18n>APIs</span>
+      <span fxFlex></span>
+    </a>
+  </mat-list-item>
+  <mat-list-item *appRoleGuard="['ROOT', 'PARTNER']" appAccordionLink>
+    <a class="relative" [routerLink]="['/tenant']">
+      <mat-icon>business</mat-icon>
+      <span i18n>Tenants</span>
+      <span fxFlex></span>
+    </a>
+  </mat-list-item>
+  <mat-divider></mat-divider>
+  <mat-list-item *appRoleGuard="['ROOT', 'PARTNER']" appAccordionLink>
+    <a class="relative" [routerLink]="['/user']">
+      <mat-icon>people</mat-icon>
+      <span i18n>Users</span>
+      <span fxFlex></span>
+    </a>
+  </mat-list-item>
+  <mat-list-item *appRoleGuard="['ROOT']" appAccordionLink>
+    <a class="relative" [routerLink]="['/role']">
+      <mat-icon>perm_identity</mat-icon>
+      <span i18n>Roles</span>
+      <span fxFlex></span>
+    </a>
+  </mat-list-item>
+  <mat-list-item *appRoleGuard="['ROOT']" appAccordionLink>
+    <a class="relative" [routerLink]="['/permission']">
+      <mat-icon>vpn_key</mat-icon>
+      <span i18n>Permissions</span>
+      <span fxFlex></span>
+    </a>
+  </mat-list-item>
+</mat-nav-list>
