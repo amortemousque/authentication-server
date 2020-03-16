@@ -10,7 +10,7 @@
 
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
-    <RootNamespace>my_new_app</RootNamespace>
+    <RootNamespace>AuthorizationServer</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'AuthorizationServer' ">
@@ -40,7 +40,6 @@
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRoot)**" />
-    <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
     <None Remove="Resources\Resources.SharedResource.fr" />
     <Content Remove="mono_crash.42f6ec13c.0.json" />
@@ -73,7 +72,6 @@
     <EmbeddedResource Condition=" '$(EnableDefaultEmbeddedResourceItems)' == 'true' " Update="Resources\Resources.SharedResource.fr.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.SharedResource.fr.Designer.cs</LastGenOutput>
-      <LogicalName>AuthorizationServer.Resources.Resources.SharedResource.fr.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

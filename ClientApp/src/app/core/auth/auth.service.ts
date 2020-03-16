@@ -15,7 +15,7 @@ export class AuthService {
     requireHttps: false,
     redirectUri: environment.authConfig.redirectUri,
     clientId: environment.authConfig.clientId,
-    scope:  environment.authConfig.scope
+    scope:  environment.authConfig.scope,
   };
 
   private _user: AuthUser;
@@ -27,10 +27,18 @@ export class AuthService {
   }
 
   public loadDiscoveryDocumentAndTryLogin() {
+  
     this.oauthService.configure(this._authConfig);
     this.oauthService.setupAutomaticSilentRefresh();
     this.oauthService.tokenValidationHandler = new JwksValidationHandler();
-    this.oauthService.loadDiscoveryDocumentAndTryLogin();
+    this.oauthService.loadDiscoveryDocumentAndTryLogin().then((ret) => {
+      console.log('coucou', ret)
+
+    })
+    .catch(error => {
+      console.log('coucou2', error)
+
+    })
   }
 
   public login() {
@@ -46,6 +54,8 @@ export class AuthService {
     if (this._user == null) {
 
       const claims = this.oauthService.getIdentityClaims();
+      console.log('test', claims)
+
       this._user = new AuthUser();
       if (claims != null) {
         this._user.mapClaims(claims);

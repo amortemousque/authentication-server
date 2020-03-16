@@ -50,7 +50,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize]
-        public async Task<IActionResult> GetUser(Guid id)
+        public async Task<IActionResult> GetUser([FromRoute]Guid id)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(Model.IdentityUser[]), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(void), 401)]
-        public async Task<IActionResult> GetUsers(string name = null, string email = null, List<string> ids = null, string fields = null)
+        public async Task<IActionResult> GetUsers([FromQuery]string name = null, [FromQuery]string email = null, [FromQuery]List<string> ids = null, [FromQuery]string fields = null)
         {
             try
             {
@@ -153,7 +153,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "users:write")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] UpdateUserCommand command)
+        public async Task<IActionResult> Put([FromRoute]Guid id, [FromBody] UpdateUserCommand command)
         {
             try
             {
@@ -182,7 +182,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "authentications:write")]
-        public async Task<IActionResult> UpdateUserPassword(Guid id, [FromBody] UpdateUserPasswordCommand command)
+        public async Task<IActionResult> UpdateUserPassword([FromRoute]Guid id, [FromBody] UpdateUserPasswordCommand command)
         {
             try
             {
@@ -207,7 +207,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "users:write")]
-        public async Task<IActionResult> Delete(DeleteUserCommand command)
+        public async Task<IActionResult> Delete([FromRoute]DeleteUserCommand command)
         {
             try
             {

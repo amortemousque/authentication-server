@@ -15,6 +15,7 @@ import { SharedModule } from './shared/shared.module';
 import { AuthGuard } from './core/auth/guards/auth.guard';
 import { RoleGuard } from './core/auth/guards/role.guard';
 import { NgxsModule } from '@ngxs/store';
+import { CallbackComponent } from './core/auth/callback/callback.component';
 
 @NgModule({
   declarations: [
@@ -30,16 +31,24 @@ import { NgxsModule } from '@ngxs/store';
     SharedModule,
     NgxsModule.forRoot(),
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
+      // { path: 'counter', component: CounterComponent },
+      // { path: 'fetch-data', component: FetchDataComponent },
       {
         path: 'user',
-        // canActivate: [AuthGuard, RoleGuard],
-        // data: {
-        //   authorizedRoles: ['ROOT', 'PARTNER']
-        // },
+        canActivate: [AuthGuard, RoleGuard],
+        data: {
+          authorizedRoles: ['ROOT', 'PARTNER']
+        },
         loadChildren: () => import('./user/user.module').then(m => m.UserModule)
+      },
+      {
+        path: 'callback',
+        component: CallbackComponent
+      },
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'user'
       }
     ]),
     BrowserAnimationsModule

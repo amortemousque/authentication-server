@@ -22,13 +22,7 @@
             </p>
         }
 
-        @foreach (var modelState in ViewBag.ModelState.Values)
-        {
-            foreach (var error in modelState.Errors)
-            {
-                <p>@error.ErrorMessage</p>
-            }
-        }
+    
     </section>
 
 

@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --disable-host-check",
     "build": "ng build",
-    "build:ssr": "ng run AuthorizationServer:server:dev",
+    "build:ssr": "ng run AuthorizationServer:server:dev --disable-host-check",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

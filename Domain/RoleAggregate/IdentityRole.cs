@@ -41,12 +41,12 @@ namespace AuthorizationServer.Domain.RoleAggregate
         [PersonalData]
         public string Description { get; set; }
 
-		[BsonId]
-		public string Id { get; set; }
+		//[BsonId]
+		//public string Id { get; set; }
 
-		public string Name { get; set; }
+		//public string Name { get; set; }
 
-		public string NormalizedName { get; set; }
+		//public string NormalizedName { get; set; }
 
 		public override string ToString() => Name;
 	}

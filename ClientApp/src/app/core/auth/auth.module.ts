@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from './auth.service';
 import { RoleGuardDirective } from './directives/role-guard.directive';
 import { OAuthModule } from 'angular-oauth2-oidc';
+import { CallbackComponent } from './callback/callback.component';
 
 @NgModule({
   declarations: [
-    RoleGuardDirective
+    RoleGuardDirective,
+    CallbackComponent
   ],
   imports: [
     CommonModule,

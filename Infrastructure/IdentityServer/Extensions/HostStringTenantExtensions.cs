@@ -14,6 +14,7 @@ namespace AuthorizationServer.Infrastructure.IdentityServer.Extensions
         public static string GetTenantNameFromHost(this HttpRequest request)
         {
             var tenantName = request.Host.Host.Split('.').First();
+            if(tenantName == "localhost") tenantName = "sandbox";
             return tenantName;
         }
 

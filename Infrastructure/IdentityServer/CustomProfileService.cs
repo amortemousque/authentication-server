@@ -20,7 +20,7 @@ namespace AuthorizationServer.Infrastructure.IdentityServer
     {
         protected readonly ILogger Logger;
 
-        protected readonly IUserRepository _userRepository;
+        protected readonly IUserRepository _userRepository; 
 
         public UserManager<IdentityUser> _userManager { get; }
         public IRoleRepository _roleRepository { get; }
@@ -66,6 +66,7 @@ namespace AuthorizationServer.Infrastructure.IdentityServer
                     claims.Add(new Claim(JwtClaimTypes.Role, role));
                 }
             }
+            claims.Add(new Claim("toto", "tata"));
 
             if (context.RequestedClaimTypes.Contains(CustomClaimTypes.Permission)) {
                 var permissions = await _roleRepository.GetRolePermissions(roles.ToArray());

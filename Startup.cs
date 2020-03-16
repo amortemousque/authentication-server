@@ -35,6 +35,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using Newtonsoft.Json;
@@ -62,8 +63,7 @@ namespace AuthorizationServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-
+   
             services.Configure<KestrelServerOptions>(options =>
             {
                 options.AllowSynchronousIO = true;
@@ -73,8 +73,8 @@ namespace AuthorizationServer
             // register the scope authorization handler
             services.AddSingleton<IAuthorizationHandler, HasPermissionHandler>();
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //.AddCookie();
+            // services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            // .AddCookie();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(o =>
             {
@@ -136,7 +136,7 @@ namespace AuthorizationServer
             var databaseName = MongoUrl.Create(connectionString).DatabaseName;  
             var _mongoDb = new MongoClient(connectionString).GetDatabase(databaseName);
             services.AddSingleton(_mongoDb);
-            services.AddScoped<ApplicationDbContext, ApplicationDbContext>(cw => new ApplicationDbContext(cw.GetService<IMongoDatabase>()));
+            services.AddSingleton<ApplicationDbContext, ApplicationDbContext>(cw => new ApplicationDbContext(cw.GetService<IMongoDatabase>()));
             //services.AddDbContext<ApplicationDbContext>(options => options.UseApplicationServiceProvider() ("Data Source=blog.db"));
             //services.AddDbContext(option => option.)
 
@@ -243,6 +243,7 @@ namespace AuthorizationServer
             services.AddSingleton(tokenCleanupOptions);
             services.AddSingleton<TokenCleanup>();
 
+            services.AddScoped<IProfileService, CustomProfileService>();
             //Identity server
             services.AddIdentityServer(options =>
             {
@@ -290,6 +291,7 @@ namespace AuthorizationServer
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                IdentityModelEventSource.ShowPII = true; 
             }
             else
             {
