@@ -1,0 +1,96 @@
+<form [formGroup]="formGroup" fxLayout="column" (ngSubmit)="onSubmit()" [appLoadingForm]="loading">
+
+<mat-card>
+    <mat-card-header>
+        <h2 >General</h2>
+    </mat-card-header>
+    <mat-form-field class="mb-1">
+        <input matInput i18n-placeholder placeholder="Name" formControlName="clientName" required>
+    </mat-form-field>
+    <mat-form-field class="mb-1">
+        <input matInput i18n-placeholder placeholder="Description" formControlName="description">
+    </mat-form-field>
+    <mat-form-field class="mb-1">
+        <input matInput i18n-placeholder placeholder="Client Uri" formControlName="clientUri">
+    </mat-form-field>
+    <mat-form-field class="mb-1">
+        <input matInput i18n-placeholder placeholder="Logo Uri" formControlName="logoUri">
+    </mat-form-field>
+    <mat-card-actions>
+        <button mat-button mat-dialog-close i18n>Cancel</button>
+        <button mat-raised-button color="accent" type="submit">
+        <mat-spinner diameter="20"></mat-spinner><ng-container i18n>Save</ng-container></button>
+    </mat-card-actions>
+</mat-card>
+<mat-card>
+    <mat-card-header>
+        <h2 >Authentication</h2>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="shadow-none">
+            <mat-form-field class="mb-1" appearance="fill" >
+                <mat-label i18n>Client ID</mat-label>
+                <input disabled matInput i18n-placeholder placeholder="Client ID" [value]="client?.clientId">
+            </mat-form-field>
+            <mat-form-field class="mb-1" appearance="fill" *ngIf="client?.clientSecrets && client?.clientSecrets.length > 0" >
+                <mat-label i18n>Client secret</mat-label>
+                <input #secret [type]="secretIsDisplayed ? 'text' : 'password'" disabled matInput i18n-placeholder placeholder="Client secret" [value]="client.clientSecrets[0].decrypted">
+                <div fxLayout="row" matSuffix>
+                    <button mat-icon-button *ngIf="secretIsDisplayed == false"><mat-icon (click)="secretIsDisplayed = true" >visibility_off</mat-icon></button>
+                    <button mat-icon-button *ngIf="secretIsDisplayed == true"><mat-icon (click)="secretIsDisplayed = false" >visibility</mat-icon></button>
+                    <button mat-icon-button><mat-icon (click)="generateNewClientSecret()" >autorenew</mat-icon></button>
+                </div>
+            </mat-form-field>
+            <div class="mb-4">
+                <div><small class="text-md" i18n>Allowed scope</small></div>
+                <span class="mr-4" formArrayName="allowedScopes" *ngFor="let allowedScope of allowedScopesControls.controls; let i = index">
+                    <mat-checkbox [formControlName]="i">{{allowedScopes[i].name}}</mat-checkbox>
+                </span>
+            </div>
+            <mat-form-field class="example-chip-list">
+                <mat-chip-list #chipList>
+                    <mat-chip *ngFor="let uri of formGroup.value.redirectUris" [selectable]="selectable"
+                            [removable]="true" (removed)="remove(uri, 'redirectUris')">
+                    {{uri}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                    </mat-chip>
+                    <input placeholder="Redirect uris"
+                            [matChipInputFor]="chipList"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                            [matChipInputAddOnBlur]="addOnBlur"
+                            (matChipInputTokenEnd)="add($event, 'redirectUris')">
+                </mat-chip-list>
+            </mat-form-field>
+
+            <mat-form-field class="example-chip-list">
+                <mat-chip-list #chipListCors>
+                    <mat-chip *ngFor="let uri of formGroup.value.allowedCorsOrigins" [selectable]="selectable"
+                            [removable]="true" (removed)="remove(uri, 'allowedCorsOrigins')">
+                    {{uri}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                    </mat-chip>
+                    <input placeholder="Allowed cors origins"
+                            [matChipInputFor]="chipListCors"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                            [matChipInputAddOnBlur]="addOnBlur"
+                            (matChipInputTokenEnd)="add($event, 'allowedCorsOrigins')">
+                </mat-chip-list>
+            </mat-form-field>
+               
+            <div class="mb-4" *ngIf="client?.clientTypeId == 2">
+                <div><small class="text-md" i18n>Grant type</small></div>
+                <span class="mr-4">
+                    <mat-checkbox formControlName="resourceOwnerEnabled">Act on behalf of a user by sending the user’s name and password (Grant type : Resource Owner)</mat-checkbox>   
+                </span>
+            </div>
+
+    </div>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button mat-dialog-close i18n>Cancel</button>
+        <button mat-raised-button color="accent" type="submit">
+        <mat-spinner diameter="20"></mat-spinner><ng-container i18n>Save</ng-container></button>
+    </mat-card-actions>
+</mat-card>
+
+</form>

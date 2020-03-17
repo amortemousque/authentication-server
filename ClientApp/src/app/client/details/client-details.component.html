@@ -1,0 +1,26 @@
+
+<div class="page-layout" *ngIf="client">
+    <div class="page-toolbar">
+        <mat-toolbar color="primary">
+            <mat-toolbar-row>
+                <img class="header-avatar mr-3"  *ngIf="client.logoUri" [src]="client.logoUri" alt="" width="42">
+                <div>
+                    <h1 class="page-title">{{client.clientName}}</h1>
+                    <p class="page-subtitle">{{ client.clientTypeId | reference:'clientTypes' | async }}</p>
+                </div>
+                <span class="example-spacer"></span>
+                <button mat-icon-button (click)="delete()">
+                    <mat-icon class="example-icon">delete</mat-icon>
+                </button>
+            </mat-toolbar-row>
+        </mat-toolbar>
+    </div>
+        <mat-tab-group>
+            <mat-tab i18n-label label="Settings"> 
+                <div class="content">
+                    <app-client-settings-form></app-client-settings-form>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+</div>
+
