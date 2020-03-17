@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from '../layout/layout.component';
-import { ClientListComponent } from './list/client-list.component';
-import { ClientDetailsComponent } from './details/client-details.component';
+import { RoleListComponent } from './list/role-list.component';
+import { RoleDetailsComponent } from './details/role-details.component';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 
-export const ClientRoutes: Routes = [
+export const RoleRoutes: Routes = [
   {
     path: '',
     component: LayoutComponent,
@@ -16,11 +16,11 @@ export const ClientRoutes: Routes = [
     children: [
       {
         path: '',
-        component: ClientListComponent
+        component: RoleListComponent
       },
       {
         path: 'details/:id',
-        component: ClientDetailsComponent,
+        component: RoleDetailsComponent,
       }
     ]
   }

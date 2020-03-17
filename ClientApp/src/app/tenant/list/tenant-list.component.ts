@@ -1,23 +1,23 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
-import { ClientCreateFormComponent } from '../create-form/client-create-form.component';
+import { TenantCreateFormComponent } from '../create-form/tenant-create-form.component';
+import * as stateActions from './tenant-list.state';
 import { BaseComponent } from '../../core/base.component';
 import { Select, Store } from '@ngxs/store';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { SearchClients } from './client-list.state';
 
 
 @Component({
-  selector: 'app-client-list',
-  templateUrl: './client-list.component.html',
-  styleUrls: ['./client-list.component.scss']
+  selector: 'app-tenant-list',
+  templateUrl: './tenant-list.component.html',
+  styleUrls: ['./tenant-list.component.scss']
 })
-export class ClientListComponent extends BaseComponent implements OnInit {
+export class TenantListComponent extends BaseComponent implements OnInit {
 
-  @Select(state => state.clients.clients) clients$;
-  @Select(state => state.clients.loading) loading$;
+  @Select(state => state.tenants.tenants) tenants$;
+  @Select(state => state.tenants.loading) loading$;
 
   readonly pageLimit = 200;
   readonly headerHeight = 50;
@@ -43,10 +43,10 @@ export class ClientListComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
 
-    this.store.dispatch(new SearchClients(''));
-    this.clients$.subscribe(clients => {
-      if (clients != null) {
-        this.talentNumer = clients.length;
+    this.store.dispatch(new stateActions.SearchTenants(''));
+    this.tenants$.subscribe(tenants => {
+      if (tenants != null) {
+        this.talentNumer = tenants.length;
       }
     });
 
@@ -59,12 +59,12 @@ export class ClientListComponent extends BaseComponent implements OnInit {
 
   onSelect(selected) {
     const id = selected.selected[0].id;
-    this.router.navigate(['/client/details/' + id]);
+    this.router.navigate(['/tenant/details/' + id]);
   }
 
 
   openCreate() {
-    const dialogRef = this.dialog.open(ClientCreateFormComponent, {
+    const dialogRef = this.dialog.open(TenantCreateFormComponent, {
       panelClass: 'app-dialog',
       width: '700px',
     });

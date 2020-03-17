@@ -1,0 +1,60 @@
+<div class="page-layout">
+    <div class="page-toolbar">
+        <mat-toolbar *ngIf="!selected.length" color="primary">
+            <mat-toolbar-row>
+                <h1 class="page-title" i18n>Permissions</h1>
+                <span class="example-spacer"></span>
+                <button mat-raised-button i18n (click)="openCreate()">New permission</button>
+            </mat-toolbar-row>
+        </mat-toolbar>
+        <mat-toolbar *ngIf="selected?.length > 0" color="primary">
+            <mat-toolbar-row>
+                <h3 i18n> {{ selected?.length }} permissions selected</h3>
+                <span class="example-spacer"></span>
+                <button mat-icon-button i18n (click)="deletePermissions()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-toolbar-row>
+        </mat-toolbar>
+    </div>
+    <div class="content">
+        <ngx-datatable #dataTable class="material fullscreen custom-datatable" [rows]="permissions$ | async"
+            [columnMode]="'flex'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="rowHeight" [scrollbarV]="true"
+            [loadingIndicator]="loading" [selectionType]="'checkbox'" [selectAllRowsOnPage]="false" [selected]="selected"
+            (select)='onSelect($event)'>
+            <ngx-datatable-column [width]="30" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+                [resizeable]="false" [headerCheckboxable]="true" [checkboxable]="true">
+
+                <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
+                    let-selectFn="selectFn">
+                    coucou
+                    <mat-checkbox [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)" >Checked</mat-checkbox>
+                </ng-template>
+                <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected"
+                    let-onCheckboxChangeFn="onCheckboxChangeFn">
+                    <input type="checkbox" [checked]="isSelected" (change)="onCheckboxChangeFn($event)" />
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Name" [flexGrow]="2">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.name}}
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Description" [flexGrow]="2">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.description}}
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-footer>
+                <ng-template ngx-datatable-footer-template>
+                    <div style="padding: 5px 10px">
+                        <div *ngIf="permissions$ | async">
+                            {{(permissions$ | async)?.length}}
+                            <span i18n>permissions</span>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngx-datatable-footer>
+        </ngx-datatable>
+    </div>
+</div>

@@ -3,11 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 
 import { BaseComponent } from '../../core/base.component';
+import { UtilsService } from '../../core/utils.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Client, DomainError } from '../../core/models';
 import { catchError } from 'rxjs/operators';
 import { AddClient } from '../list/client-list.state';
-import { MessageService } from '../../shared/message/message.service';
 
 @Component({
   selector: 'app-client-create-form',
@@ -21,10 +22,11 @@ export class ClientCreateFormComponent extends BaseComponent implements OnInit {
   loading = false;
 
   constructor(
-    private messageService: MessageService,
+    private utils: UtilsService,
     private formBuilder: FormBuilder,
     public dialog: MatDialog,
     private store: Store,
+    public snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<ClientCreateFormComponent>) {
     super();
   }
@@ -63,8 +65,9 @@ export class ClientCreateFormComponent extends BaseComponent implements OnInit {
           return err;
         }))
         .subscribe(r => {
+          console.log('coucou', r);
           this.loading = false;
-          this.messageService.openSuccessMessage('saved')
+          this.utils.displaySnackMessage('saved')
           this.dialogRef.close(client);
         })
     }

@@ -1,0 +1,20 @@
+<form [formGroup]="formGroup" fxLayout="column" (ngSubmit)="onSubmit()" [appLoadingForm]="loading">
+
+<mat-card>
+    <mat-card-header>
+        <h2 i18n>Settings</h2>
+    </mat-card-header>
+    <mat-form-field  class="mb-1 pb-1" appearance="fill" >
+      <mat-label i18n>Name</mat-label>
+      <input matInput i18n-placeholder placeholder="Name" disabled [value]="role?.name">
+    </mat-form-field>
+    <mat-form-field class="mb-1">
+      <input matInput i18n-placeholder placeholder="Desciption" formControlName="description" required>
+    </mat-form-field>
+    <mat-card-actions>
+        <button mat-button mat-dialog-close i18n>Cancel</button>
+        <button mat-raised-button color="accent" type="submit">
+        <mat-spinner diameter="20"></mat-spinner><ng-container i18n>Save</ng-container></button>
+    </mat-card-actions>
+</mat-card>
+</form>

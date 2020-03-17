@@ -33,6 +33,7 @@ export class ReferenceService {
         this._references[name] = this.http.get<any>(`${this.apiUrl}/collections/${name}`, {
           headers: new HttpHeaders().set('Authorization', this._authHeader),
         }).pipe(
+        map(metadata => metadata.items),
         publishReplay(1),refCount());
     }
     return this._references[name];

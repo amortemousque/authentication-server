@@ -40,14 +40,6 @@ import { CallbackComponent } from './core/auth/callback/callback.component';
         loadChildren: () => import('./api/api.module').then(m => m.ApiModule)
       },
       {
-        path: 'client',
-        canActivate: [AuthGuard, RoleGuard],
-        data: {
-          authorizedRoles: ['ROOT', 'PARTNER']
-        },
-        loadChildren: () => import('./client/client.module').then(m => m.ClientModule)
-      },
-      {
         path: 'callback',
         component: CallbackComponent
       },
