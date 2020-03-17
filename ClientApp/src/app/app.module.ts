@@ -1,14 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
@@ -20,10 +15,7 @@ import { CallbackComponent } from './core/auth/callback/callback.component';
 @NgModule({
   declarations: [
     AppComponent,
-    NavMenuComponent,
-    HomeComponent,
-    CounterComponent,
-    FetchDataComponent
+    NavMenuComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -31,8 +23,6 @@ import { CallbackComponent } from './core/auth/callback/callback.component';
     SharedModule,
     NgxsModule.forRoot(),
     RouterModule.forRoot([
-      // { path: 'counter', component: CounterComponent },
-      // { path: 'fetch-data', component: FetchDataComponent },
       {
         path: 'user',
         canActivate: [AuthGuard, RoleGuard],
@@ -40,6 +30,14 @@ import { CallbackComponent } from './core/auth/callback/callback.component';
           authorizedRoles: ['ROOT', 'PARTNER']
         },
         loadChildren: () => import('./user/user.module').then(m => m.UserModule)
+      },
+      {
+        path: 'api',
+        canActivate: [AuthGuard, RoleGuard],
+        data: {
+          authorizedRoles: ['ROOT', 'PARTNER']
+        },
+        loadChildren: () => import('./api/api.module').then(m => m.ApiModule)
       },
       {
         path: 'callback',

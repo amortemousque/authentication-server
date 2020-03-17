@@ -1,0 +1,21 @@
+<mat-card>
+    <mat-nav-list class="mat-x-line">
+        <mat-list-item *ngFor="let scope of scopes">
+            <div mat-line fxLayout="row" fxLayoutAlign="start center">
+                <h3 class="mb-0 mr-2" *ngIf="!scope.isEditing">{{ scope.name }}</h3>
+                <small *ngIf="!scope.isEditing" class="font-italic"> {{ scope.description }} </small>
+            </div>
+
+            <div *ngIf="!scope.isEditing" class="mat-list-action">
+                <button mat-icon-button mat-button-sm (click)="deletePermission(scope);">
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <button mat-icon-button mat-button-sm (click)="openPermissionForm(scope); $event.stopPropagation();">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </div>
+            <app-api-permission-inline-form mat-line *ngIf="scope.isEditing" (cancelled)="cancelledEdition(scope)" [apiScope]="scope"></app-api-permission-inline-form>
+        </mat-list-item>
+    </mat-nav-list>
+</mat-card>
+<button mat-raised-button color="accent" class="ml-3" (click)="openPermissionForm()">Add a permission</button>

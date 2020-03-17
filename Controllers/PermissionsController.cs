@@ -15,7 +15,7 @@ namespace AuthorizationServer.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("v{version:apiVersion}/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     public class PermissionsController : Controller
     {
         protected IMediator _mediator;

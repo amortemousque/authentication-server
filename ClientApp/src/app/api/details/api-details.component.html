@@ -1,0 +1,27 @@
+
+<div class="page-layout" *ngIf="api">
+    <div class="page-toolbar">
+        <mat-toolbar color="primary">
+            <mat-toolbar-row>
+                <h1 class="page-title">{{api.displayName}}</h1>
+                <span class="example-spacer"></span>
+                <button mat-icon-button (click)="delete()">
+                    <mat-icon class="example-icon">delete</mat-icon>
+                </button>
+            </mat-toolbar-row>
+        </mat-toolbar>
+    </div>
+    <mat-tab-group>
+        <mat-tab label="Settings"  i18n-label> 
+            <div class="content">
+                <app-api-settings-form></app-api-settings-form>
+            </div>
+        </mat-tab>
+        <mat-tab label="Permissions (scopes)"  i18n-label>
+            <div class="content">
+                <app-api-permissions></app-api-permissions>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+

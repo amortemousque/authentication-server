@@ -66,7 +66,6 @@ namespace AuthorizationServer.Infrastructure.IdentityServer
                     claims.Add(new Claim(JwtClaimTypes.Role, role));
                 }
             }
-            claims.Add(new Claim("toto", "tata"));
 
             if (context.RequestedClaimTypes.Contains(CustomClaimTypes.Permission)) {
                 var permissions = await _roleRepository.GetRolePermissions(roles.ToArray());

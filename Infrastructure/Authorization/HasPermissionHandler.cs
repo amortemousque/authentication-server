@@ -50,7 +50,8 @@ namespace AuthorizationServer
 	            throw new ForbbidenException($"request url host '{requestedTenantName}' is different to the tokenized tenant '{tokenTenantName}'");
 
             var tokenTenantId = context.User.FindFirst(CustomClaimTypes.TenantId) != null ? Guid.Parse(context.User.FindFirst(CustomClaimTypes.TenantId)?.Value) : Guid.Empty;
-            var user = _dbContext.Users.AsQueryable().First(u => u.NormalizedUserName == context.User.Identity.Name.ToUpper() && u.TenantId == tokenTenantId);
+            var userName = context.User.Identity.Name.ToUpper();
+            var user = _dbContext.Users.AsQueryable().First(u => u.NormalizedUserName == userName && u.TenantId == tokenTenantId);
             var permissions = GetRolePermissions(user.Roles.ToArray());
 
             if (permissions.Any(p => p.Contains(requirement.Permission)))
