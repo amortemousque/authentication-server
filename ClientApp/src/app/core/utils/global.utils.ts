@@ -2,7 +2,6 @@ import { cloneDeep, flattenDeep, camelCase as camelCaseLodash } from 'lodash';
 
 export function deleteEmptyKeys(obj) {
   const entity = obj;
-  const li = [];
   Object.keys(entity).forEach((name) => {
     const type = typeof entity[name];
     if (type === 'boolean' && entity[name] === null) {

@@ -1,11 +1,6 @@
 <div fxFlex fxLayout="row">
     <div fxFlex="60">
         <table width="100%" mat-table [dataSource]="rolePermissions" class="mat-elevation-z1">
-
-            <!--- Note that these columns can be defined in any order.
-                      The actual rendered columns are set as a property on the row definition" -->
-
-            <!-- Name Column -->
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Role permissions </th>
                 <td mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -24,11 +19,6 @@
     </div>
     <div fxFlex="40">
         <table width="100%" mat-table [dataSource]="unselectedPermissions" class="mat-elevation-z1  ml-4">
-            <!--- Note that these columns can be defined in any order.
-                      The actual rendered columns are set as a property on the row definition" -->
-
-            <!-- Name Column -->
-            <!-- Checkbox Column -->
             <ng-container matColumnDef="select">
                 <th mat-header-cell *matHeaderCellDef>
                     <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()">

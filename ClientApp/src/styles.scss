@@ -1,11 +1,14 @@
-
 @import "./app/shared/layout/app-bar/app-bar-theme";
 @import "./app/shared/layout/sidebar/sidebar-theme";
+@import "./app/shared/layout/page-header/page-header-theme";
+
 @import "./assets/styles/vendors/ngx-datatable";
-@import '~@angular/material/theming';
+@import "./assets/styles/vendors/mat-card";
+
+@import "~@angular/material/theming";
 @include mat-core();
 $candy-app-primary: mat-palette($mat-indigo);
-$candy-app-accent:  mat-palette($mat-pink, A200, A100, A400);
+$candy-app-accent: mat-palette($mat-pink, A200, A100, A400);
 
 $candy-app-warn: mat-palette($mat-red);
 $theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
@@ -15,12 +18,137 @@ $config: mat-typography-config();
 
 @include app-bar-theme($theme);
 @include app-sidebar-theme($theme);
+@include app-page-header-theme($theme);
 @include app-ngx-datatable($theme);
+@include app-mat-card($theme);
 @include app-bar-typography($config);
 @include app-sidebar-typography($config);
 
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-form-field {
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.mat-form-group {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.page-layout {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  justify-content: stretch;
+  height: 100%;
+  .content {
+    position: relative;
+    flex: 1;
+    margin: 0px;
+  }
+}
+
+.logo {
+  max-height: 45px;
+  width: 45px;
+}
+
+.logo img {
+  max-width: 45px;
+  max-height: 45px;
+}
+
+.card-indicator {
+  min-width: 190px;
+}
+
+.info-message {
+  margin-bottom: 1.5rem;
+  color: #777;
+  font-style: italic;
+}
+
+.type-selector {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+
+  .selector {
+    color: #666;
+
+    .selector-icon {
+      color: #888;
+      font-size: 2rem;
+    }
+
+    .selector-title {
+      margin-top: 1rem;
+      margin-bottom: 1.2rem;
+      font-size: 1.3rem;
+    }
+
+    .selector-desciption {
+      font-style: italic;
+    }
+  }
+  .selector.selected {
+    border: solid 1px red;
+    box-shadow: 0 0px 1px -2px rgba(0, 0, 0, 0.2),
+      0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  }
+}
 
 
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+
+
+
+
+.loading-form {
+    &.is-loading {
+        button {
+            cursor: default;
+            pointer-events: none;
+        }
+        button[type="submit"] {
+            .mat-spinner {
+                display: initial;
+                margin-right: 5px;
+            }
+            .mat-button-wrapper {
+                display:flex;
+                align-items: center;
+                flex-direction: row;
+                justify-content: center;
+            }
+            &.mat-fab .mat-icon {
+                display: none;
+            }
+            &.mat-accent, &.mat-primary {
+                 .mat-spinner circle {
+                     stroke: #ffffff;
+                 }
+            }
+        }
+    
+        .mat-dialog-content, .mat-card-content {
+            overflow: hidden;
+            opacity: 0.5;
+        }
+    }
+
+    button[type="submit"] .mat-spinner {
+        display: none;
+    }
+}

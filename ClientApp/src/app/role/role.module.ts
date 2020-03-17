@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { LayoutModule } from '../layout/layout.module'
-
 import { RoleListComponent } from './list/role-list.component'
 import { RoleListState } from './list/role-list.state';
 import { RoleDetailsState } from './details/role-details.state';
@@ -15,24 +13,20 @@ import { RoleCreateFormComponent } from './create-form/role-create-form.componen
 import { RoleDetailsComponent } from './details/role-details.component';
 import { RoleSettingsFormComponent } from './settings-form/role-settings-form.component';
 import { RolePermissionsComponent } from './permissions/role-permissions.component';
-import { AuthModule } from '../auth/auth.module';
 import { CoreModule } from '../core/core.module';
 import { NgxsModule } from '@ngxs/store';
-import { AuthGuard } from '../auth/guards/auth.guard';
-import { RoleGuard } from '../auth/guards/role.guard';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    // InterviewModule,
-    LayoutModule,
     RouterModule.forChild(RoleRoutes),
-    AuthModule.forRoot(),
-    CoreModule.forRoot(),
+    SharedModule,
+    CoreModule,
     NgxsModule.forFeature([
-        RoleListState,
-        RoleDetailsState,
-        PermissionsState
+      RoleListState,
+      RoleDetailsState,
+      PermissionsState
     ])
   ],
   declarations: [
@@ -50,4 +44,4 @@ import { RoleGuard } from '../auth/guards/role.guard';
   ]
 })
 
-export class RoleModule {}
+export class RoleModule { }

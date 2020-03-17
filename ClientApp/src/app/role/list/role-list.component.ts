@@ -34,7 +34,6 @@ export class RoleListComponent extends BaseComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     public router: Router,
-    private el: ElementRef,
     private store: Store
   ) {
       super();
@@ -52,39 +51,6 @@ export class RoleListComponent extends BaseComponent implements OnInit {
 
     this.loading$.subscribe(loading => this.loading = loading);
   }
-
-  // onScroll(e: any, offsetY: number) {
-  //   this.store.dispatch(new stateActions.UpdatePointerPositionY(offsetY));
-  //   if (this.talentNumer < this.totalCount) {
-  //     // total height of all rows in the viewport
-  //     const viewHeight = this.el.nativeElement.getBoundingRoleRect().height - this.headerHeight;
-  //     const length = this.talentNumer;
-  //     // check if we scrolled to the end of the viewport
-  //     const left = offsetY + viewHeight;
-  //     const right =  (length * this.rowHeight - 12000);
-  //     if (!this.loading && left >= right) {
-
-  //       // total number of results to load
-  //       let limit = this.pageLimit;
-
-  //       // check if we haven't fetched any results yet
-  //       if (length === 0) {
-
-  //         // calculate the number of rows that fit within viewport
-  //         const pageSize = Math.ceil(viewHeight / this.rowHeight);
-
-  //         // change the limit to pageSize such that we fill the first page entirely
-  //         // (otherwise, we won't be able to scroll past it)
-  //         limit = Math.max(pageSize, this.pageLimit);
-  //       }
-  //       this.loadPage(limit);
-  //     }
-  //   }
-  // }
-
-  // private loadPage(limit: number) {
-  //   this.store.dispatch(new stateActions.NextPage(limit))
-  // }
 
   onActivate(selected) {
     this.rowHovered = selected.row;

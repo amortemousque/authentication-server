@@ -1,17 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
 import { BaseComponent } from '../../core/base.component';
 import { Role } from '../../core/models';
-import { ReferenceService } from '../../core/services';
-import { UtilsService } from '../../core/utils.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmModalComponent } from '../../core/components/modal/confirm-modal.component';
 import { takeUntil, filter } from 'rxjs/operators';
 import { LoadRole } from './role-details.state';
 import { DeleteRole } from '../list/role-list.state';
+import { MessageService } from '../../shared/message/message.service';
 
 @Component({
   selector: 'app-role-details',
@@ -28,7 +26,7 @@ export class RoleDetailsComponent extends BaseComponent implements OnInit {
   loading = false;
 
   constructor(
-    private utils: UtilsService,
+    private messageService: MessageService,
     public dialog: MatDialog,
     private store: Store,
     public snackBar: MatSnackBar,
@@ -52,30 +50,19 @@ export class RoleDetailsComponent extends BaseComponent implements OnInit {
   }
 
   delete() {
-    const dialogRef = this.dialog.open(ConfirmModalComponent, {
-      width: '700px',
-      panelClass: 'app-dialog',
-      data: {
-        message: 'Suppression',
-        details: 'Etes vous sur de supprimer le role ? Cette suppression sera définive.'
-     }
-    });
-    dialogRef.afterClosed().subscribe(result => {
+    this.messageService.openConfirmationDialog('Etes vous sur de supprimer le role ? Cette suppression sera définive.')
+    .afterClosed().subscribe(result => {
       if (result) {
         this.store.dispatch(new DeleteRole(this.role.id)).subscribe(() => {
-          this.utils.displaySnackMessage('deleted');
+          this.messageService.openSuccessMessage('deleted');
           this.router.navigate(['/role']);
         });
       }
     })
   }
 
-
-
   setType(value) {
     this.formGroup.patchValue({roleTypeId: value})
   }
-
-
 }
 

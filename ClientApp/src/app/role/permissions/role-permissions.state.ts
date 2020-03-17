@@ -5,16 +5,16 @@ import { Injectable } from '@angular/core';
 
 export class GetRolePermissions {
     static readonly type = '[Role] Get role permissions';
-    constructor(public payload: string) {}
+    constructor(public payload: string) { }
 }
 export class AddPermissionsToRole {
     static readonly type = '[Role] Add role permissions';
-    constructor(public payload: Permission[]) {}
+    constructor(public payload: Permission[]) { }
 }
 
 export class DeletePermissionToRole {
     static readonly type = '[Role] Delete role permission ';
-    constructor(public payload: Permission) {}
+    constructor(public payload: Permission) { }
 }
 
 
@@ -40,22 +40,21 @@ export class PermissionsState {
     }
 
     @Action(GetRolePermissions)
-    searchRoles({ getState, patchState }: StateContext<PermissionsStateModel>, { payload }: GetRolePermissions ) {
+    searchRoles({ getState, patchState }: StateContext<PermissionsStateModel>, { payload }: GetRolePermissions) {
         const state = getState();
         patchState({
             loading: true,
         });
         return this.roleService.getPermissions(payload).subscribe(value => {
-                patchState({
-                    loading: false,
-                    permissions: value
-                });
-              }
-            );
+            patchState({
+                loading: false,
+                permissions: value
+            });
+        });
     }
 
     @Action(AddPermissionsToRole)
-    addPermission({ getState, patchState }: StateContext<PermissionsStateModel>, { payload }: AddPermissionsToRole ) {
+    addPermission({ getState, patchState }: StateContext<PermissionsStateModel>, { payload }: AddPermissionsToRole) {
         patchState({
             permissions: [...getState().permissions, ...payload]
         })
@@ -63,7 +62,7 @@ export class PermissionsState {
     }
 
     @Action(DeletePermissionToRole)
-    deletePermission({ getState, patchState }: StateContext<PermissionsStateModel>, { payload }: DeletePermissionToRole ) {
+    deletePermission({ getState, patchState }: StateContext<PermissionsStateModel>, { payload }: DeletePermissionToRole) {
         patchState({
             permissions: getState().permissions.filter(s => s.id !== payload.id)
         });

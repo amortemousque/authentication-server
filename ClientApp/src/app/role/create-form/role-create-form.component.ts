@@ -1,15 +1,14 @@
-import { Component, Inject, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 
-import * as roleActions from '../list/role-list.state';
 import { BaseComponent } from '../../core/base.component';
-import { ReferenceService } from '../../core/services';
-import { UtilsService } from '../../core/utils.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Role, DomainError } from '../../core/models';
 import { catchError } from 'rxjs/operators';
+import { MessageService } from '../../shared/message/message.service';
+import { AddRole } from '../list/role-list.state';
 
 @Component({
   selector: 'app-role-create-form',
@@ -22,10 +21,10 @@ export class RoleCreateFormComponent extends BaseComponent implements OnInit {
 
   loading = false;
   roleCtrl = new FormControl();
-  @ViewChild('roleInput') roleInput: ElementRef;
+  @ViewChild('roleInput', {static: false}) roleInput: ElementRef;
 
   constructor(
-    private utils: UtilsService,
+    private messageService: MessageService,
     private formBuilder: FormBuilder,
     public dialog: MatDialog,
     private store: Store,
@@ -53,7 +52,7 @@ export class RoleCreateFormComponent extends BaseComponent implements OnInit {
     if (this.formGroup.valid) {
       this.loading = true;
       const role = this.mapForm(this.formGroup);
-      this.store.dispatch(new roleActions.AddRole(role))
+      this.store.dispatch(new AddRole(role))
       .pipe(catchError(err => {
         if (err instanceof DomainError) {
           this.formGroup.get(err.field).setErrors({
@@ -65,7 +64,7 @@ export class RoleCreateFormComponent extends BaseComponent implements OnInit {
        }))
       .subscribe(r => {
         this.loading = false;
-        this.utils.displaySnackMessage('saved')
+        this.messageService.openSuccessMessage('saved')
         this.dialogRef.close(role);
       });
     }

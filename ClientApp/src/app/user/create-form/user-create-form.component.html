@@ -6,12 +6,6 @@
     <div class="shadow-none">
       <mat-form-field>
         <mat-select i18n-placeholder placeholder="Tenant" formControlName="tenantId" required>
-          <!-- <mat-select-trigger>
-            <div>
-                <img width="30" [src]="selected.logoUri" alt="" class="mr-3">{{selected.givenName}}{{selected.name}}
-
-            </div>
-          </mat-select-trigger> -->
           <mat-option *ngFor="let tenant of tenants$ | async" [value]="tenant.id">
             <div fxLayout="row" fxLayoutAlign="start center">
                 <img width="30" [src]="tenant.logoUri" alt="" class="mr-3">{{tenant.name}}
@@ -22,8 +16,8 @@
       <mat-form-field class="mb-0">
         <input matInput i18n-placeholder placeholder="Email" formControlName="email" required>
         <mat-error *ngIf="formGroup.controls['email'].errors?.notUnique" i18n>An other user has the same name.</mat-error>
+        <mat-hint>The email is used as login.</mat-hint>
       </mat-form-field>
-      <div class="mb-3 font-italic" i18n>The email is used as login.</div>
       <mat-form-field class="mb-1">
         <input matInput i18n-placeholder placeholder="Given name" formControlName="givenName" required>
       </mat-form-field>
@@ -34,7 +28,6 @@
         <mat-chip-list #chipList>
           <mat-chip *ngFor="let role of formGroup?.value.roles">
             {{role}}
-            <!-- <mat-icon matChipRemove>cancel</mat-icon> -->
           </mat-chip>
           <input
             formControlName="roles" 

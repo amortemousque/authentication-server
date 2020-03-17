@@ -1,16 +1,15 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-
-import * as tenantActions from '../list/tenant-list.state';
 import { BaseComponent } from '../../core/base.component';
 import { Tenant } from '../../core/models';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ReferenceService } from '../../core/services';
-import { UtilsService } from '../../core/utils.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { takeUntil } from 'rxjs/operators';
+import { MessageService } from '../../shared/message/message.service';
+import { deleteEmptyKeys } from '../../core/utils/global.utils';
+import { UpdateTenant } from '../list/tenant-list.state';
 
 
 @Component({
@@ -30,8 +29,7 @@ export class TenantSettingsFormComponent extends BaseComponent implements OnInit
   loading = false;
 
   constructor(
-    private referenceService: ReferenceService,
-    private utils: UtilsService,
+    private messageService: MessageService,
     private formBuilder: FormBuilder,
     public dialog: MatDialog,
     private store: Store,
@@ -59,7 +57,7 @@ export class TenantSettingsFormComponent extends BaseComponent implements OnInit
       // FIll the form
         const tenant = new Tenant();
         Object.assign(tenant, this.tenant);
-        this.utils.deleteEmptyKeys(tenant);
+        deleteEmptyKeys(tenant);
         this.formGroup.reset();
         this.formGroup.patchValue(tenant);
       }
@@ -79,10 +77,10 @@ export class TenantSettingsFormComponent extends BaseComponent implements OnInit
     if (this.formGroup.valid) {
       this.loading = true;
       const tenant = this.mapForm(this.formGroup);
-      this.store.dispatch(new tenantActions.UpdateTenant(tenant))
+      this.store.dispatch(new UpdateTenant(tenant))
       .subscribe(r => {
         this.loading = false;
-        this.utils.displaySnackMessage('saved')
+        this.messageService.openSuccessMessage('saved')
       });
     }
   }

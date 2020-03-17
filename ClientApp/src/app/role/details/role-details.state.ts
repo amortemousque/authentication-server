@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 
 export class LoadRole {
     static readonly type = '[Role details] Load role details';
-    constructor(public payload: string) {}
+    constructor(public payload: string) { }
 }
 
 export interface RoleDetailsStateModel {
@@ -27,22 +27,17 @@ export class RoleDetailsState {
     constructor(private roleService: RoleService, public store: Store) {
     }
 
-    // ngxsOnInit({ patchState }: StateContext<any>) {
-     
-    // }
-
     @Action(LoadRole)
-    searchRoles({ getState, patchState }: StateContext<RoleDetailsStateModel>, { payload }: LoadRole ) {
+    searchRoles({ getState, patchState }: StateContext<RoleDetailsStateModel>, { payload }: LoadRole) {
         patchState({
             loading: true,
         });
         return this.roleService.getRole(payload).subscribe(value => {
-                patchState({
-                    loading: false,
-                    role: value
-                });
-              }
-            );
+            patchState({
+                loading: false,
+                role: value
+            });
+        });
     }
 
 }

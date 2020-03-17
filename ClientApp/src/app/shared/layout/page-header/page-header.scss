@@ -1,0 +1,12 @@
+.app-page-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 4rem 2rem 1rem 2rem;
+}
+
+.app-page-header-title, h1.app-page-header-title {
+  margin-right: auto;
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+}

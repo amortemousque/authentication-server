@@ -17,7 +17,6 @@ import { OAuthModule } from "angular-oauth2-oidc";
     ReactiveFormsModule,
     AuthModule,
     NgxDatatableModule,
-    FlexLayoutModule,
     OAuthModule.forRoot()
   ],
   exports: [
@@ -27,8 +26,7 @@ import { OAuthModule } from "angular-oauth2-oidc";
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    AuthModule,
-    FlexLayoutModule
+    AuthModule
   ]
 })
 export class CoreModule {}

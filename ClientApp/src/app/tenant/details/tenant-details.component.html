@@ -1,26 +1,23 @@
-
 <div class="page-layout" *ngIf="tenant">
-    <div class="page-toolbar">
-        <mat-toolbar color="primary">
-            <mat-toolbar-row>
-                <!-- <img class="header-avatar mr-3"  *ngIf="tenant.logoUri" [src]="tenant.logoUri" alt="" width="42"> -->
-                <h1 class="page-title">{{tenant.name}}</h1>
-                <span class="example-spacer"></span>
-                <button mat-icon-button (click)="delete()">
-                    <mat-icon class="example-icon">delete</mat-icon>
-                </button>
-            </mat-toolbar-row>
-        </mat-toolbar>
-    </div>
+    <app-page-header>
+        <h1 app-page-header-title>{{tenant.name}}</h1>
+        <app-page-header-actions>
+            <button mat-icon-button (click)="delete()">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </app-page-header-actions>
+    </app-page-header>
     <mat-tab-group>
-        <mat-tab label="Settings" i18n-label> 
+        <mat-tab label="Settings" i18n-label>
             <div class="content">
                 <div fxLayout="row">
                     <app-tenant-settings-form></app-tenant-settings-form>
                     <div>
-                        <mat-card class="card-indicator mat-teal" >
+                        <mat-card class="card-indicator mat-teal">
                             <h2 class="indicator"> {{ tenant?.usersNumber }}</h2>
-                            <p class="indicator-info"><ng-container i18n>users on the tenant</ng-container></p>
+                            <p class="indicator-info">
+                                <ng-container i18n>users on the tenant</ng-container>
+                            </p>
                         </mat-card>
                     </div>
                 </div>
@@ -28,4 +25,3 @@
         </mat-tab>
     </mat-tab-group>
 </div>
-

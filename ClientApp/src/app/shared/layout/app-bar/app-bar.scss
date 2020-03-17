@@ -1,19 +1,20 @@
-
 $bar-height: 64px;
 $bar-logo-height: 32px;
 $bar-logo-margin: 8px;
 
-
 .app-bar {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   padding: 0 16px;
   height: $bar-height;
-  .ghost-icon-button {
+  box-shadow: 0 1px 8px rgba(0,0,0,.3);
+
+  .mat-icon-button {
     margin-top: -3px;
   }
-
-  .ghost-icon-button:not(:first-child) {
+  .mat-icon-button:not(:first-child) {
     margin-right: 1rem;
   }
 }

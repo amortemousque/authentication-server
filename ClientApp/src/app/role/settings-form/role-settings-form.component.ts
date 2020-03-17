@@ -2,16 +2,16 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
-
-import * as roleActions from '../list/role-list.state';
 import { Observable } from '../../../../node_modules/rxjs';
 import { BaseComponent } from '../../core/base.component';
 import { Role } from '../../core/models';
-import { ReferenceService, TenantService } from '../../core/services';
-import { UtilsService } from '../../core/utils.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { takeUntil } from 'rxjs/operators';
+import { TenantService } from '../../core/services';
+import { MessageService } from '../../shared/message/message.service';
+import { deleteEmptyKeys } from '../../core/utils/global.utils';
+import { UpdateRole } from '../list/role-list.state';
 
 
 @Component({
@@ -34,13 +34,11 @@ export class RoleSettingsFormComponent extends BaseComponent implements OnInit {
   tenants$: Observable<any>;
 
   roleCtrl = new FormControl();
-  @ViewChild('roleInput') roleInput: ElementRef;
+  @ViewChild('roleInput', {static: false}) roleInput: ElementRef;
 
   constructor(
-    private referenceService: ReferenceService,
     private tenantService: TenantService,
-
-    private utils: UtilsService,
+    private messageService: MessageService,
     private formBuilder: FormBuilder,
     public dialog: MatDialog,
     private store: Store,
@@ -67,7 +65,7 @@ export class RoleSettingsFormComponent extends BaseComponent implements OnInit {
       // FIll the form
         const role = new Role();
         Object.assign(role, this.role);
-        this.utils.deleteEmptyKeys(role);
+        deleteEmptyKeys(role);
         this.formGroup.reset();
         this.formGroup.patchValue(role);
       }
@@ -87,10 +85,10 @@ export class RoleSettingsFormComponent extends BaseComponent implements OnInit {
     if (this.formGroup.valid) {
       this.loading = true;
       const role = this.mapForm(this.formGroup);
-      this.store.dispatch(new roleActions.UpdateRole(role))
+      this.store.dispatch(new UpdateRole(role))
       .subscribe(r => {
         this.loading = false;
-        this.utils.displaySnackMessage('saved')
+        this.messageService.openSuccessMessage('saved')
       });
     }
   }

@@ -1,0 +1,29 @@
+@mixin app-mat-card($theme) {
+  body {
+    .mat-card {
+      margin: 0.7rem;
+      max-width: 800px;
+    }
+
+    .mat-card-header .mat-icon-button {
+      margin-top: auto;
+      margin-right: 10px;
+      margin-bottom: auto;
+      margin-left: auto;
+    }
+
+    .mat-card.card-indicator {
+        flex: 1 1 100%;
+        padding-top: 12px;
+        padding-bottom: 14px;
+        max-width: 200px;
+        .indicator {
+            font-weight: bold;
+        }
+
+        .indicator-info {
+            margin: 0;
+        }
+    }
+  }
+}

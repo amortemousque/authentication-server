@@ -1,9 +1,16 @@
 @import "~@angular/material/theming";
 
+$menu-item-height: 44px;
+$menu-item-height-padding: 24px;
+$menu-item-height-margin: 16px;
+$spacing-between-items: 20px;
+
+
 .app-sidebar {
   position: relative;
   display: flex;
   overflow: hidden;
+  flex: 1 0 auto;
   flex-direction: column;
   flex-shrink: 0;
   box-sizing: border-box;
@@ -50,36 +57,7 @@
     }
   }
 }
-
-// border
-.app-sidebar-left:before {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  display: block;
-  margin: auto;
-  width: 2px;
-  height: calc(100% - 60px);
-  background-color: #d5d5d5;
-  content: " ";
-}
-
-.app-sidebar-right:before {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  display: block;
-  margin: auto;
-  width: 2px;
-  height: calc(100% - 60px);
-  background-color: #d5d5d5;
-  content: " ";
-}
-
 // hide menu title for minimal sidebar
-
 .app-sidebar .mat-list-item .mat-icon + span {
   transition-timing-function: ease-in-out;
   transition-duration: 150ms;
@@ -92,34 +70,6 @@
 
 .app-sidebar:not(.open) .mat-list-item .mat-icon + span {
   opacity: 0;
-}
-
-
-
-
-
-
-
-
-$menu-item-height: 44px;
-$menu-item-height-padding: 24px;
-$menu-item-height-margin: 16px;
-
-$spacing-between-items: 20px;
-
-
-
-
-
-
-
-footer {
-  flex-shrink: 0;
-  padding: 0 30px 30px;
-}
-
-.app-sidebar {
-  flex: 1 0 auto;
 }
 
 // main list into the drawer

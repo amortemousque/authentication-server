@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
@@ -14,8 +13,7 @@ import { CallbackComponent } from './core/auth/callback/callback.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    NavMenuComponent
+    AppComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -38,6 +36,38 @@ import { CallbackComponent } from './core/auth/callback/callback.component';
           authorizedRoles: ['ROOT', 'PARTNER']
         },
         loadChildren: () => import('./api/api.module').then(m => m.ApiModule)
+      },
+      {
+        path: 'client',
+        canActivate: [AuthGuard, RoleGuard],
+        data: {
+          authorizedRoles: ['ROOT', 'PARTNER']
+        },
+        loadChildren: () => import('./client/client.module').then(m => m.ClientModule)
+      },
+      {
+        path: 'tenant',
+        canActivate: [AuthGuard, RoleGuard],
+        data: {
+          authorizedRoles: ['ROOT', 'PARTNER']
+        },
+        loadChildren: () => import('./tenant/tenant.module').then(m => m.TenantModule)
+      },
+      {
+        path: 'permission',
+        canActivate: [AuthGuard, RoleGuard],
+        data: {
+          authorizedRoles: ['ROOT', 'PARTNER']
+        },
+        loadChildren: () => import('./permission/permission.module').then(m => m.PermissionModule)
+      },
+      {
+        path: 'role',
+        canActivate: [AuthGuard, RoleGuard],
+        data: {
+          authorizedRoles: ['ROOT', 'PARTNER']
+        },
+        loadChildren: () => import('./role/role.module').then(m => m.RoleModule)
       },
       {
         path: 'callback',

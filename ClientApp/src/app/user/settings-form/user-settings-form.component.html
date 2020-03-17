@@ -11,20 +11,14 @@
       <input matInput i18n-placeholder placeholder="Email" formControlName="email" required>
       <mat-icon matSuffix color="warn" *ngIf="!user.emailConfirmed" i18n-matTooltip matTooltip="User has not confirmed his email address in his mailbox">warning</mat-icon>
       <mat-error *ngIf="formGroup.controls['email'].errors?.notUnique" i18n>An other user has the same name.</mat-error>
+      <mat-hint>The email is used as login.</mat-hint>
     </mat-form-field>
-    <div class="mb-3 font-italic" i18n>The email is used as login.</div>
     <mat-form-field class="mb-1">
       <input matInput i18n-placeholder placeholder="Given name" formControlName="givenName" required>
     </mat-form-field>
     <mat-form-field class="mb-1">
       <input matInput i18n-placeholder placeholder="Family name" formControlName="familyName" required>
     </mat-form-field>
-
-    <!-- <mat-form-field class="mb-1">
-        <input matInput i18n-placeholder placeholder="Roles" formControlName="roles" required>
-        <mat-error *ngIf="formGroup.controls['name'].errors?.notUnique" i18n>An other user has the same name.</mat-error>
-      </mat-form-field> -->
-
     <mat-form-field i18n-placeholder placeholder="Roles">
       <mat-chip-list #chipList>
         <mat-chip *ngFor="let role of formGroup?.value.roles">

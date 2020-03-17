@@ -1,16 +1,12 @@
 <div class="page-layout" *ngIf="role">
-    <div class="page-toolbar">
-        <mat-toolbar color="primary">
-            <mat-toolbar-row>
-                <!-- <img class="header-avatar mr-3" *ngIf="role.logoUri" [src]="role.logoUri" alt="" width="42"> -->
-                <h1 class="page-title">{{role.name}}</h1>
-                <span class="example-spacer"></span>
-                <button mat-icon-button (click)="delete()">
-                    <mat-icon class="example-icon">delete</mat-icon>
-                </button>
-            </mat-toolbar-row>
-        </mat-toolbar>
-    </div>
+    <app-page-header>
+        <h1 app-page-header-title>{{role.name}}</h1>
+        <app-page-header-actions>
+            <button mat-icon-button (click)="delete()">
+                <mat-icon class="example-icon">delete</mat-icon>
+            </button>
+        </app-page-header-actions>
+    </app-page-header>
     <mat-tab-group>
         <mat-tab label="Settings" i18n-label>
             <div class="content">

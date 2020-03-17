@@ -1,15 +1,13 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
-
-import * as tenantActions from '../list/tenant-list.state';
 import { BaseComponent } from '../../core/base.component';
-import { ReferenceService } from '../../core/services';
-import { UtilsService } from '../../core/utils.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Tenant, DomainError } from '../../core/models';
 import { catchError } from 'rxjs/operators';
+import { MessageService } from '../../shared/message/message.service';
+import { AddTenant } from '../list/tenant-list.state';
 
 @Component({
   selector: 'app-tenant-create-form',
@@ -23,8 +21,7 @@ export class TenantCreateFormComponent extends BaseComponent implements OnInit {
   loading = false;
 
   constructor(
-    private referenceService: ReferenceService,
-    private utils: UtilsService,
+    private messageService: MessageService,
     private formBuilder: FormBuilder,
     public dialog: MatDialog,
     private store: Store,
@@ -55,7 +52,7 @@ export class TenantCreateFormComponent extends BaseComponent implements OnInit {
     if (this.formGroup.valid) {
       this.loading = true;
       const tenant = this.mapForm(this.formGroup);
-      this.store.dispatch(new tenantActions.AddTenant(tenant))
+      this.store.dispatch(new AddTenant(tenant))
       .pipe(catchError(err => {
         if (err instanceof DomainError) {
           this.formGroup.get(err.field).setErrors({
@@ -67,7 +64,7 @@ export class TenantCreateFormComponent extends BaseComponent implements OnInit {
        }))
       .subscribe(r => {
         this.loading = false;
-        this.utils.displaySnackMessage('saved')
+        this.messageService.openSuccessMessage('saved')
         this.dialogRef.close(tenant);
       });
     }

@@ -34,6 +34,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { LoadingFormDirective } from './loading-form/loading-form.directive';
 import { ReferencePipe, ReferencesPipe, ParenthesisPipe } from './pipes';
 import { LayoutModule } from './layout/layout.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { AppPageHeaderModule } from './layout/page-header/page-header.module';
 
 @NgModule({
   declarations: [
@@ -76,7 +78,9 @@ import { LayoutModule } from './layout/layout.module';
     MatButtonModule,
     AppMessageModule,
     NgxDatatableModule,
-    LayoutModule
+    LayoutModule,
+    AppPageHeaderModule,
+    FlexLayoutModule
   ],
   exports: [
     MatIconModule,
@@ -115,7 +119,9 @@ import { LayoutModule } from './layout/layout.module';
     ReferencePipe,
     ReferencesPipe,
     ParenthesisPipe,
-    LayoutModule
+    LayoutModule,
+    AppPageHeaderModule,
+    FlexLayoutModule
   ]
 })
 export class SharedModule {}

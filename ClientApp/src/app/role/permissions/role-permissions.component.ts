@@ -3,15 +3,13 @@ import { Select, Store } from '@ngxs/store';
 
 import { Observable, combineLatest } from '../../../../node_modules/rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
-import * as roleActions from './role-permissions.state';
-import * as rolePermissionActions from './role-permissions.state';
 import { BaseComponent } from '../../core/base.component';
 import { Role, Permission } from '../../core/models';
-import { ReferenceService, PermissionService } from '../../core/services';
-import { UtilsService } from '../../core/utils.service';
+import { PermissionService } from '../../core/services';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { map } from 'rxjs/operators';
+import { MessageService } from '../../shared/message/message.service';
+import { AddPermissionsToRole, DeletePermissionToRole, GetRolePermissions } from './role-permissions.state';
 
 @Component({
   selector: 'app-role-permissions',
@@ -37,7 +35,7 @@ export class RolePermissionsComponent extends BaseComponent implements OnInit {
 
   constructor(
     private permissionService: PermissionService,
-    private utils: UtilsService,
+    private messageService: MessageService,
     public dialog: MatDialog,
     private store: Store,
     public snackBar: MatSnackBar) {
@@ -47,7 +45,7 @@ export class RolePermissionsComponent extends BaseComponent implements OnInit {
   ngOnInit() {
     this.role$.subscribe(role => {
         this.role = role;
-        this.store.dispatch(new roleActions.GetRolePermissions(role.id));
+        this.store.dispatch(new GetRolePermissions(role.id));
     })
     
     combineLatest(this.rolePermissions$, this.permissionService.searchPermissions('')).subscribe(([rolePermissions, permissions]) => {
@@ -72,16 +70,16 @@ export class RolePermissionsComponent extends BaseComponent implements OnInit {
 
   addSelectedPermissions() {
     this.selection.selected.forEach(select => select.roleId = this.role.id);
-    this.store.dispatch(new rolePermissionActions.AddPermissionsToRole(this.selection.selected)).subscribe(() => {
-      this.utils.displaySnackMessage('saved');
+    this.store.dispatch(new AddPermissionsToRole(this.selection.selected)).subscribe(() => {
+      this.messageService.openSuccessMessage('saved');
     });
     this.selection.clear();
   }
 
   deletePermission(permission) {
     permission.roleId = this.role.id;
-    this.store.dispatch(new roleActions.DeletePermissionToRole(permission)).subscribe(() => {
-      this.utils.displaySnackMessage('deleted');
+    this.store.dispatch(new DeletePermissionToRole(permission)).subscribe(() => {
+      this.messageService.openSuccessMessage('deleted');
     });
   }
 }

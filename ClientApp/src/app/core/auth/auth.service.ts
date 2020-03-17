@@ -31,14 +31,7 @@ export class AuthService {
     this.oauthService.configure(this._authConfig);
     this.oauthService.setupAutomaticSilentRefresh();
     this.oauthService.tokenValidationHandler = new JwksValidationHandler();
-    this.oauthService.loadDiscoveryDocumentAndTryLogin().then((ret) => {
-      console.log('coucou', ret)
-
-    })
-    .catch(error => {
-      console.log('coucou2', error)
-
-    })
+    this.oauthService.loadDiscoveryDocumentAndTryLogin();
   }
 
   public login() {

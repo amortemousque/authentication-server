@@ -1,18 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
 
-import * as clientListActions from '../list/client-list.state';
-import * as clientActions from './client-details.state';
 import { BaseComponent } from '../../core/base.component';
 import { Client } from '../../core/models';
-import { ReferenceService } from '../../core/services';
-import { UtilsService } from '../../core/utils.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmModalComponent } from '../../core/components/modal/confirm-modal.component';
 import { takeUntil } from 'rxjs/operators';
+import { MessageService } from '../../shared/message/message.service';
+import { LoadClient } from './client-details.state';
+import { DeleteClient } from '../list/client-list.state';
 
 @Component({
   selector: 'app-client-details',
@@ -32,12 +29,9 @@ export class ClientDetailsComponent extends BaseComponent implements OnInit {
   loading = false;
 
   constructor(
-    private referenceService: ReferenceService,
-    private utils: UtilsService,
-    private formBuilder: FormBuilder,
+    private messageService: MessageService,
     public dialog: MatDialog,
     private store: Store,
-    public snackBar: MatSnackBar,
     public route: ActivatedRoute,
     public router: Router) {
       super();
@@ -49,7 +43,7 @@ export class ClientDetailsComponent extends BaseComponent implements OnInit {
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe(params => {
       this.id = params['id'];
-      this.store.dispatch(new clientActions.LoadClient(this.id));
+      this.store.dispatch(new LoadClient(this.id));
     });
 
     this.client$
@@ -66,18 +60,11 @@ export class ClientDetailsComponent extends BaseComponent implements OnInit {
 
 
   delete() {
-    const dialogRef = this.dialog.open(ConfirmModalComponent, {
-      width: '700px',
-      panelClass: 'app-dialog',
-      data: {
-        message: 'Suppression',
-        details: 'Etes vous sur de supprimer le client ? Cette suppression sera définive.'
-     }
-    });
-    dialogRef.afterClosed().subscribe(result => {
+    this.messageService.openConfirmationDialog('Etes vous sur de supprimer le client ? Cette suppression sera définive.')
+    .afterClosed().subscribe(result => {
       if (result) {
-        this.store.dispatch(new clientListActions.DeleteClient(this.client)).subscribe(() => {
-          this.utils.displaySnackMessage('deleted');
+        this.store.dispatch(new DeleteClient(this.client)).subscribe(() => {
+          this.messageService.openSuccessMessage('deleted');
           this.router.navigate(['/client']);
         });
       }
@@ -85,11 +72,8 @@ export class ClientDetailsComponent extends BaseComponent implements OnInit {
   }
 
 
-
   setType(value) {
     this.formGroup.patchValue({clientTypeId: value})
   }
-
-
 }
 

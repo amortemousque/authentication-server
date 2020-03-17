@@ -1,0 +1,6 @@
+<img class="header-avatar mr-3" *ngIf="logoUri" [src]="logoUri" alt="" width="42">
+<div>
+    <ng-content select="[app-page-header-title], [appPageHeaderTitle]"></ng-content>
+    <ng-content select="[app-page-header-subtitle], [appPageHeaderSubtitle]"></ng-content>
+</div>
+<ng-content select="app-page-header-actions, [app-page-header-actions], [appPageHeaderActions]"></ng-content>

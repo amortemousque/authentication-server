@@ -18,8 +18,7 @@ import { MessageService } from './message.service';
     MatIconModule,
     MatSnackBarModule,
     MatButtonModule,
-    FlexLayoutModule,
-    MatButtonModule
+    FlexLayoutModule
   ],
   declarations: [
     AppSnackbarIcon,

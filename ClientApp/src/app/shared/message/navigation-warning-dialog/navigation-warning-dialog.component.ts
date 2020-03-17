@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export type NavigationWarningResult = 'Cancel' | 'Ignore' | 'Save';
 
@@ -9,9 +9,13 @@ export type NavigationWarningResult = 'Cancel' | 'Ignore' | 'Save';
   styleUrls: ['./navigation-warning-dialog.component.scss']
 })
 export class NavigationWarningDialogComponent {
-
+  message: string = '';
+ 
   constructor(
-    public dialogRef: MatDialogRef<NavigationWarningDialogComponent>) {
+
+    public dialogRef: MatDialogRef<NavigationWarningDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+      this.message = data.message;
   }
 
   onCancel(): void {

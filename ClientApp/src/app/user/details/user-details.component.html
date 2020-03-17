@@ -1,41 +1,41 @@
-
 <div class="page-layout" *ngIf="user">
-    <div class="page-toolbar">
-        <mat-toolbar color="primary">
-            <mat-toolbar-row>
-                <img class="header-avatar mr-3"  *ngIf="user.logoUri" [src]="user.logoUri" alt="" width="42">
-                <h1 class="page-title">{{user.fullName}}</h1>
-                <span class="example-spacer"></span>
-                <button mat-icon-button (click)="delete()">
-                    <mat-icon class="example-icon">delete</mat-icon>
-                </button>
-                <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
-                    <mat-icon>more_vert</mat-icon>
-                </button>
-                <mat-menu #menu="matMenu">
-                <a mat-menu-item  (click)="generateNewPassword()">
+    <app-page-header>
+        <img class="header-avatar mr-3" *ngIf="user.logoUri" [src]="user.logoUri" alt="" width="42">
+        <h1 app-page-header-title>{{user.fullName}}</h1>
+        <app-page-header-actions>
+            <button mat-icon-button (click)="delete()">
+                <mat-icon class="example-icon">delete</mat-icon>
+            </button>
+            <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <a mat-menu-item (click)="generateNewPassword()">
                     <mat-icon>autorenew</mat-icon>
                     <span i18n>Reset password</span>
                 </a>
-                </mat-menu>
-            </mat-toolbar-row>
-        </mat-toolbar>
-    </div>
+            </mat-menu>
+        </app-page-header-actions>
+    </app-page-header>
     <mat-tab-group>
-        <mat-tab label="Settings" i18n-label> 
+        <mat-tab label="Settings" i18n-label>
             <div class="content">
                 <div fxLayout="row">
                     <app-user-settings-form></app-user-settings-form>
                     <div>
-                        <mat-card class="card-indicator mat-teal" >
+                        <mat-card class="card-indicator mat-teal">
                             <div *ngIf="user.lastLoginDate">
                                 <h2 class="indicator">{{user.lastLoginDate | date:'medium' }}</h2>
-                                <p class="indicator-info"><ng-container i18n>Last login date</ng-container></p>
+                                <p class="indicator-info">
+                                    <ng-container i18n>Last login date</ng-container>
+                                </p>
                             </div>
                             <div *ngIf="!user.lastLoginDate">
-                                <p class="indicator-info"><ng-container i18n>Never login</ng-container></p>
+                                <p class="indicator-info">
+                                    <ng-container i18n>Never login</ng-container>
+                                </p>
                             </div>
-                            
+
                         </mat-card>
                     </div>
                 </div>
@@ -43,4 +43,3 @@
         </mat-tab>
     </mat-tab-group>
 </div>
-

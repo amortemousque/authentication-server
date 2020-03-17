@@ -1,16 +1,15 @@
-import { Component, Inject, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 
-import * as permissionActions from '../list/permission-list.state';
 import { BaseComponent } from '../../core/base.component';
-import { ReferenceService } from '../../core/services';
-import { UtilsService } from '../../core/utils.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Permission, DomainError } from '../../core/models';
-import { pipe } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { AddPermission } from '../list/permission-list.state';
+import { ReferenceService } from '../../shared/pipes/reference.service';
+import { MessageService } from '../../shared/message/message.service';
 
 @Component({
   selector: 'app-permission-create-form',
@@ -23,11 +22,11 @@ export class PermissionCreateFormComponent extends BaseComponent implements OnIn
 
   loading = false;
   permissionCtrl = new FormControl();
-  @ViewChild('permissionInput') permissionInput: ElementRef;
+  @ViewChild('permissionInput', {static: false}) permissionInput: ElementRef;
 
   constructor(
     private referenceService: ReferenceService,
-    private utils: UtilsService,
+    private messageService: MessageService,
     private formBuilder: FormBuilder,
     public dialog: MatDialog,
     private store: Store,
@@ -55,7 +54,7 @@ export class PermissionCreateFormComponent extends BaseComponent implements OnIn
     if (this.formGroup.valid) {
       this.loading = true;
       const permission = this.mapForm(this.formGroup);
-      this.store.dispatch(new permissionActions.AddPermission(permission))
+      this.store.dispatch(new AddPermission(permission))
       .pipe(catchError(err => {
         if (err instanceof DomainError) {
           this.formGroup.get(err.field).setErrors({
@@ -67,7 +66,7 @@ export class PermissionCreateFormComponent extends BaseComponent implements OnIn
        }))
       .subscribe(r => {
         this.loading = false;
-        this.utils.displaySnackMessage('saved')
+        this.messageService.openSuccessMessage('saved')
         this.dialogRef.close(permission);
       });
     }

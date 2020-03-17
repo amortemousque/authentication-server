@@ -1,12 +1,12 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 
 import { TenantCreateFormComponent } from '../create-form/tenant-create-form.component';
-import * as stateActions from './tenant-list.state';
 import { BaseComponent } from '../../core/base.component';
 import { Select, Store } from '@ngxs/store';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { SearchTenants } from './tenant-list.state';
 
 
 @Component({
@@ -43,7 +43,7 @@ export class TenantListComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
 
-    this.store.dispatch(new stateActions.SearchTenants(''));
+    this.store.dispatch(new SearchTenants(''));
     this.tenants$.subscribe(tenants => {
       if (tenants != null) {
         this.talentNumer = tenants.length;
@@ -61,7 +61,6 @@ export class TenantListComponent extends BaseComponent implements OnInit {
     const id = selected.selected[0].id;
     this.router.navigate(['/tenant/details/' + id]);
   }
-
 
   openCreate() {
     const dialogRef = this.dialog.open(TenantCreateFormComponent, {

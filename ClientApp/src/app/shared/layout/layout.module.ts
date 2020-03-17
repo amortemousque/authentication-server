@@ -14,20 +14,23 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppSidebarModule } from './sidebar/sidebar.module';
 import { AppBarModule } from './app-bar/app-bar.module';
 import { MatButtonModule } from '@angular/material/button';
+import { AppPageHeaderModule } from './page-header/page-header.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
     HttpClientModule,
+    RouterModule,
     CoreModule,
     MatSidenavModule,
     MatListModule,
     MatIconModule,
     MatMenuModule,
     MatToolbarModule,
+    MatButtonModule,
     AppSidebarModule,
     AppBarModule,
-    MatButtonModule
   ],
   declarations: [
     LayoutComponent,
@@ -37,7 +40,8 @@ import { MatButtonModule } from '@angular/material/button';
   exports: [
     LayoutComponent,
     HeaderComponent,
-    MenuComponent
+    MenuComponent,
+    RouterModule,
   ]
 })
 

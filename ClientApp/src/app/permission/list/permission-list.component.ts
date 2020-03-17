@@ -1,14 +1,12 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '../../core/base.component';
 import { Select, Store } from '@ngxs/store';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { UtilsService } from '../../core/utils.service';
 import { environment } from '../../../environments/environment';
 import { PermissionCreateFormComponent } from '../create-form/permission-create-form.component';
 import { DeletePermissions, SearchPermissions } from './permission-list.state';
-
-
+import { MessageService } from '../../shared/message/message.service';
 
 @Component({
   selector: 'app-permission-list',
@@ -34,9 +32,8 @@ export class PermissionListComponent extends BaseComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     public router: Router,
-    private el: ElementRef,
     private store: Store,
-    private utils: UtilsService,
+    private messageService: MessageService,
 
   ) {
       super();
@@ -52,7 +49,7 @@ export class PermissionListComponent extends BaseComponent implements OnInit {
   deletePermissions() {
     this.store.dispatch(new DeletePermissions(this.selected))
     .subscribe(r => {
-      this.utils.displaySnackMessage('deleted')
+      this.messageService.openSuccessMessage('deleted')
     });
     this.selected.splice(0, this.selected.length);
   }
@@ -66,7 +63,7 @@ export class PermissionListComponent extends BaseComponent implements OnInit {
 
 
   openCreate() {
-    const dialogRef = this.dialog.open(PermissionCreateFormComponent, {
+    this.dialog.open(PermissionCreateFormComponent, {
       panelClass: 'app-dialog',
       width: '700px',
     });

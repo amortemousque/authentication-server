@@ -1,19 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-
+import { FormControl, FormGroup } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
-
-import * as tenantListActions from '../list/tenant-list.state';
-import * as tenantActions from './tenant-details.state';
 import { BaseComponent } from '../../core/base.component';
 import { Tenant } from '../../core/models';
-import { ReferenceService } from '../../core/services';
-import { UtilsService } from '../../core/utils.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmModalComponent } from '../../core/components/modal/confirm-modal.component';
 import { takeUntil } from 'rxjs/operators';
+import { MessageService } from '../../shared/message/message.service';
+import { DeleteTenant } from '../list/tenant-list.state';
+import { LoadTenant } from './tenant-details.state';
 
 @Component({
   selector: 'app-tenant-details',
@@ -29,15 +25,10 @@ export class TenantDetailsComponent extends BaseComponent implements OnInit {
   id: string;
   formGroup: FormGroup;
   schoolCtrl: FormControl;
-
-  // filteredSchools = new Observable<ReferenceLabel[]>();
-  // studyLevels = new Observable<StudyLevel[]>();
   loading = false;
 
   constructor(
-    private referenceService: ReferenceService,
-    private utils: UtilsService,
-    private formBuilder: FormBuilder,
+    private messageService: MessageService,
     public dialog: MatDialog,
     private store: Store,
     public snackBar: MatSnackBar,
@@ -52,7 +43,7 @@ export class TenantDetailsComponent extends BaseComponent implements OnInit {
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe(params => {
       this.id = params['id'];
-      this.store.dispatch(new tenantActions.LoadTenant(this.id));
+      this.store.dispatch(new LoadTenant(this.id));
     });
 
     this.tenant$
@@ -62,37 +53,23 @@ export class TenantDetailsComponent extends BaseComponent implements OnInit {
         this.tenant = tenant2;
       }
     });
-  
+
   }
 
-
-
-
   delete() {
-    const dialogRef = this.dialog.open(ConfirmModalComponent, {
-      width: '700px',
-      panelClass: 'app-dialog',
-      data: {
-        message: 'Suppression',
-        details: 'Etes vous sur de supprimer le tenant ? Cette suppression sera définive.'
-     }
-    });
-    dialogRef.afterClosed().subscribe(result => {
+    this.messageService.openConfirmationDialog('Etes vous sur de supprimer le tenant ? Cette suppression sera définive.')
+    .afterClosed().subscribe(result => {
       if (result) {
-        this.store.dispatch(new tenantListActions.DeleteTenant(this.tenant)).subscribe(() => {
-          this.utils.displaySnackMessage('deleted');
+        this.store.dispatch(new DeleteTenant(this.tenant)).subscribe(() => {
+          this.messageService.openSuccessMessage('deleted');
           this.router.navigate(['/tenant']);
         });
       }
     })
   }
 
-
-
   setType(value) {
     this.formGroup.patchValue({tenantTypeId: value})
   }
-
-
 }
 

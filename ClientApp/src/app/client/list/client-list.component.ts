@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 
 import { ClientCreateFormComponent } from '../create-form/client-create-form.component';
 import { BaseComponent } from '../../core/base.component';

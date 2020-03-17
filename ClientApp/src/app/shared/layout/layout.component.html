@@ -3,12 +3,10 @@
         <button (click)="toggleSidebar()" mat-icon-button>
             <mat-icon>menu</mat-icon>
         </button>
-        <img appBarLogo src="./assets/images/logo.svg" alt="" />
-        <div appBarHeadline appTranslate>hiring.recruitment</div>
-        <!-- <app-avatar appBarAvatar [matMenuTriggerFor]="user" class="ml-48" matRipple [src]="currentUser.picture.url"></app-avatar> -->
+        <div appBarHeadline>Authentication</div>
         <mat-menu #user="matMenu" x-position="before" y-position="after">
             <a mat-menu-item (click)="logoff()">
-                <ng-container><span appTranslate>global.logout</span></ng-container>
+                <ng-container><span>Logout</span></ng-container>
             </a>
         </mat-menu>
     </app-bar>

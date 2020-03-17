@@ -1,17 +1,14 @@
 <div class="page-layout">
-    <div class="page-toolbar">
-        <mat-toolbar color="primary">
-            <mat-toolbar-row>
-                <h1 class="page-title" i18n>Roles</h1>
-                <span class="example-spacer"></span>
-                <button mat-raised-button i18n (click)="openCreate()">New role</button>
-            </mat-toolbar-row>
-        </mat-toolbar>
-    </div>
+    <app-page-header>
+        <h1 app-page-header-title i18n>Roles</h1>
+        <app-page-header-actions>
+            <button mat-raised-button i18n (click)="openCreate()">New role</button>
+        </app-page-header-actions>
+    </app-page-header>
     <div class="content">
-            <ngx-datatable #dataTable class="material fullscreen custom-datatable" [rows]="roles$ | async" [columnMode]="'flex'" [headerHeight]="50"
-            [footerHeight]="50" [rowHeight]="rowHeight" [selected]="selected" [scrollbarV]="true" [loadingIndicator]="loading"
-            [selectionType]="'single'" (activate)="onActivate($event)" (select)="onSelect($event)">
+        <ngx-datatable #dataTable class="material fullscreen custom-datatable" [rows]="roles$ | async" [columnMode]="'flex'"
+            [headerHeight]="50" [footerHeight]="50" [rowHeight]="rowHeight" [selected]="selected" [scrollbarV]="true"
+            [loadingIndicator]="loading" [selectionType]="'single'" (activate)="onActivate($event)" (select)="onSelect($event)">
             <ngx-datatable-column name="Name" [flexGrow]="2">
                 <ng-template let-row="row" ngx-datatable-cell-template>
                     {{row.name}}

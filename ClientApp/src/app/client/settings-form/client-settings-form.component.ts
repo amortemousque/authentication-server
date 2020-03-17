@@ -1,19 +1,18 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnInit } from '@angular/core';
-
-import * as clientActions from '../list/client-list.state';
-import * as detailsActions from '../details/client-details.state';
 import { BaseComponent } from '../../core/base.component';
 import { Select, Store } from '@ngxs/store';
 import { Client } from '../../core/models';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
-import { ReferenceService } from '../../core/services';
-import { UtilsService } from '../../core/utils.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ConfirmModalComponent } from '../../core/components/modal/confirm-modal.component';
 import { takeUntil } from 'rxjs/operators';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { MessageService } from '../../shared/message/message.service';
+import { UpdateClientSecret } from '../details/client-details.state';
+import { UpdateClient } from '../list/client-list.state';
+import { ReferenceService } from '../../shared/pipes/reference.service';
+import { deleteEmptyKeys } from '../../core/utils/global.utils';
 
 
 @Component({
@@ -30,13 +29,12 @@ export class ClientSettingsFormComponent extends BaseComponent implements OnInit
   addOnBlur = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   allowedScopes = [];
-  // studyLevels = new Observable<StudyLevel[]>();
   loading = false;
   secretIsDisplayed = false;
 
   constructor(
     private referenceService: ReferenceService,
-    private utils: UtilsService,
+    private messageService: MessageService,
     private formBuilder: FormBuilder,
     public dialog: MatDialog,
     private store: Store,
@@ -82,7 +80,7 @@ export class ClientSettingsFormComponent extends BaseComponent implements OnInit
         // FIll the form
           const client = new Client();
           Object.assign(client, this.client);
-          this.utils.deleteEmptyKeys(client);
+          deleteEmptyKeys(client);
           this.formGroup.reset();
           this.formGroup.patchValue(client);
           this.formGroup.patchValue({
@@ -126,17 +124,10 @@ export class ClientSettingsFormComponent extends BaseComponent implements OnInit
 
 
   generateNewClientSecret() {
-    const dialogRef = this.dialog.open(ConfirmModalComponent, {
-      width: '700px',
-      panelClass: 'app-dialog',
-      data: {
-        message: 'Suppression',
-        details: 'Etes vous sur de régérer le secret ?'
-     }
-    });
-    dialogRef.afterClosed().subscribe(result => {
+    this.messageService.openConfirmationDialog('Etes vous sur de régérer le secret ?')
+    .afterClosed().subscribe(result => {
       if (result) {
-        this.store.dispatch(new detailsActions.UpdateClientSecret(this.client.id));
+        this.store.dispatch(new UpdateClientSecret(this.client.id));
       }
     })
   }
@@ -161,10 +152,10 @@ export class ClientSettingsFormComponent extends BaseComponent implements OnInit
     if (this.formGroup.valid) {
       this.loading = true;
       const client = this.mapForm(this.formGroup);
-      this.store.dispatch(new clientActions.UpdateClient(client))
+      this.store.dispatch(new UpdateClient(client))
       .subscribe(r => {
         this.loading = false;
-        this.utils.displaySnackMessage('saved')
+        this.messageService.openSuccessMessage('saved')
       });
     }
   }
