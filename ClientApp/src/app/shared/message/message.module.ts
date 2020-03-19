@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { AppSnackbarIcon, AppSnackbarMessage } from './snackbar-message';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
-import { NavigationWarningDialogComponent } from './navigation-warning-dialog/navigation-warning-dialog.component';
 import { MessageService } from './message.service';
 
 @NgModule({
@@ -23,8 +22,7 @@ import { MessageService } from './message.service';
   declarations: [
     AppSnackbarIcon,
     AppSnackbarMessage,
-    ConfirmationDialogComponent,
-    NavigationWarningDialogComponent
+    ConfirmationDialogComponent
   ],
   providers: [
     AppSnackbarIcon,
@@ -33,8 +31,7 @@ import { MessageService } from './message.service';
   ],
   entryComponents: [
     AppSnackbarMessage,
-    ConfirmationDialogComponent,
-    NavigationWarningDialogComponent
+    ConfirmationDialogComponent
   ]
 })
 

@@ -3,10 +3,11 @@ import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
-import { AuthModule } from "./auth/auth.module";
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { OAuthModule } from "angular-oauth2-oidc";
+import { AppAuthModule } from "./auth/auth.module";
+import { environment } from "../../environments/environment";
+import { NgxPermissionsModule } from "ngx-permissions";
 
 @NgModule({
   imports: [
@@ -15,7 +16,7 @@ import { OAuthModule } from "angular-oauth2-oidc";
     FormsModule,
     RouterModule,
     ReactiveFormsModule,
-    AuthModule,
+    NgxPermissionsModule,
     NgxDatatableModule,
     OAuthModule.forRoot()
   ],
@@ -26,7 +27,8 @@ import { OAuthModule } from "angular-oauth2-oidc";
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    AuthModule
+    AppAuthModule,
+    NgxPermissionsModule
   ]
 })
 export class CoreModule {}

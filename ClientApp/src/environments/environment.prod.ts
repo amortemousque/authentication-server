@@ -12,7 +12,7 @@ export const environment = {
     clientId: '60D0SPSVOBHAJOLGLHK1I8UUCO5MM249',
     issuer: `${baseUriNoPort}:5001`,
     audience: 'quarksupone_api',
-    redirectUri: `${baseUri}/callback`,
+    redirectUri: `${baseUri}`,
     scope: `openid email profile role permission tenant quarksupone_api`,
     loginUrl:  `${baseUri}/Account/Login`,
   }

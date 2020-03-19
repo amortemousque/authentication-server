@@ -1,27 +1,29 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from './auth.service';
-import { RoleGuardDirective } from './directives/role-guard.directive';
 import { OAuthModule } from 'angular-oauth2-oidc';
-import { CallbackComponent } from './callback/callback.component';
+import { NgxsModule, Store } from '@ngxs/store';
+import { AuthenticationState } from './auth.state';
+import { AUTH_CONFIG, AppAuthConfig } from './auth-config';
+import { AccessTokenHolder, DefaultAccessTokenHolder } from './access-token-holder';
 
 @NgModule({
-  declarations: [
-    RoleGuardDirective,
-    CallbackComponent
-  ],
   imports: [
     CommonModule,
-    OAuthModule
-  ],
-  exports: [
-    RoleGuardDirective
+    OAuthModule,
+    NgxsModule.forFeature([
+      AuthenticationState
+    ])
   ]
 })
-export class AuthModule {
-  static forRoot(): ModuleWithProviders {
+export class AppAuthModule {
+
+  static forRoot(config: AppAuthConfig): ModuleWithProviders {
     return {
-      ngModule: AuthModule
-    };
+      ngModule: AppAuthModule,
+      providers: [
+        { provide: AUTH_CONFIG, useValue: config },
+        { provide: AccessTokenHolder, useClass: DefaultAccessTokenHolder, deps: [Store] }
+      ]
+    }
   }
 }

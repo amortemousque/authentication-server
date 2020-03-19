@@ -14,7 +14,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppSidebarModule } from './sidebar/sidebar.module';
 import { AppBarModule } from './app-bar/app-bar.module';
 import { MatButtonModule } from '@angular/material/button';
-import { AppPageHeaderModule } from './page-header/page-header.module';
 import { RouterModule } from '@angular/router';
 
 @NgModule({

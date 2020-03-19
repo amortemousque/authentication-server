@@ -3,8 +3,7 @@ import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { publishReplay, refCount, map } from 'rxjs/operators';
-import { AuthService } from '../../core/auth/auth.service';
-
+import { AccessTokenHolder } from '../../core/auth/access-token-holder';
 
 export type CollectionType = 
     'clientTypes' | 'allowedScopes'
@@ -20,12 +19,12 @@ export class ReferenceService {
 
   private _references: Array<Observable<any[]>> = [];
 
-  constructor(private http: HttpClient, private auth: AuthService) {
+  constructor(private http: HttpClient, public tokenHolder: AccessTokenHolder) {
     this.apiUrl = environment.adminApiUrl;
   }
 
   private get _authHeader(): string {
-    return `Bearer ${this.auth.access_token}`;
+    return `Bearer ${this.tokenHolder.getAccessToken()}`;
   }
 
   getReference(name: CollectionType): Observable<any[]> {

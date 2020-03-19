@@ -8,7 +8,6 @@ import { UserDetailsState } from './details/user-details.state';
 import { UserRoutes } from './user.routing';
 
 import { UserCreateFormComponent } from './create-form/user-create-form.component'
-import { AuthModule } from '../core/auth/auth.module';
 import { CoreModule } from '@angular/flex-layout';
 import { NgxsModule } from '@ngxs/store';
 import { UserDetailsComponent } from './details/user-details.component';
@@ -21,7 +20,6 @@ import { UserSettingsFormComponent } from './settings-form/user-settings-form.co
   imports: [
     CommonModule,
     RouterModule.forChild(UserRoutes),
-    AuthModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
     CoreModule,

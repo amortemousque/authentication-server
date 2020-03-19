@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { AuthService } from '../../../core/auth/auth.service';
+import { Select } from '@ngxs/store';
+import { AuthenticationState } from '../../../core/auth/auth.state';
+import { Observable } from 'rxjs';
+import { AuthUser } from '../../../core/auth/auth.model';
 
 @Component({
   selector: 'app-menu',
@@ -8,8 +10,8 @@ import { AuthService } from '../../../core/auth/auth.service';
   templateUrl: './menu.component.html',
 })
 export class MenuComponent {
-  currentLang = 'en';
+  @Select(AuthenticationState.currentUser) currentUser$: Observable<AuthUser>;
 
-  constructor(public dialog: MatDialog, public authService: AuthService) {
+  constructor() {
   }
 }

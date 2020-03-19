@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
-import { NavigationWarningDialogComponent } from './navigation-warning-dialog/navigation-warning-dialog.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { AppSnackbarMessage } from './snackbar-message';
 
@@ -19,12 +18,6 @@ export class MessageService {
     return this.dialog.open(ConfirmationDialogComponent, {
       width: '350px',
       data: {message:  message}
-    });
-  }
-
-  openNavigationWarningDialog(): MatDialogRef<NavigationWarningDialogComponent, any> {
-    return this.dialog.open(NavigationWarningDialogComponent, {
-      width: '670px'
     });
   }
 

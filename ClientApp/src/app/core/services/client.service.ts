@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Client } from '../models';
-import { AuthService } from '../auth/auth.service';
+import { AccessTokenHolder } from '../auth/access-token-holder';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +11,12 @@ import { AuthService } from '../auth/auth.service';
 
   apiUrl: string;
 
-  constructor(private http: HttpClient, private auth: AuthService) {
+  constructor(private http: HttpClient,  public tokenHolder: AccessTokenHolder) {
     this.apiUrl = environment.adminApiUrl;
   }
 
   private get _authHeader(): string {
-    return `Bearer ${this.auth.access_token}`;
+    return `Bearer ${this.tokenHolder.getAccessToken()}`;
   }
 
   searchClients(search: string): Observable<Client[]> {

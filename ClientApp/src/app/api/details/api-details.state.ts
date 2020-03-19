@@ -27,10 +27,6 @@ export class ApiDetailsState {
     constructor(private apiService: ApiService, public store: Store) {
     }
 
-    // ngxsOnInit({ patchState }: StateContext<any>) {
-     
-    // }
-
     @Action(LoadApi)
     searchApis({ getState, patchState }: StateContext<ApiDetailsStateModel>, { payload }: LoadApi ) {
         const state = getState();

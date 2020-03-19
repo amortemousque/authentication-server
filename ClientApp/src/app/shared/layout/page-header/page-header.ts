@@ -1,6 +1,4 @@
 import { Component, Directive, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { AuthService } from '../../../core/auth/auth.service';
 
 
 @Directive({
@@ -31,6 +29,6 @@ export class PageHeaderSubtitle { }
 })
 export class PageHeader {
 
-  constructor(public dialog: MatDialog, public authService: AuthService) {
+  constructor() {
   }
 }

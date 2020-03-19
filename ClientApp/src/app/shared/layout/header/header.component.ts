@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { AuthService } from '../../../core/auth/auth.service';
 
 
 @Component({
@@ -10,7 +9,7 @@ export class HeaderComponent {
 
   @Output() toggleSidenav = new EventEmitter<void>();
 
-  constructor(public auth: AuthService) {
+  constructor() {
   }
 
 }

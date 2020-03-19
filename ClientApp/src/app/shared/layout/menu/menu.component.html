@@ -1,37 +1,37 @@
-<mat-nav-list appAccordion class="app-navigation">
-  <mat-list-item *appRoleGuard="['ROOT']" appAccordionLink >
+<mat-nav-list appAccordion class="app-navigation" *ngIf="currentUser$ | async as user">
+  <mat-list-item *ngxPermissionsOnly="['authentications:write:root']" appAccordionLink>
     <a class="relative" [routerLink]="['/client']">
       <mat-icon>web</mat-icon>
       <span i18n class="navigation-title">Clients</span>
     </a>
   </mat-list-item>
   
-  <mat-list-item *appRoleGuard="['ROOT']" appAccordionLink >
+  <mat-list-item *ngxPermissionsOnly="['authentications:write:root']" appAccordionLink>
     <a class="relative" [routerLink]="['/api']" >
       <mat-icon>view_list</mat-icon>
       <span i18n class="navigation-title">APIs</span>
     </a>
   </mat-list-item>
-  <mat-list-item *appRoleGuard="['ROOT', 'PARTNER']" appAccordionLink >
+  <mat-list-item *ngxPermissionsOnly="['tenants:write:root']" appAccordionLink >
     <a class="relative" [routerLink]="['/tenant']">
       <mat-icon>business</mat-icon>
       <span i18n class="navigation-title">Tenants</span>
     </a>
   </mat-list-item>
   <mat-divider></mat-divider>
-  <mat-list-item *appRoleGuard="['ROOT', 'PARTNER']" appAccordionLink >
+  <mat-list-item *ngxPermissionsOnly="['users:write:root']" appAccordionLink >
     <a class="relative" [routerLink]="['/user']">
       <mat-icon>people</mat-icon>
       <span i18n class="navigation-title">Users</span>
     </a>
   </mat-list-item>
-  <mat-list-item *appRoleGuard="['ROOT']" appAccordionLink >
+  <mat-list-item *ngxPermissionsOnly="['roles:write:root']" appAccordionLink >
     <a class="relative" [routerLink]="['/role']">
       <mat-icon>perm_identity</mat-icon>
       <span i18n class="navigation-title">Roles</span>
     </a>
   </mat-list-item>
-  <mat-list-item *appRoleGuard="['ROOT']" appAccordionLink >
+  <mat-list-item *ngxPermissionsOnly="['permissions:write:root']" appAccordionLink >
     <a class="relative" [routerLink]="['/permission']">
       <mat-icon>vpn_key</mat-icon>
       <span i18n class="navigation-title">Permissions</span>

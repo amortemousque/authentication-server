@@ -1,4 +1,16 @@
 :host {
-    display: block;
-    width: 100%;
-  }
+  display: block;
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+mat-card {
+  padding: 0;
+}
+
+mat-card-actions {
+  padding: 16px !important;
+}
