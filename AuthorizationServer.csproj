@@ -15,7 +15,7 @@
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'AuthorizationServer' ">
     <StartAction>Project</StartAction>
-    <ApplicationURL>http://localhost:5000</ApplicationURL>
+    <ApplicationURL>http://localhost:5002</ApplicationURL>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.2" />
@@ -45,6 +45,7 @@
     <Content Remove="mono_crash.42f6ec13c.0.json" />
     <Content Remove="mono_crash.42f6ec13c.0.json" />
     <Content Remove="wwwroot\css\style.css" />
+    <Content Remove="mono_crash.345041f552.0.json" />
   </ItemGroup>
 
   <ItemGroup>

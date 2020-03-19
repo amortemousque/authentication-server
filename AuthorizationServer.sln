@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationServer", "AuthorizationServer.csproj", "{32BFF84A-D049-4363-B5FC-309C6A21052F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationServer", "AuthorizationServer.csproj", "{9D104643-C734-438A-8DEA-4CA3BE503719}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,9 +9,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{32BFF84A-D049-4363-B5FC-309C6A21052F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{32BFF84A-D049-4363-B5FC-309C6A21052F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{32BFF84A-D049-4363-B5FC-309C6A21052F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{32BFF84A-D049-4363-B5FC-309C6A21052F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D104643-C734-438A-8DEA-4CA3BE503719}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D104643-C734-438A-8DEA-4CA3BE503719}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D104643-C734-438A-8DEA-4CA3BE503719}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D104643-C734-438A-8DEA-4CA3BE503719}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

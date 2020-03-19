@@ -7,6 +7,7 @@ using AuthorizationServer.Application.Security;
 using AuthorizationServer.Domain.Contracts;
 using AuthorizationServer.Domain.Services;
 using AuthorizationServer.ExceptionHandling.Extensions;
+using AuthorizationServer.Infrastructure;
 using AuthorizationServer.Infrastructure.Context;
 using AuthorizationServer.Infrastructure.IdentityServer;
 using AuthorizationServer.Infrastructure.IdentityServer.Services;
@@ -143,7 +144,7 @@ namespace AuthorizationServer
             //Helpers
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.AddScoped<IApplicationContext, ApplicationContext>();
+            services.AddScoped<IIdentityService, HttpRequestIdentityService>();
             services.AddScoped<IUrlHelper>(x =>
             {
                 var actionContext = x.GetService<IActionContextAccessor>().ActionContext;

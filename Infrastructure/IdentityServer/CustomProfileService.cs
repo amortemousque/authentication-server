@@ -23,13 +23,13 @@ namespace AuthorizationServer.Infrastructure.IdentityServer
         protected readonly IUserRepository _userRepository; 
 
         public UserManager<IdentityUser> _userManager { get; }
-        public IRoleRepository _roleRepository { get; }
+        public IPermissionRepository _permissionRepository { get; }
         public ITenantRepository _tenantRepository { get; }
 
-        public CustomProfileService(UserManager<IdentityUser> userManager, IRoleRepository roleRepository, ITenantRepository tenantRepository, ILogger<CustomProfileService> logger)
+        public CustomProfileService(UserManager<IdentityUser> userManager, IPermissionRepository permissionRepository, ITenantRepository tenantRepository, ILogger<CustomProfileService> logger)
         {
             _userManager = userManager;
-            _roleRepository = roleRepository;
+            _permissionRepository = permissionRepository;
             _tenantRepository = tenantRepository;
             Logger = logger;
         }
@@ -68,7 +68,7 @@ namespace AuthorizationServer.Infrastructure.IdentityServer
             }
 
             if (context.RequestedClaimTypes.Contains(CustomClaimTypes.Permission)) {
-                var permissions = await _roleRepository.GetRolePermissions(roles.ToArray());
+                var permissions = await _permissionRepository.GetRolePermissions(roles.ToArray());
                 foreach (var permission in permissions)
                 {
                     claims.Add(new Claim(CustomClaimTypes.Permission, permission));

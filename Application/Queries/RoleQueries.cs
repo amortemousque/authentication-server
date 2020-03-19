@@ -42,11 +42,5 @@ namespace AuthorizationServer.Application.Queries
 
             return response.ToList();
         }
-
-        public async Task<List<Permission>> GetRolePermissionsAsync(Guid id)
-        {
-            var response = await _roleRepository.GetRolePermissions(id);
-            return response.ToList();
-        }
     }
 }

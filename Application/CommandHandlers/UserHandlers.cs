@@ -16,6 +16,7 @@ using AuthorizationServer.Exceptions;
 using AuthorizationServer.Infrastructure.Context;
 using Rebus.Sagas;
 using IdentityUser = AuthorizationServer.Domain.UserAggregate.IdentityUser;
+using AuthorizationServer.Infrastructure;
 
 namespace AuthorizationServer.Application.CommandHandlers
 {
@@ -32,17 +33,17 @@ namespace AuthorizationServer.Application.CommandHandlers
         private readonly SecurityService _securityService;
         private readonly IBus _bus;
         private readonly IEmailSender _emailSender;
-        private readonly IApplicationContext _applicationContext;
+        private readonly IIdentityService _identityService;
         private readonly ISagaStorage _sagaStorage;
 		
 
         public UserHandlers(UserManager<IdentityUser> userManager, IUserRepository userRepository,
-            SecurityService securityService, IEmailSender emailSender, IBus bus, IApplicationContext applicationContext, IAccountInviteRepository inviteRepository, ISagaStorage sagaStorage)
+            SecurityService securityService, IEmailSender emailSender, IBus bus, IIdentityService identityService, IAccountInviteRepository inviteRepository, ISagaStorage sagaStorage)
         {
             _userManager = userManager;
             _userRepository = userRepository;
             _bus = bus;
-            _applicationContext = applicationContext;
+            _identityService = identityService;
             _inviteRepository = inviteRepository;
             _sagaStorage = sagaStorage;
             _emailSender = emailSender;
@@ -53,12 +54,13 @@ namespace AuthorizationServer.Application.CommandHandlers
         {
             if (!await _securityService.CanCreateUser()) throw new ForbbidenException();
 
-            var tenant = _applicationContext.Tenant;
+            var tenantId = _identityService.GetTenantIdentity();
+            var tenantName = _identityService.GetTenantName();
 
-            if (!await _userRepository.HasUniqEmail(message.Email, tenant.Id))
+            if (!await _userRepository.HasUniqEmail(message.Email, tenantId))
 	            throw new ConflictException("Another user has the same email.");
 
-			if (!await _userRepository.HasUniqPersonId(message.PersonId, tenant.Id))
+			if (!await _userRepository.HasUniqPersonId(message.PersonId, tenantId))
 				throw new ConflictException("Another user has been already created for this person");
 
             var user = await IdentityUser.Factory.CreateNewEntry(
@@ -92,10 +94,10 @@ namespace AuthorizationServer.Application.CommandHandlers
 
             if (message.InviteId != Guid.Empty)
 			{
-				var invite = await _inviteRepository.GetById(message.InviteId, tenant.Id) ?? throw new ArgumentException(nameof(message.InviteId));
+				var invite = await _inviteRepository.GetById(message.InviteId, tenantId) ?? throw new ArgumentException(nameof(message.InviteId));
 				invite.Accept();
 				await _inviteRepository.SaveAsync(invite);
-				await _bus.Publish(new InviteAccepted { InviteeId = message.PersonId, TenantName = tenant.Name, TenantId = tenant.Id,
+				await _bus.Publish(new InviteAccepted { InviteeId = message.PersonId, TenantName = tenantName, TenantId = tenantId,
 					InitiatorId = message.PersonId});
 			}
 
@@ -181,7 +183,7 @@ namespace AuthorizationServer.Application.CommandHandlers
 		{
 			var user = await _userManager.FindByEmailAsync(request.Email) ?? throw new NotFoundException(request.Email);
 			var result = await _userManager.ResetPasswordAsync(user, request.Code, request.Password);
-			if(result.Succeeded) await _bus.Publish(new PasswordReset { InitiatorId = Guid.Parse(user.Id), TenantId = user.TenantId, TenantName = _applicationContext.Tenant.Name });
+			if(result.Succeeded) await _bus.Publish(new PasswordReset { InitiatorId = Guid.Parse(user.Id), TenantId = user.TenantId, TenantName = _identityService.GetTenantName() });
 			return result;
 		}
     }

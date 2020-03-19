@@ -29,12 +29,12 @@ namespace AuthorizationServer.Infrastructure.Repositories
             IUserAuthenticatorKeyStore<IdentityUser>
     {
         private readonly ApplicationDbContext _context;
-        private readonly Guid _tenantId;
+        private readonly IIdentityService _identityService;
 
-        public UserRepository(ApplicationDbContext context, IApplicationContext applicationContext)
+        public UserRepository(ApplicationDbContext context, IIdentityService identityService)
         {
             _context = context;
-            _tenantId = applicationContext.Tenant.Id;
+            _identityService = identityService;
         }
 
         public async Task<IQueryable<IdentityUser>> GetAll()
@@ -51,7 +51,7 @@ namespace AuthorizationServer.Infrastructure.Repositories
 
         public virtual async Task<IdentityResult> CreateAsync(IdentityUser user, CancellationToken token)
         {
-	        user.TenantId = _tenantId;
+	      //  user.TenantId = _tenantId;
             user.FullName = user.GivenName + " " + user.FamilyName;
             user.CreatedAt = DateTime.Now;
             user.UpdatedAt = DateTime.Now;
@@ -100,7 +100,7 @@ namespace AuthorizationServer.Infrastructure.Repositories
 
         public virtual Task<IdentityUser> FindByNameAsync(string normalizedUserName, CancellationToken token)
             // todo low priority exception on duplicates? or better to enforce unique index to ensure this
-            => _context.Users.Find(u => u.NormalizedUserName == normalizedUserName && u.TenantId == this._tenantId).FirstOrDefaultAsync(token);
+            => _context.Users.Find(u => u.NormalizedUserName == normalizedUserName && u.TenantId == _identityService.GetTenantIdentity()).FirstOrDefaultAsync(token);
 
         public virtual async Task SetPasswordHashAsync(IdentityUser user, string passwordHash, CancellationToken token)
             => user.PasswordHash = passwordHash;
@@ -176,7 +176,7 @@ namespace AuthorizationServer.Infrastructure.Repositories
         {
             // note: I don't like that this now searches on normalized email :(... why not FindByNormalizedEmailAsync then?
             // todo low - what if a user can have multiple accounts with the same email?
-            return _context.Users.Find(u => u.NormalizedEmail == normalizedEmail && u.TenantId == this._tenantId).FirstOrDefaultAsync(token);
+            return _context.Users.Find(u => u.NormalizedEmail == normalizedEmail && u.TenantId == _identityService.GetTenantIdentity()).FirstOrDefaultAsync(token);
         }
 
         public virtual async Task<IList<Claim>> GetClaimsAsync(IdentityUser user, CancellationToken token)

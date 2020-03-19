@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AuthorizationServer.Domain.Contracts;
 using AuthorizationServer.Domain.PermissionAggregate;
+using AuthorizationServer.Domain.RoleAggregate;
 using AuthorizationServer.Infrastructure.Context;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -52,6 +53,31 @@ namespace AuthorizationServer.Infrastructure.Repositories
         public async Task Delete(Guid id)
         {
             await _context.Permissions.DeleteOneAsync(c => c.Id == id);
+        }
+
+
+        public async Task<List<string>> GetRolePermissions(string[] roleNames)
+        {
+            var filterDef = new FilterDefinitionBuilder<IdentityRole>();
+            var filter = filterDef.In(x => x.NormalizedName, roleNames);
+            var roles = await _context.Roles.Find(filter).ToListAsync() ?? new List<IdentityRole>();
+            var permissions = roles.ToList().SelectMany(r => r.Permissions ?? new List<string>()).Distinct().ToList();
+
+            return permissions;
+        }
+
+        public async Task<List<Permission>> GetRolePermissions(Guid id)
+        {
+            var role = await _context.Roles.AsQueryable().SingleOrDefaultAsync(t => t.Id == id.ToString());
+
+            var rolePermissions = role.Permissions ?? new List<string>();
+
+
+            var filterDef = new FilterDefinitionBuilder<Permission>();
+            var filter = filterDef.In(x => x.Name, rolePermissions);
+            var permissions = await _context.Permissions.Find(filter).ToListAsync();
+
+            return permissions;
         }
 
         public async Task SaveAsync(Permission entity)

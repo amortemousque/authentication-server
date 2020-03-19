@@ -12,10 +12,10 @@ namespace AuthorizationServer.Infrastructure.IdentityServer
 		private readonly string _tenantName;
 		private readonly Guid _tenantId;
 
-		public CustomClaimInjection(IApplicationContext context)
+		public CustomClaimInjection(IIdentityService identityService)
 		{
-			_tenantName = context.Tenant.Name;
-			_tenantId = context.Tenant.Id;
+			_tenantName = identityService.GetTenantName();
+			_tenantId = identityService.GetTenantIdentity();
 		}
 
 		public Task ValidateAsync(CustomTokenRequestValidationContext context)

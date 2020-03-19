@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AuthorizationServer.Infrastructure;
 using AuthorizationServer.Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -10,13 +11,13 @@ namespace AuthorizationServer.Application.Security
     {
         private readonly IAuthorizationService _authorizationService;
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly IApplicationContext _applicationContext;
+        private readonly IIdentityService _identityService;
 
-        public SecurityService(IAuthorizationService authorizationService, IHttpContextAccessor contextAccessor, IApplicationContext applicationContext)
+        public SecurityService(IAuthorizationService authorizationService, IHttpContextAccessor contextAccessor, IIdentityService identityService)
         {
             _authorizationService = authorizationService;
             _contextAccessor = contextAccessor;
-            _applicationContext = applicationContext;
+            _identityService = identityService;
         }
 
         public async Task<bool> CanReadRoleRoot()
@@ -32,8 +33,8 @@ namespace AuthorizationServer.Application.Security
             var isClient = await _authorizationService.AuthorizeAsync(_contextAccessor.HttpContext.User, $"application(users:read)");
             var isAdmin = await _authorizationService.AuthorizeAsync(_contextAccessor.HttpContext.User, "users:read:tenant");
             var isUser = await _authorizationService.AuthorizeAsync(_contextAccessor.HttpContext.User, $"users:read:user");
-            return (isAdmin.Succeeded && _applicationContext.Tenant.Id == userTenantId) || 
-                   (isUser.Succeeded && _applicationContext.User.Id == userId) || isClient.Succeeded || isRoot.Succeeded;
+            return (isAdmin.Succeeded && _identityService.GetTenantIdentity() == userTenantId) || 
+                   (isUser.Succeeded && _identityService.GetUserIdentity() == userId) || isClient.Succeeded || isRoot.Succeeded;
         }
 
         public async Task<bool> CanCreateUser()
@@ -50,8 +51,8 @@ namespace AuthorizationServer.Application.Security
             var isAdmin = await _authorizationService.AuthorizeAsync(_contextAccessor.HttpContext.User, $"users:write:tenant");
             var isClient = await _authorizationService.AuthorizeAsync(_contextAccessor.HttpContext.User, $"application(users:write)");
             var isUser = await _authorizationService.AuthorizeAsync(_contextAccessor.HttpContext.User, $"users:write:user");
-            return (isAdmin.Succeeded && _applicationContext.Tenant.Id == userTenantId) || 
-                   (isUser.Succeeded && _applicationContext.User.Id == userId) || isClient.Succeeded || isRoot.Succeeded;
+            return (isAdmin.Succeeded && _identityService.GetTenantIdentity() == userTenantId) || 
+                   (isUser.Succeeded && _identityService.GetUserIdentity() == userId) || isClient.Succeeded || isRoot.Succeeded;
         }
     }
 }

@@ -9,8 +9,6 @@ namespace AuthorizationServer.Application.Commands
     public class CreateApiScopeCommand : IRequest<ApiScope>
     {
         [Required]
-        public Guid Id { get; set; }
-        [Required]
         public Guid ApiResourceId { get; set; }
         [Required]
         public string Name { get; set; }

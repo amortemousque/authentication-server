@@ -8,6 +8,7 @@ using Rebus.Bus;
 using AuthorizationServer.Domain.Contracts;
 using AuthorizationServer.Domain.TenantAggregate;
 using AuthorizationServer.Infrastructure.Context;
+using AuthorizationServer.Infrastructure;
 
 namespace AuthorizationServer.Application.CommandHandlers
 {
@@ -19,13 +20,13 @@ namespace AuthorizationServer.Application.CommandHandlers
     {
         private readonly ITenantRepository _repository;
         private readonly IBus _bus;
-        private readonly IApplicationContext _applicationContext;
+        private readonly IIdentityService _identityService;
 
-        public TenantHandlers(ITenantRepository repository, IBus bus, IApplicationContext applicationContext)
+        public TenantHandlers(ITenantRepository repository, IBus bus, IIdentityService identityService)
         {
             _repository = repository;
             _bus = bus;
-            _applicationContext = applicationContext;
+            _identityService = identityService;
         }
 
         public async Task<Tenant> Handle(CreateTenantCommand message, CancellationToken cancellationToken)
@@ -33,7 +34,7 @@ namespace AuthorizationServer.Application.CommandHandlers
             var tenant = await Tenant.Factory.CreateNewEntry(_repository, message.Name, message.DisplayName, message.Description);
 
             tenant.CreatedAt = DateTime.Now;
-            tenant.CreatedBy = _applicationContext.User?.Id??new Guid();
+            tenant.CreatedBy = _identityService.GetUserIdentity();
             await _repository.Add(tenant);
 
             return tenant;
@@ -55,8 +56,8 @@ namespace AuthorizationServer.Application.CommandHandlers
 
             tenant.CreatedAt = DateTime.Now;
             tenant.UpdatedAt = DateTime.Now;
-            tenant.CreatedBy = tenant.CreatedBy == Guid.Empty ? _applicationContext.User.Id : tenant.CreatedBy;
-            tenant.UpdatedBy = _applicationContext.User.Id;
+            tenant.CreatedBy = tenant.CreatedBy == Guid.Empty ? _identityService.GetUserIdentity() : tenant.CreatedBy;
+            tenant.UpdatedBy = _identityService.GetUserIdentity();
 
             await _repository.SaveAsync(tenant);
             return true;
@@ -68,7 +69,7 @@ namespace AuthorizationServer.Application.CommandHandlers
             tenant.Archive();
 
             tenant.UpdatedAt = DateTime.Now;
-            tenant.UpdatedBy = _applicationContext.User.Id;
+            tenant.UpdatedBy = _identityService.GetUserIdentity();
             await _repository.SaveAsync(tenant);
 
             return true;

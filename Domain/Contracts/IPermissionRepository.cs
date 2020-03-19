@@ -16,6 +16,10 @@ namespace AuthorizationServer.Domain.Contracts
 
         Task<IQueryable<Permission>> GetAll();
 
+        Task<List<string>> GetRolePermissions(string[] roleNames);
+
+        Task<List<Permission>> GetRolePermissions(Guid id);
+
         Task Add(Permission entity);
 
         Task Delete(Guid id);

@@ -10,7 +10,8 @@ namespace AuthorizationServer.Application.Commands
     {
         [JsonIgnore]
         public Guid Id { get; set; }
-        [Required]
+
+        [JsonIgnore]
         public Guid ApiResourceId { get; set; }
         public string Description { get; set; }
     }
