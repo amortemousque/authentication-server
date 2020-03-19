@@ -12,7 +12,7 @@ import { MessageService } from '../../shared/message/message.service';
 import { UpdateClientSecret } from '../details/client-details.state';
 import { UpdateClient } from '../list/client-list.state';
 import { ReferenceService } from '../../shared/pipes/reference.service';
-import { deleteEmptyKeys } from '../../core/utils/global.utils';
+import { deleteEmptyKeys, deepClone } from '../../core/utils/global.utils';
 
 
 @Component({
@@ -39,7 +39,7 @@ export class ClientSettingsFormComponent extends BaseComponent implements OnInit
     public dialog: MatDialog,
     private store: Store,
     public snackBar: MatSnackBar) {
-      super();
+    super();
   }
 
   ngOnInit() {
@@ -72,25 +72,21 @@ export class ClientSettingsFormComponent extends BaseComponent implements OnInit
 
 
       this.client$
-      .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(client2 => {
-        if (client2) {
-          this.client = client2;
-
-        // FIll the form
-          const client = new Client();
-          Object.assign(client, this.client);
-          deleteEmptyKeys(client);
-          this.formGroup.reset();
-          this.formGroup.patchValue(client);
-          this.formGroup.patchValue({
-            allowedScopes: this.allowedScopes.map(scope => (client.allowedScopes || []).find(a => a === scope.name))
-          });
-          this.formGroup.patchValue({
-            resourceOwnerEnabled: client.allowedGrantTypes.includes("password")
-          });
-        }
-      });
+        .pipe(takeUntil(this.componentDestroyed$))
+        .subscribe(client => {
+          if (client) {
+            this.client = client;
+            client = deleteEmptyKeys(deepClone(client));
+            this.formGroup.reset();
+            this.formGroup.patchValue(client);
+            this.formGroup.patchValue({
+              allowedScopes: this.allowedScopes.map(scope => (client.allowedScopes ||  []).find(a => a === scope.name))
+            });
+            this.formGroup.patchValue({
+              resourceOwnerEnabled: client.allowedGrantTypes.includes("password")
+            });
+          }
+        });
     });
   }
 
@@ -107,7 +103,7 @@ export class ClientSettingsFormComponent extends BaseComponent implements OnInit
           this.formGroup.value[controlName] = [];
         }
         const uris = [...this.formGroup.value[controlName], uri.trim()];
-        this.formGroup.patchValue({[controlName]: uris});
+        this.formGroup.patchValue({ [controlName]: uris });
       })
     }
 
@@ -119,17 +115,17 @@ export class ClientSettingsFormComponent extends BaseComponent implements OnInit
 
   remove(uri: string, controlName: string): void {
     const uris = this.formGroup.value[controlName].filter(s => s !== uri)
-    this.formGroup.patchValue({[controlName]: uris});
+    this.formGroup.patchValue({ [controlName]: uris });
   }
 
 
   generateNewClientSecret() {
     this.messageService.openConfirmationDialog('Etes vous sur de régérer le secret ?')
-    .afterClosed().subscribe(result => {
-      if (result) {
-        this.store.dispatch(new UpdateClientSecret(this.client.id));
-      }
-    })
+      .afterClosed().subscribe(result => {
+        if (result) {
+          this.store.dispatch(new UpdateClientSecret(this.client.id));
+        }
+      })
   }
 
 
@@ -138,8 +134,8 @@ export class ClientSettingsFormComponent extends BaseComponent implements OnInit
     Object.assign(client, formGroup.value);
 
     const scopes = this.formGroup.value.allowedScopes
-    .map((v, i) => v ? this.allowedScopes[i].name : null)
-    .filter(v => v !== null);
+      .map((v, i) => v ? this.allowedScopes[i].name : null)
+      .filter(v => v !== null);
 
     client.allowedScopes = scopes;
     return client;
@@ -153,10 +149,10 @@ export class ClientSettingsFormComponent extends BaseComponent implements OnInit
       this.loading = true;
       const client = this.mapForm(this.formGroup);
       this.store.dispatch(new UpdateClient(client))
-      .subscribe(r => {
-        this.loading = false;
-        this.messageService.openSuccessMessage('saved')
-      });
+        .subscribe(r => {
+          this.loading = false;
+          this.messageService.openSuccessMessage('saved')
+        });
     }
   }
 }

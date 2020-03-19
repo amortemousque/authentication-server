@@ -2,12 +2,13 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Store } from '@ngxs/store';
 
-import * as apiActions from '../api-permissions.state';
 import { BaseComponent } from '../../../core/base.component';
 import { ApiScope, DomainError } from '../../../core/models';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MessageService } from '../../../shared/message/message.service';
+import { UpdateApiScope, AddApiScope } from '../api-permissions.state';
+import { catchError } from 'rxjs/operators';
 
 
 
@@ -41,6 +42,7 @@ export class ApiPermissionInlineFormComponent extends BaseComponent implements O
 
   ngOnInit() {
     this.formGroup = this.formBuilder.group({
+      id: [null],
       apiResourceId: [null],
       name: [''],
       description: ['']
@@ -70,26 +72,25 @@ export class ApiPermissionInlineFormComponent extends BaseComponent implements O
       const api = this.mapForm(this.formGroup);
       let promise = null;
       if (this._apiScope.id) {
-        promise = this.store.dispatch(new apiActions.UpdateApiScope(api))
+        promise = this.store.dispatch(new UpdateApiScope(api))
       } else {
-        promise = this.store.dispatch(new apiActions.AddApiScope(api))
+        promise = this.store.dispatch(new AddApiScope(api))
       }
-      promise
-      .catch(err => {
-        if (err instanceof DomainError) {
-          this.formGroup.get(err.field).setErrors({
-            notUnique: true
-          });
-          this.loading = false;
-        }
-        return err;
-       })
+      promise.pipe(
+        catchError(err => {
+          if (err instanceof DomainError) {
+            this.formGroup.get(err.field).setErrors({
+              notUnique: true
+            });
+            this.loading = false;
+          }
+          return err;
+         })
+      )
       .subscribe(() => {
           this.loading = false;
           this.messageService.openSuccessMessage('saved');
         });
     }
   }
-
 }
-

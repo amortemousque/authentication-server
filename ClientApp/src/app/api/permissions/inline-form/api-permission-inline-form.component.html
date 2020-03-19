@@ -1,12 +1,16 @@
-<form [formGroup]="formGroup" fxLayout="row" (ngSubmit)="onSubmit()" [appLoadingForm]="loading">
+<form [formGroup]="formGroup" fxLayout="row" fxLayoutAlign="start center" (ngSubmit)="onSubmit()" [appLoadingForm]="loading">
     <mat-form-field class="mb-0">
-        <input matInput i18n-placeholder placeholder="Name" formControlName="name" required>
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" required>
         <mat-error *ngIf="formGroup.controls['name'].errors?.notUnique" i18n>An other permission has the same name.</mat-error>
     </mat-form-field>
     <mat-form-field class="ml-2 mb-0">
-        <textarea matInput i18n-placeholder placeholder="Description" formControlName="description" rows="1"></textarea>
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="1"></textarea>
     </mat-form-field>
     <button mat-button class="ml-3" type="button" (click)="cancelEdition()" i18n>Cancel</button>
-    <button mat-button type="submit"><mat-spinner diameter="20"></mat-spinner><ng-container i18n>Save</ng-container></button>
+    <button mat-raised-button color="primary" type="submit">
+        <mat-spinner diameter="20"></mat-spinner>
+        <ng-container i18n>Save</ng-container>
+    </button>
 </form>
-        

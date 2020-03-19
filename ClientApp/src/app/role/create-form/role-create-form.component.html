@@ -5,19 +5,20 @@
   <mat-dialog-content>
     <div class="shadow-none">
       <mat-form-field class="mb-1">
-        <input matInput i18n-placeholder placeholder="Name" formControlName="name" required>
+        <mat-label i18n>Name</mat-label>
+        <input matInput formControlName="name" required>
         <mat-error *ngIf="formGroup.controls['name'].errors?.notUnique" i18n>An other role has the same name.</mat-error>
       </mat-form-field>
       <div class="mb-4 font-italic" i18n>Identifier of the role. You can't use space or special characteres</div>
-
       <mat-form-field class="mb-1">
-        <input matInput i18n-placeholder placeholder="Desciption" formControlName="description" required>
+        <mat-label i18n>Description</mat-label>
+        <input matInput formControlName="description" required>
       </mat-form-field>
     </div>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button mat-dialog-close i18n>Cancel</button>
-    <button mat-button type="submit">
+    <button mat-raised-button color="primary" type="submit">
       <mat-spinner diameter="20"></mat-spinner>
       <ng-container i18n>Save</ng-container>
     </button>

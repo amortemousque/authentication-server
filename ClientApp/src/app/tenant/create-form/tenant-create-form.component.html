@@ -4,19 +4,22 @@
 <form [formGroup]="formGroup" fxLayout="column" (ngSubmit)="onSubmit()" [appLoadingForm]="loading">
   <mat-dialog-content>
     <div class="shadow-none">
-        <mat-form-field class="mb-1">
-            <input matInput i18n-placeholder placeholder="tenant-name" formControlName="name" required>
-            <mat-error *ngIf="formGroup.controls['name'].errors?.notUnique" i18n>An other tenant has the same name.</mat-error>
-        </mat-form-field>
-        <mat-button-toggle-group class="mb-2" name="fontStyle" aria-label="Font Style">
-            <mat-button-toggle value="bold"><img width="30" class="mr-2" src="/admin/assets/images/regions/eu.svg">Europe</mat-button-toggle>
-            <mat-button-toggle disabled i18n>Other</mat-button-toggle>
-        </mat-button-toggle-group>
+      <mat-form-field class="mb-1">
+        <mat-label i18n>Tenant name</mat-label>
+        <input matInput formControlName="name" required>
+        <mat-error *ngIf="formGroup.controls['name'].errors?.notUnique" i18n>An other tenant has the same name.</mat-error>
+      </mat-form-field>
+      <mat-button-toggle-group class="mb-2" name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle value="bold"><img width="30" class="mr-2" src="/assets/images/regions/eu.svg">Europe</mat-button-toggle>
+        <mat-button-toggle disabled i18n>Other</mat-button-toggle>
+      </mat-button-toggle-group>
     </div>
-  </mat-dialog-content> 
+  </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button mat-dialog-close i18n>Cancel</button>
-    <button mat-button type="submit">
-      <mat-spinner diameter="20"></mat-spinner><ng-container i18n>Save</ng-container></button>
+    <button mat-raised-button color="primary" type="submit">
+      <mat-spinner diameter="20"></mat-spinner>
+      <ng-container i18n>Save</ng-container>
+    </button>
   </mat-dialog-actions>
 </form>

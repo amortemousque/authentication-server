@@ -4,6 +4,7 @@
 
 @import "./assets/styles/vendors/ngx-datatable";
 @import "./assets/styles/vendors/mat-card";
+@import "./assets/styles/vendors/mat-form-field";
 
 @import "~@angular/material/theming";
 @include mat-core();
@@ -14,15 +15,35 @@ $candy-app-warn: mat-palette($mat-red);
 $theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
 @include angular-material-theme($theme);
 
-$config: mat-typography-config();
+$config: mat-typography-config(
+    $font-family:   'Roboto, "Helvetica Neue", sans-serif',
+    $display-4:     mat-typography-level(112px, 112px, 300, $letter-spacing: -0.05em),
+    $display-3:     mat-typography-level(56px, 56px, 400, $letter-spacing: -0.02em),
+    $display-2:     mat-typography-level(45px, 48px, 400, $letter-spacing: -0.005em),
+    $display-1:     mat-typography-level(34px, 40px, 400),
+    $headline:      mat-typography-level(24px, 32px, 400),
+    $title:         mat-typography-level(20px, 32px, 500),
+    $subheading-2:  mat-typography-level(16px, 28px, 400),
+    $subheading-1:  mat-typography-level(15px, 24px, 400),
+    $body-2:        mat-typography-level(14px, 24px, 500),
+    $body-1:        mat-typography-level(14px, 20px, 400),
+    $caption:       mat-typography-level(12px, 20px, 400),
+    $button:        mat-typography-level(14px, 14px, 500),
+    // Line-height must be unit-less fraction of the font-size.
+    $input:         mat-typography-level(16px, 1.125, 400)
+);
+@include angular-material-typography($config);
 
 @include app-bar-theme($theme);
 @include app-sidebar-theme($theme);
 @include app-page-header-theme($theme);
 @include app-ngx-datatable($theme);
+@include app-mat-form-field($theme);
 @include app-mat-card($theme);
 @include app-bar-typography($config);
 @include app-sidebar-typography($config);
+
+
 
 html,
 body {
@@ -33,15 +54,9 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.mat-form-field {
-  margin-bottom: 0.5rem;
-  width: 100%;
-}
 
-.mat-form-group {
-  margin-bottom: 1rem;
-  width: 100%;
-}
+
+
 
 .page-layout {
   display: flex;
@@ -56,63 +71,9 @@ body {
   }
 }
 
-.logo {
-  max-height: 45px;
-  width: 45px;
-}
-
-.logo img {
-  max-width: 45px;
-  max-height: 45px;
-}
-
 .card-indicator {
   min-width: 190px;
 }
-
-.info-message {
-  margin-bottom: 1.5rem;
-  color: #777;
-  font-style: italic;
-}
-
-.type-selector {
-  display: flex;
-  flex-direction: row;
-  text-align: center;
-
-  .selector {
-    color: #666;
-
-    .selector-icon {
-      color: #888;
-      font-size: 2rem;
-    }
-
-    .selector-title {
-      margin-top: 1rem;
-      margin-bottom: 1.2rem;
-      font-size: 1.3rem;
-    }
-
-    .selector-desciption {
-      font-style: italic;
-    }
-  }
-  .selector.selected {
-    border: solid 1px red;
-    box-shadow: 0 0px 1px -2px rgba(0, 0, 0, 0.2),
-      0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-  }
-}
-
-
-
-
-
-
-
-
 
 
 .loading-form {

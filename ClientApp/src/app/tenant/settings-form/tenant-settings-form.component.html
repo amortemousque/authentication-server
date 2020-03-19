@@ -1,28 +1,32 @@
 <form [formGroup]="formGroup" fxLayout="column" (ngSubmit)="onSubmit()" [appLoadingForm]="loading">
 
-<mat-card>
-    <mat-card-header>
-        <h2 i18n>Settings</h2>
-    </mat-card-header>
-    <mat-slide-toggle class="mb-4" formControlName="enabled" color="accent">Enabled</mat-slide-toggle>
-    <mat-form-field class="mb-1" appearance="fill">
-        <mat-label i18n>Name</mat-label>
-        <input matInput i18n-placeholder placeholder="Name" [value]="tenant.name" disabled>
-    </mat-form-field>
-    <mat-button-toggle-group class="mb-4" name="fontStyle" aria-label="Font Style">
-        <mat-button-toggle value="bold"><img width="30" class="mr-2" src="/admin/assets/images/regions/eu.svg">Europe</mat-button-toggle>
-        <mat-button-toggle disabled i18n>Other</mat-button-toggle>
-    </mat-button-toggle-group>
-    <mat-form-field class="mb-1">
-        <input matInput i18n-placeholder placeholder="Description" formControlName="description">
-    </mat-form-field>
-    <mat-form-field class="mb-1">
-        <input matInput i18n-placeholder placeholder="Logo Uri" formControlName="logoUri">
-    </mat-form-field>
-    <mat-card-actions>
-        <button mat-button mat-dialog-close i18n>Cancel</button>
-        <button mat-raised-button color="accent" type="submit">
-        <mat-spinner diameter="20"></mat-spinner><ng-container i18n>Save</ng-container></button>
-    </mat-card-actions>
-</mat-card>
+    <mat-card>
+        <mat-card-header>
+            <h2 matCardTitle i18n>Settings</h2>
+        </mat-card-header>
+        <mat-slide-toggle class="mb-4" formControlName="enabled" color="accent">Enabled</mat-slide-toggle>
+        <mat-form-field class="mb-1" appearance="fill">
+            <mat-label i18n>Name</mat-label>
+            <input matInput [value]="tenant.name" disabled>
+        </mat-form-field>
+        <mat-button-toggle-group class="mb-4" name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle value="bold"><img width="30" class="mr-2" src="/assets/images/regions/eu.svg">Europe</mat-button-toggle>
+            <mat-button-toggle disabled i18n>Other</mat-button-toggle>
+        </mat-button-toggle-group>
+        <mat-form-field class="mb-1">
+            <mat-label i18n>Description</mat-label>
+            <input matInput formControlName="description">
+        </mat-form-field>
+        <mat-form-field class="mb-1">
+            <mat-label i18n>Logo Uri</mat-label>
+            <input matInput formControlName="logoUri">
+        </mat-form-field>
+        <mat-card-actions>
+            <button mat-button mat-dialog-close i18n>Cancel</button>
+            <button mat-raised-button color="primary" type="submit">
+                <mat-spinner diameter="20"></mat-spinner>
+                <ng-container i18n>Save</ng-container>
+            </button>
+        </mat-card-actions>
+    </mat-card>
 </form>

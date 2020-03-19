@@ -12,6 +12,7 @@ export function deleteEmptyKeys(obj) {
       deleteEmptyKeys(entity[name]);
     }
   });
+  return obj;
 }
 
 /**

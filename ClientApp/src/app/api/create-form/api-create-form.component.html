@@ -5,19 +5,23 @@
   <mat-dialog-content>
     <div class="shadow-none">
       <mat-form-field class="mb-0">
-        <input matInput i18n-placeholder placeholder="Name" formControlName="displayName" required>
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="displayName" required>
+        <mat-hint align="end" >Friendly name for the API.</mat-hint>
       </mat-form-field>
-      <div class="mb-4 font-italic" i18n>Friendly name for the API.</div>
       <mat-form-field class="mb-0">
-        <input matInput i18n-placeholder placeholder="Identifier" formControlName="name" required>
+        <mat-label>Identifier</mat-label>
+        <input matInput formControlName="name" required>
         <mat-error *ngIf="formGroup.controls['name'].errors?.notUnique" i18n>An other API has the same identifier.</mat-error>
+        <mat-hint align="end" matTooltip="This value is used for authentication with
+        introspection and will be added to the audience of the outgoing access token" >The unique name of the API.</mat-hint>
       </mat-form-field>
-      <div class="font-italic" i18n>The unique name of the API. This value is used for authentication with introspection and will be added to the audience of the outgoing access token</div>
+      <div class="font-italic" i18n></div>
     </div>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button mat-dialog-close i18n>Cancel</button>
-    <button mat-button type="submit">
+    <button mat-raised-button color="primary" type="submit">
       <mat-spinner diameter="20"></mat-spinner>
       <ng-container i18n>Save</ng-container>
     </button>

@@ -9,8 +9,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { takeUntil } from 'rxjs/operators';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MessageService } from '../../shared/message/message.service';
-import { deleteEmptyKeys } from '../../core/utils/global.utils';
+import { deleteEmptyKeys, deepClone } from '../../core/utils/global.utils';
 import { UpdateApi } from '../list/api-list.state';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -20,7 +21,7 @@ import { UpdateApi } from '../list/api-list.state';
 })
 export class ApiSettingsFormComponent extends BaseComponent implements OnInit {
 
-  @Select(state => state.api.api) api$;
+  @Select(state => state.api.api) api$: Observable<Api>;
   api: Api;
   formGroup: FormGroup;
   selectable = true;
@@ -54,14 +55,10 @@ export class ApiSettingsFormComponent extends BaseComponent implements OnInit {
 
     this.api$
       .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(api2 => {
-        if (api2) {
-          this.api = api2;
-
-          // FIll the form
-          const api = new Api();
-          Object.assign(api, this.api);
-          deleteEmptyKeys(api);
+      .subscribe(api => {
+        if (api) {
+          this.api = api;
+          api = deleteEmptyKeys(deepClone(api));
           this.formGroup.reset();
           this.formGroup.patchValue(api);
         }

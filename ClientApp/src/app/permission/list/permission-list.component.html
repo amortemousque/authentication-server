@@ -2,7 +2,7 @@
     <app-page-header *ngIf="!selected.length">
         <h1 app-page-header-title>Permissions</h1>
         <app-page-header-actions>
-            <button mat-raised-button i18n (click)="openCreate()">New permission</button>
+            <button mat-raised-button color="accent" i18n (click)="openCreate()">New permission</button>
         </app-page-header-actions>
     </app-page-header>
     <app-page-header  *ngIf="selected?.length > 0">

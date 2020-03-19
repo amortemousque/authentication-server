@@ -15,6 +15,7 @@ import { PermissionInitializerFactory } from './core/permission/permission-initi
 import { AppAuthModule } from './core/auth/auth.module';
 import { environment } from '../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 
 @NgModule({
@@ -107,7 +108,6 @@ import { HttpClient } from '@angular/common/http';
     BrowserAnimationsModule
   ],
   providers: [
-    NgxPermissionsGuard,
     {
       provide: APP_INITIALIZER,
       useFactory: PermissionInitializerFactory,

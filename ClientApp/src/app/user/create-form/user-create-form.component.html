@@ -5,39 +5,37 @@
   <mat-dialog-content>
     <div class="shadow-none">
       <mat-form-field>
-        <mat-select i18n-placeholder placeholder="Tenant" formControlName="tenantId" required>
+        <mat-label i18n>Tenant</mat-label>
+        <mat-select formControlName="tenantId" required>
           <mat-option *ngFor="let tenant of tenants$ | async" [value]="tenant.id">
             <div fxLayout="row" fxLayoutAlign="start center">
-                <img width="30" [src]="tenant.logoUri" alt="" class="mr-3">{{tenant.name}}
+              <img width="30" [src]="tenant.logoUri" alt="" class="mr-3">{{tenant.name}}
             </div>
           </mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field class="mb-0">
-        <input matInput i18n-placeholder placeholder="Email" formControlName="email" required>
+        <mat-label i18n>Email</mat-label>
+        <input matInput formControlName="email" required>
         <mat-error *ngIf="formGroup.controls['email'].errors?.notUnique" i18n>An other user has the same name.</mat-error>
-        <mat-hint>The email is used as login.</mat-hint>
+        <mat-hint align="end" >The email is used as login.</mat-hint>
       </mat-form-field>
       <mat-form-field class="mb-1">
-        <input matInput i18n-placeholder placeholder="Given name" formControlName="givenName" required>
+        <mat-label i18n>Given name</mat-label>
+        <input matInput formControlName="givenName" required>
       </mat-form-field>
       <mat-form-field class="mb-1">
-        <input matInput i18n-placeholder placeholder="Family name" formControlName="familyName" required>
+        <mat-label i18n>Family name</mat-label>
+        <input matInput formControlName="familyName" required>
       </mat-form-field>
-      <mat-form-field i18n-placeholder placeholder="Roles">
+      <mat-form-field>
+        <mat-label i18n>Roles</mat-label>
         <mat-chip-list #chipList>
           <mat-chip *ngFor="let role of formGroup?.value.roles">
             {{role}}
           </mat-chip>
-          <input
-            formControlName="roles" 
-            placeholder="Roles"
-            #roleInput
-            [formControl]="roleCtrl"
-            [matAutocomplete]="auto"
-            [matChipInputFor]="chipList"
-            matChipInputAddOnBlur="false"
-            > 
+          <input formControlName="roles" #roleInput [formControl]="roleCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList"
+            matChipInputAddOnBlur="false">
         </mat-chip-list>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
           <mat-option *ngFor="let role of roles$ | async" [value]="role">
@@ -49,7 +47,7 @@
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button mat-dialog-close i18n>Cancel</button>
-    <button mat-button type="submit">
+    <button mat-raised-button color="primary" type="submit">
       <mat-spinner diameter="20"></mat-spinner>
       <ng-container i18n>Save</ng-container>
     </button>
