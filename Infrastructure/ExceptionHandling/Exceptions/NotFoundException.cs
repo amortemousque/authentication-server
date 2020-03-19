@@ -3,6 +3,10 @@ namespace AuthorizationServer.Exceptions
 {
     public class NotFoundException : Exception
     {
+        public NotFoundException()
+        {
+        }
+
         public NotFoundException(Guid resourceId) : base($"Resource not found {resourceId}")
         {
 

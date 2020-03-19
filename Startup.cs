@@ -202,7 +202,6 @@ namespace AuthorizationServer
             // Localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-            // Sagas - Configuration
 
 
             // Rebus - Integration event 
@@ -309,17 +308,19 @@ namespace AuthorizationServer
                 app.UseSpaStaticFiles();
             }
 
-            app.UseCors(
-                options => options.AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-            );
+            //app.UseCors(
+            //    options => options.AllowAnyOrigin()
+            //    .AllowAnyHeader()
+            //    .AllowAnyMethod()
+            //);
 
             var supportedCultures = new[]
             {
                 new CultureInfo("en"),
                 new CultureInfo("fr")
             };
+
+            app.UseExceptiontMiddleware();
 
 
             app.UseRouting();

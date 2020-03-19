@@ -85,27 +85,15 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         public async Task<IActionResult> GetUsers([FromQuery]string name = null, [FromQuery]string email = null, [FromQuery]List<string> ids = null, [FromQuery]string fields = null)
         {
-            try
-            {
-                var userAuthorize = await _authorizationService.AuthorizeAsync(User, "users:read");
-                var applicationAuthorize = await _authorizationService.AuthorizeAsync(User, "application(users:read)");
+            var userAuthorize = await _authorizationService.AuthorizeAsync(User, "users:read");
+            var applicationAuthorize = await _authorizationService.AuthorizeAsync(User, "application(users:read)");
 
-                if (userAuthorize.Succeeded || applicationAuthorize.Succeeded)
-                {
-                    var users = await _userQueries.GetUsersAsync(name, email, ids, fields);
-                    return Ok(users);
-                }
-                return StatusCode(401);
-
-            }
-            catch (KeyNotFoundException)
+            if (userAuthorize.Succeeded || applicationAuthorize.Succeeded)
             {
-                return NotFound();
+                var users = await _userQueries.GetUsersAsync(name, email, ids, fields);
+                return Ok(users);
             }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            return StatusCode(401);
         }
 
 
@@ -116,35 +104,16 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 409)]
         public async Task<IActionResult> Post([FromBody]CreateUserCommand command)
         {
-            try
-            {
-                var userAuthorize = await _authorizationService.AuthorizeAsync(User, "users:write");
-                var applicationAuthorize = await _authorizationService.AuthorizeAsync(User, "application(users:write)");
+            var userAuthorize = await _authorizationService.AuthorizeAsync(User, "users:write");
+            var applicationAuthorize = await _authorizationService.AuthorizeAsync(User, "application(users:write)");
 
-                if (userAuthorize.Succeeded || applicationAuthorize.Succeeded)
-                {
-                    var user = await _mediator.Send(command);
-                    return Ok(user);
-                }
+            if (userAuthorize.Succeeded || applicationAuthorize.Succeeded)
+            {
+                var user = await _mediator.Send(command);
+                return Ok(user);
+            }
 
-                return StatusCode(401);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ForbbidenException)
-            {
-                return StatusCode(403);
-            }
-	        catch (ConflictException e)
-	        {
-		        return Conflict(e.Message);
-	        }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            return StatusCode(401);
         }
 
         [HttpPut("{id}")]
@@ -155,24 +124,9 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "users:write")]
         public async Task<IActionResult> Put([FromRoute]Guid id, [FromBody] UpdateUserCommand command)
         {
-            try
-            {
-                command.Id = id;
-                await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ForbbidenException)
-            {
-                return StatusCode(403);
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            command.Id = id;
+            await _mediator.Send(command);
+            return Ok();
         }
 
 
@@ -184,21 +138,10 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "authentications:write")]
         public async Task<IActionResult> UpdateUserPassword([FromRoute]Guid id, [FromBody] UpdateUserPasswordCommand command)
         {
-            try
-            {
-                command.Id = id;
-                await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
-        }
+            command.Id = id;
+            await _mediator.Send(command);
+            return Ok();
+         }
 
 
         [HttpDelete("{id}")]
@@ -209,20 +152,8 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "users:write")]
         public async Task<IActionResult> Delete([FromRoute]DeleteUserCommand command)
         {
-            try
-            {
-                await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
-
+            await _mediator.Send(command);
+            return Ok();
         }
     }
 }

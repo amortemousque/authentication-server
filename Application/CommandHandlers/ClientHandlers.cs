@@ -8,6 +8,7 @@ using System.Linq;
 using System.Collections.Generic;
 using AuthorizationServer.Domain.ClientAggregate;
 using AuthorizationServer.Domain.Contracts;
+using AuthorizationServer.Exceptions;
 
 namespace AuthorizationServer.Application.CommandHandlers
 {
@@ -34,7 +35,7 @@ namespace AuthorizationServer.Application.CommandHandlers
 
         public async Task<bool> Handle(UpdateClientCommand message, CancellationToken cancellationToken)
         {
-            var client = await _repository.GetById(message.Id) ?? throw new KeyNotFoundException();
+            var client = await _repository.GetById(message.Id) ?? throw new NotFoundException();
 
             message.AllowedScopes = message.AllowedScopes ?? new List<string>();
 
@@ -70,7 +71,7 @@ namespace AuthorizationServer.Application.CommandHandlers
 
         public async Task<ClientSecret> Handle(UpdateClientSecretCommand message, CancellationToken cancellationToken)
         {
-            var client = await _repository.GetById(message.Id) ?? throw new KeyNotFoundException();
+            var client = await _repository.GetById(message.Id) ?? throw new NotFoundException();
             client.GenerateNewClientId();
             
             await _repository.SaveAsync(client);
@@ -79,11 +80,10 @@ namespace AuthorizationServer.Application.CommandHandlers
 
         public async Task<bool> Handle(DeleteClientCommand message, CancellationToken cancellationToken)
         {
-            var client = await _repository.GetById(message.Id) ?? throw new KeyNotFoundException();
+            var client = await _repository.GetById(message.Id) ?? throw new NotFoundException();
             await _repository.Delete(message.Id);
             return true;
         }
 
-    
     }
 }    

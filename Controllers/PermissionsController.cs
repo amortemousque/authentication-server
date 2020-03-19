@@ -42,15 +42,8 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "permissions:read")]
         public async Task<IActionResult> GetPermission([FromRoute]Guid id)
         {
-            try
-            {
-                var api = await _permissionQueries.GetPermissionAsync(id);
-                return Ok(api);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
+            var api = await _permissionQueries.GetPermissionAsync(id);
+            return Ok(api);
         }
 
         [HttpGet]
@@ -60,19 +53,8 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "permissions:read")]
         public async Task<IActionResult> GetPermissions([FromQuery]string name)
         {
-            try
-            {
-                var permissions = await _permissionQueries.GetPermissionsAsync(name);
-                return Ok(permissions);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            var permissions = await _permissionQueries.GetPermissionsAsync(name);
+            return Ok(permissions);
         }
 
 
@@ -83,19 +65,8 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "permissions:read")]
         public async Task<IActionResult> GetMyPermissions()
         {
-            try
-            {
-                var permissions = await _permissionQueries.GetUserPermissions(_identityService.GetUserIdentity());
-                return Ok(permissions);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            var permissions = await _permissionQueries.GetUserPermissions(_identityService.GetUserIdentity());
+            return Ok(permissions);
         }
 
 
@@ -106,19 +77,8 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "permissions:write")]
         public async Task<IActionResult> Post([FromBody]CreatePermissionCommand command)
         {
-            try
-            {
-                var permission = await _mediator.Send(command);
-                return Ok(permission);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            var permission = await _mediator.Send(command);
+            return Ok(permission);
         }
 
         [HttpPut("{id}")]
@@ -129,20 +89,9 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "permissions:write")]
         public async Task<IActionResult> Put([FromRoute]Guid id, [FromBody] UpdatePermissionCommand command)
         {
-            try
-            {
-                command.Id = id;
-                await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            command.Id = id;
+            await _mediator.Send(command);
+            return Ok();
         }
 
 
@@ -154,21 +103,9 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "permissions:write")]
         public async Task<IActionResult> Delete([FromRoute]Guid id)
         {
-            try
-            {
-                var command = new DeletePermissionCommand() { Id = id };
-                await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
-
+            var command = new DeletePermissionCommand() { Id = id };
+            await _mediator.Send(command);
+            return Ok();
         }
 
         [HttpDelete(Name = "DeleteMultiple")]
@@ -178,23 +115,12 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "permissions:write")]
         public async Task<IActionResult> DeleteMultiple([FromQuery]Guid[] ids)
         {
-            try
+            foreach (var id in ids)
             {
-                foreach (var id in ids)
-                {
-                    var command = new DeletePermissionCommand() { Id = id };
-                    await _mediator.Send(command);
-                }
-                return Ok();
+                var command = new DeletePermissionCommand() { Id = id };
+                await _mediator.Send(command);
             }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            return Ok();
         }
     }
 }

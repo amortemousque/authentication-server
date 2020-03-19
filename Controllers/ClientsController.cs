@@ -42,19 +42,8 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "authentications:read")]
         public async Task<IActionResult> GetClient([FromRoute]Guid id)
         {
-            try
-            {
-                var api = await _clientQueries.GetClientAsync(id);
-                return Ok(api);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            var api = await _clientQueries.GetClientAsync(id);
+            return Ok(api);
         }
 
         [HttpGet]
@@ -64,15 +53,8 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "authentications:read")]
         public async Task<IActionResult> GetClients([FromQuery]string name, [FromQuery]bool? enabled)
         {
-            try
-            {
-                var clients = await _clientQueries.GetClientsAsync(name, enabled);
-                return Ok(clients);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
+            var clients = await _clientQueries.GetClientsAsync(name, enabled);
+            return Ok(clients);
         }
 
 
@@ -82,19 +64,8 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "authentications:write")]
         public async Task<IActionResult> Post([FromBody]CreateClientCommand command)
         {
-            try
-            {
-                var client = await _mediator.Send(command);
-                return Ok(client);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            var client = await _mediator.Send(command);
+            return Ok(client);
         }
         
         [HttpPut("{id}")]
@@ -105,20 +76,9 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "authentications:write")]
         public async Task<IActionResult> Put([FromRoute]Guid id, [FromBody]UpdateClientCommand command)
         {
-            try
-            {
-                command.Id = id;
-                var client = await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            command.Id = id;
+            await _mediator.Send(command);
+            return Ok();
         }
 
 
@@ -130,20 +90,9 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "authentications:write")]
         public async Task<IActionResult> UpdateClientSecret([FromRoute]Guid id, [FromBody] UpdateClientSecretCommand command)
         {
-            try
-            {
-                command.Id = id;
-                var clientSecret = await _mediator.Send(command);
-                return Ok(clientSecret);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            command.Id = id;
+            var clientSecret = await _mediator.Send(command);
+            return Ok(clientSecret);
         }
 
 
@@ -155,20 +104,9 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "authentications:write")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            try
-            {
-                var command = new DeleteClientCommand { Id = id };
-                var client = await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            var command = new DeleteClientCommand { Id = id };
+            var client = await _mediator.Send(command);
+            return Ok();
         }
     }
 }

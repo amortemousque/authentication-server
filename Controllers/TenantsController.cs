@@ -40,23 +40,15 @@ namespace AuthorizationServer.Controllers
         [Authorize]
         public async Task<IActionResult> GetTenant(Guid id)
         {
-            try
-            {
-                var userAuthorize = await _authorizationService.AuthorizeAsync(User, "tenants:read");
-                var applicationAuthorize = await _authorizationService.AuthorizeAsync(User, "application(tenants:read)");
+            var userAuthorize = await _authorizationService.AuthorizeAsync(User, "tenants:read");
+            var applicationAuthorize = await _authorizationService.AuthorizeAsync(User, "application(tenants:read)");
 
-                if (userAuthorize.Succeeded || applicationAuthorize.Succeeded)
-                {
-                    var api = await _tenantQueries.GetTenantByIdAsync(id);
-                    return Ok(api);
-                }
-                return StatusCode(401);
-
-            }
-            catch (KeyNotFoundException)
+            if (userAuthorize.Succeeded || applicationAuthorize.Succeeded)
             {
-                return NotFound();
+                var api = await _tenantQueries.GetTenantByIdAsync(id);
+                return Ok(api);
             }
+            return StatusCode(401);
         }
 
         [HttpGet]
@@ -65,26 +57,15 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 400)]
         public async Task<IActionResult> GetTenants(string name, bool? enabled)
         {
-            try
-            {
-                var userAuthorize = await _authorizationService.AuthorizeAsync(User, "tenants:read");
-                var applicationAuthorize = await _authorizationService.AuthorizeAsync(User, "application(tenants:read)");
+            var userAuthorize = await _authorizationService.AuthorizeAsync(User, "tenants:read");
+            var applicationAuthorize = await _authorizationService.AuthorizeAsync(User, "application(tenants:read)");
 
-                if (userAuthorize.Succeeded || applicationAuthorize.Succeeded)
-                {
-                    var tenants = await _tenantQueries.GetTenantsAsync(name, enabled);
-                    return Ok(tenants);
-                }
-                return StatusCode(401);
-            }
-            catch (KeyNotFoundException)
+            if (userAuthorize.Succeeded || applicationAuthorize.Succeeded)
             {
-                return NotFound();
+                var tenants = await _tenantQueries.GetTenantsAsync(name, enabled);
+                return Ok(tenants);
             }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            return StatusCode(401);
         }
 
 
@@ -95,25 +76,16 @@ namespace AuthorizationServer.Controllers
         [Authorize]
         public async Task<IActionResult> Post([FromBody]CreateTenantCommand command)
         {
-            try
-            {
-                var userAuthorize = await _authorizationService.AuthorizeAsync(User, "tenants:write");
-                var applicationAuthorize = await _authorizationService.AuthorizeAsync(User, "application(tenants:write)");
+        
+            var userAuthorize = await _authorizationService.AuthorizeAsync(User, "tenants:write");
+            var applicationAuthorize = await _authorizationService.AuthorizeAsync(User, "application(tenants:write)");
 
-                if(userAuthorize.Succeeded || applicationAuthorize.Succeeded) {
-                    var tenant = await _mediator.Send(command);
-                    return Ok(tenant);
-                }
-                return StatusCode(401);
+            if(userAuthorize.Succeeded || applicationAuthorize.Succeeded) {
+                var tenant = await _mediator.Send(command);
+                return Ok(tenant);
             }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            return StatusCode(401);
+  
         }
 
         [HttpPut("{id}")]
@@ -124,20 +96,9 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "tenants:write")]
         public async Task<IActionResult> Put(Guid id, [FromBody] UpdateTenantCommand command)
         {
-            try
-            {
-                command.Id = id;
-                await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            command.Id = id;
+            await _mediator.Send(command);
+            return Ok();
         }
 
 
@@ -149,20 +110,8 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "tenants:write")]
         public async Task<IActionResult> Delete(DeleteTenantCommand command)
         {
-            try
-            {
-                await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
-
+            await _mediator.Send(command);
+            return Ok();
         }
     }
 }

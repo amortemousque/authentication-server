@@ -10,6 +10,7 @@ using AuthorizationServer.Application.Commands;
 using Model = AuthorizationServer.Domain.RoleAggregate;
 using AuthorizationServer.Domain.PermissionAggregate;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AuthorizationServer.Exceptions;
 
 namespace AuthorizationServer.Controllers
 {
@@ -54,7 +55,7 @@ namespace AuthorizationServer.Controllers
             {
                 var role = await _roleManager.FindByIdAsync(id.ToString());
                 if (role == null)
-                    throw new KeyNotFoundException();
+                    throw new NotFoundException();
 
                 return Ok(role);
             }
@@ -71,19 +72,8 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "roles:read")]
         public async Task<IActionResult> GetRoles([FromQuery]string name)
         {
-            try
-            {
-                var roles = await _roleQueries.GetRolesAsync(name);
-                return Ok(roles);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            var roles = await _roleQueries.GetRolesAsync(name);
+            return Ok(roles);
         }
 
 
@@ -94,19 +84,8 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "roles:write")]
         public async Task<IActionResult> Post([FromBody]CreateRoleCommand command)
         {
-            try
-            {
-                var role = await _mediator.Send(command);
-                return Ok(role);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            var role = await _mediator.Send(command);
+            return Ok(role);
         }
 
         [HttpPut("{id}")]
@@ -116,20 +95,9 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "roles:write")]
         public async Task<IActionResult> Put([FromRoute] Guid id, [FromBody] UpdateRoleCommand command)
         {
-            try
-            {
-                command.Id = id;
-                await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            command.Id = id;
+            await _mediator.Send(command);
+            return Ok();
         }
 
 
@@ -140,26 +108,10 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "roles:write")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            try
-            {
-                var command = new DeleteRoleCommand { Id = id };
-                await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
-
+            var command = new DeleteRoleCommand { Id = id };
+            await _mediator.Send(command);
+            return Ok();
         }
-
-
-
-        // permission
 
         [HttpGet("{id}/permissions", Name = "GetRolePermissions")]
         [ProducesResponseType(typeof(Permission[]), 200)]
@@ -193,20 +145,9 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "permissions:write")]
         public async Task<IActionResult> PostPermissionRole([FromRoute]Guid id, [FromBody] AddPermissionsToRoleCommand command)
         {
-            try
-            {
-                command.RoleId = id;
-                await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            command.RoleId = id;
+            await _mediator.Send(command);
+            return Ok();
         }
 
 
@@ -218,21 +159,9 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "permissions:write")]
         public async Task<IActionResult> DeletePermissionRole([FromRoute]Guid id, [FromRoute]Guid permissionId)
         {
-            try
-            {
-                var command = new RemovePermissionToRoleCommand { RoleId = id, PermissionId = permissionId };
-                await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
-
+            var command = new RemovePermissionToRoleCommand { RoleId = id, PermissionId = permissionId };
+            await _mediator.Send(command);
+            return Ok();
         }
     }
 }

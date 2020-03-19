@@ -6,9 +6,9 @@ using AuthorizationServer.Application.Commands;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
-using AuthorizationServer.Domain.RoleAggregate;
 using AuthorizationServer.Domain.Contracts;
 using IdentityRole = AuthorizationServer.Domain.RoleAggregate.IdentityRole;
+using AuthorizationServer.Exceptions;
 
 namespace AuthorizationServer.Application.CommandHandlers
 {
@@ -85,8 +85,8 @@ namespace AuthorizationServer.Application.CommandHandlers
 
         public async Task<bool> Handle(AddPermissionsToRoleCommand message, CancellationToken cancellationToken)
         {
-            var role = await _roleManager.FindByIdAsync(message.RoleId.ToString()) ?? throw new KeyNotFoundException();;
-            var permissions = await _permissionRepository.GetByNames(message.Permissions) ?? throw new KeyNotFoundException();
+            var role = await _roleManager.FindByIdAsync(message.RoleId.ToString()) ?? throw new NotFoundException();;
+            var permissions = await _permissionRepository.GetByNames(message.Permissions) ?? throw new NotFoundException();
 
             role.Permissions = role.Permissions ?? new List<string>();
 
@@ -104,8 +104,8 @@ namespace AuthorizationServer.Application.CommandHandlers
 
         public async Task<bool> Handle(RemovePermissionToRoleCommand message, CancellationToken cancellationToken)
         {
-            var role = await _roleManager.FindByIdAsync(message.RoleId.ToString()) ?? throw new KeyNotFoundException();
-            var permission = await _permissionRepository.GetById(message.PermissionId) ?? throw new KeyNotFoundException();
+            var role = await _roleManager.FindByIdAsync(message.RoleId.ToString()) ?? throw new NotFoundException();
+            var permission = await _permissionRepository.GetById(message.PermissionId) ?? throw new NotFoundException();
 
             if (role.Permissions.Any(pname => pname == permission.Name)) 
             {
@@ -113,7 +113,7 @@ namespace AuthorizationServer.Application.CommandHandlers
             } 
             else 
             {
-                throw new KeyNotFoundException("Permission not found in this role");
+                throw new NotFoundException("Permission not found in this role");
             }
 
                 

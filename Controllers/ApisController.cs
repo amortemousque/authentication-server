@@ -36,15 +36,8 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 404)]
         public async Task<IActionResult> GetApi(Guid id)
         {
-            try
-            {
-                var api = await _apiQueries.GetApiAsync(id);
-                return Ok(api);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
+            var api = await _apiQueries.GetApiAsync(id);
+            return Ok(api);
         }
 
         [HttpGet]
@@ -74,19 +67,8 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "authentications:write")]
         public async Task<IActionResult> Post([FromBody]CreateApiCommand command)
         {
-            try
-            {
-                var apiResource = await _mediator.Send(command);
-                return Ok(apiResource);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            var apiResource = await _mediator.Send(command);
+            return Ok(apiResource);
         }
 
 
@@ -122,20 +104,9 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "authentications:write")]
         public async Task<IActionResult> Delete([FromRoute]Guid id)
         {
-            try
-            {
-                var command = new DeleteApiCommand { Id = id };
-                await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            var command = new DeleteApiCommand { Id = id };
+            await _mediator.Send(command);
+            return Ok();
         }
 
 
@@ -149,19 +120,8 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "authentications:read")]
         public async Task<IActionResult> GetApiScopes([FromRoute]Guid id)
         {
-            try
-            {
-                var scopes = await _apiQueries.GetApiScopesAsync(id);
-                return Ok(scopes);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            var scopes = await _apiQueries.GetApiScopesAsync(id);
+            return Ok(scopes);
         }
 
 
@@ -197,22 +157,11 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "authentications:write")]
         public async Task<IActionResult> PutApiScope([FromRoute]Guid id, [FromRoute]Guid scopeId, [FromBody]UpdateApiScopeCommand command)
         {
-            try
-            {
-                command.ApiResourceId = id;
-                command.Id = scopeId;
+            command.ApiResourceId = id;
+            command.Id = scopeId;
 
-                await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
+            await _mediator.Send(command);
+            return Ok();
         }
 
         [HttpDelete("{id}/scopes/{scopeId}", Name = "DeleteApiScope")]
@@ -223,21 +172,9 @@ namespace AuthorizationServer.Controllers
         [Authorize(Policy = "authentications:write")]
         public async Task<IActionResult> DeleteApiScope([FromRoute]Guid id, [FromRoute]Guid scopeId)
         {
-            try
-            {
-                var command = new DeleteApiScopeCommand { Id = scopeId, ApiResourceId = id };
-                var client = await _mediator.Send(command);
-                return Ok();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (ArgumentException argumentException)
-            {
-                return BadRequest(argumentException.Message);
-            }
-
+            var command = new DeleteApiScopeCommand { Id = scopeId, ApiResourceId = id };
+            await _mediator.Send(command);
+            return Ok();
         }
     }
 }

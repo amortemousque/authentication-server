@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using IdentityModel;
 using AuthorizationServer.Domain.Contracts;
+using AuthorizationServer.Exceptions;
 
 namespace AuthorizationServer.Domain.ApiAggregate
 {
@@ -73,7 +74,7 @@ namespace AuthorizationServer.Domain.ApiAggregate
                 throw new ArgumentException("The name must be specified", nameof(scopeId));
 
             if (scope == null)
-                throw new KeyNotFoundException();
+                throw new NotFoundException();
             
             this.Scopes.Remove(scope);
         }

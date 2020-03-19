@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using AuthorizationServer.Application.Events;
 using AuthorizationServer.Domain.PermissionAggregate;
 using AuthorizationServer.Domain.Contracts;
+using AuthorizationServer.Exceptions;
 
 namespace AuthorizationServer.Application.CommandHandlers
 {
@@ -33,7 +34,7 @@ namespace AuthorizationServer.Application.CommandHandlers
 
         public async Task<bool> Handle(UpdatePermissionCommand message, CancellationToken cancellationToken)
         {
-            var permission = await _repository.GetById(message.Id) ?? throw new KeyNotFoundException();
+            var permission = await _repository.GetById(message.Id) ?? throw new NotFoundException();
 
             permission.UpdateInfos(message.Description);
 
@@ -44,7 +45,7 @@ namespace AuthorizationServer.Application.CommandHandlers
 
         public async Task<bool> Handle(DeletePermissionCommand message, CancellationToken cancellationToken)
         {
-            var permission = await _repository.GetById(message.Id) ?? throw new KeyNotFoundException();
+            var permission = await _repository.GetById(message.Id) ?? throw new NotFoundException();
             await _repository.Delete(message.Id);
             await _mediator.Publish(new PermissionDeletedEvent(permission.Id, permission.Name));
 

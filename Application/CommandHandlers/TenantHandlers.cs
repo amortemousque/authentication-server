@@ -9,6 +9,7 @@ using AuthorizationServer.Domain.Contracts;
 using AuthorizationServer.Domain.TenantAggregate;
 using AuthorizationServer.Infrastructure.Context;
 using AuthorizationServer.Infrastructure;
+using AuthorizationServer.Exceptions;
 
 namespace AuthorizationServer.Application.CommandHandlers
 {
@@ -42,7 +43,7 @@ namespace AuthorizationServer.Application.CommandHandlers
 
         public async Task<bool> Handle(UpdateTenantCommand message, CancellationToken cancellationToken)
         {
-            var tenant = await _repository.GetById(message.Id) ?? throw new KeyNotFoundException();
+            var tenant = await _repository.GetById(message.Id) ?? throw new NotFoundException();
 
             tenant.UpdateInfos(message.Description, message.LogoUri, message.EmailSignature);
             if (message.Enabled) 
@@ -65,7 +66,7 @@ namespace AuthorizationServer.Application.CommandHandlers
 
         public async Task<bool> Handle(DeleteTenantCommand message, CancellationToken cancellationToken)
         {
-            var tenant = await _repository.GetById(message.Id) ?? throw new KeyNotFoundException();
+            var tenant = await _repository.GetById(message.Id) ?? throw new NotFoundException();
             tenant.Archive();
 
             tenant.UpdatedAt = DateTime.Now;

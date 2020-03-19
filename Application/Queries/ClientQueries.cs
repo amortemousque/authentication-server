@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using System.Linq.Expressions;
 using AuthorizationServer.Domain.Contracts;
 using AuthorizationServer.Domain.ClientAggregate;
+using AuthorizationServer.Exceptions;
 
 namespace AuthorizationServer.Application.Queries
 {
@@ -26,7 +27,7 @@ namespace AuthorizationServer.Application.Queries
             var response = await _clientRepository.GetById(id);
 
             if (response == null)
-                throw new KeyNotFoundException();
+                throw new NotFoundException();
 
             return response;
         }
