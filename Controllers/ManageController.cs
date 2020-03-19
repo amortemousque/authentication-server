@@ -12,6 +12,7 @@ using AuthorizationServer.Domain.Services;
 using AuthorizationServer.Domain.TenantAggregate;
 using AuthorizationServer.Models;
 using AuthorizationServer.Models.ManageViewModels;
+using AuthorizationServer.Infrastructure.IdentityServer.Extensions;
 
 namespace AuthorizationServer.Controllers
 {
@@ -44,8 +45,7 @@ namespace AuthorizationServer.Controllers
 
         public Tenant GetCurrentTenant()
         {
-            var domain = HttpContext.Request.Host;
-            var tenantName = domain.Host.Split('.').First();
+            var tenantName = HttpContext.Request.GetTenantNameFromHost();
             var tenant = _tenantQueries.GetTenantByNameAsync(tenantName).Result;
             return tenant;
         }

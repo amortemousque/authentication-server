@@ -52,7 +52,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [Authorize(Policy = "authentications:read")]
-        public async Task<IActionResult> GetApis(string name, string displayName, bool? enabled)
+        public async Task<IActionResult> GetApis([FromQuery]string name, [FromQuery]string displayName, [FromQuery]bool? enabled)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "authentications:write")]
-        public async Task<IActionResult> Put(Guid id, [FromBody]UpdateApiCommand command)
+        public async Task<IActionResult> Put([FromRoute]Guid id, [FromBody]UpdateApiCommand command)
         {
             try
             {
@@ -120,10 +120,11 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "authentications:write")]
-        public async Task<IActionResult> Delete(DeleteApiCommand command)
+        public async Task<IActionResult> Delete([FromRoute]Guid id)
         {
             try
             {
+                var command = new DeleteApiCommand { Id = id };
                 await _mediator.Send(command);
                 return Ok();
             }
@@ -140,17 +141,17 @@ namespace AuthorizationServer.Controllers
 
         //scope
 
-        [HttpGet("{apiResourceId}/scopes", Name = "GetApiScopes")]
+        [HttpGet("{id}/scopes", Name = "GetApiScopes")]
         [ProducesResponseType(typeof(ApiResource[]), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "authentications:read")]
-        public async Task<IActionResult> GetApiScopes(Guid apiResourceId)
+        public async Task<IActionResult> GetApiScopes([FromRoute]Guid id)
         {
             try
             {
-                var scopes = await _apiQueries.GetApiScopesAsync(apiResourceId);
+                var scopes = await _apiQueries.GetApiScopesAsync(id);
                 return Ok(scopes);
             }
             catch (KeyNotFoundException)
@@ -164,15 +165,16 @@ namespace AuthorizationServer.Controllers
         }
 
 
-        [HttpPost("{apiResourceId}/scopes", Name = "PostApiScope")]
+        [HttpPost("{id}/scopes", Name = "PostApiScope")]
         [ProducesResponseType(typeof(ApiResource), 201)]
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 400)]
         [Authorize(Policy = "authentications:write")]
-        public async Task<IActionResult> PostApiScope([FromBody]CreateApiScopeCommand command)
+        public async Task<IActionResult> PostApiScope([FromRoute] Guid id, [FromBody]CreateApiScopeCommand command)
         {
             try
             {
+                command.ApiResourceId = id;
                 var apiResource = await _mediator.Send(command);
                 return Ok(apiResource);
             }
@@ -187,17 +189,19 @@ namespace AuthorizationServer.Controllers
         }
 
 
-        [HttpPut("{apiResourceId}/scopes/{id}", Name = "PutApiScope")]
+        [HttpPut("{id}/scopes/{scopeId}", Name = "PutApiScope")]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "authentications:write")]
-        public async Task<IActionResult> PutApiScope(Guid id, [FromBody]UpdateApiScopeCommand command)
+        public async Task<IActionResult> PutApiScope([FromRoute]Guid id, [FromRoute]Guid scopeId, [FromBody]UpdateApiScopeCommand command)
         {
             try
             {
-                command.Id = id;
+                command.ApiResourceId = id;
+                command.Id = scopeId;
+
                 await _mediator.Send(command);
                 return Ok();
             }
@@ -211,16 +215,17 @@ namespace AuthorizationServer.Controllers
             }
         }
 
-        [HttpDelete("{apiResourceId}/scopes/{id}", Name = "DeleteApiScope")]
+        [HttpDelete("{id}/scopes/{scopeId}", Name = "DeleteApiScope")]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "authentications:write")]
-        public async Task<IActionResult> DeleteApiScope(DeleteApiScopeCommand command)
+        public async Task<IActionResult> DeleteApiScope([FromRoute]Guid id, [FromRoute]Guid scopeId)
         {
             try
             {
+                var command = new DeleteApiScopeCommand { Id = scopeId, ApiResourceId = id };
                 var client = await _mediator.Send(command);
                 return Ok();
             }

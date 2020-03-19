@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using AuthorizationServer.Application.Commands;
 using AuthorizationServer.Domain.PermissionAggregate;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AuthorizationServer.Infrastructure.Context;
+using AuthorizationServer.Infrastructure;
 
 namespace AuthorizationServer.Controllers
 {
@@ -20,13 +22,16 @@ namespace AuthorizationServer.Controllers
     {
         protected IMediator _mediator;
         private readonly PermissionQueries _permissionQueries;
+        private readonly IIdentityService _identityService;
 
         public PermissionsController(
             IMediator mediator,
-            PermissionQueries permissionQueries)
+            PermissionQueries permissionQueries,
+            IIdentityService identityService)
         {
             _mediator = mediator;
             _permissionQueries = permissionQueries;
+            _identityService = identityService;
         }
 
         [HttpGet("{id}")]
@@ -35,7 +40,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "permissions:read")]
-        public async Task<IActionResult> GetPermission(Guid id)
+        public async Task<IActionResult> GetPermission([FromRoute]Guid id)
         {
             try
             {
@@ -53,11 +58,34 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [Authorize(Policy = "permissions:read")]
-        public async Task<IActionResult> GetPermissions(string name)
+        public async Task<IActionResult> GetPermissions([FromQuery]string name)
         {
             try
             {
                 var permissions = await _permissionQueries.GetPermissionsAsync(name);
+                return Ok(permissions);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException argumentException)
+            {
+                return BadRequest(argumentException.Message);
+            }
+        }
+
+
+        [HttpGet("/users/me/permissions")]
+        [ProducesResponseType(typeof(Permission[]), 200)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(void), 401)]
+        [Authorize(Policy = "permissions:read")]
+        public async Task<IActionResult> GetMyPermissions()
+        {
+            try
+            {
+                var permissions = await _permissionQueries.GetUserPermissions(_identityService.GetUserIdentity());
                 return Ok(permissions);
             }
             catch (KeyNotFoundException)
@@ -99,7 +127,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "permissions:write")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] UpdatePermissionCommand command)
+        public async Task<IActionResult> Put([FromRoute]Guid id, [FromBody] UpdatePermissionCommand command)
         {
             try
             {
@@ -124,10 +152,11 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "permissions:write")]
-        public async Task<IActionResult> Delete(DeletePermissionCommand command)
+        public async Task<IActionResult> Delete([FromRoute]Guid id)
         {
             try
             {
+                var command = new DeletePermissionCommand() { Id = id };
                 await _mediator.Send(command);
                 return Ok();
             }
@@ -142,16 +171,16 @@ namespace AuthorizationServer.Controllers
 
         }
 
-        [HttpDelete( Name = "DeleteMultiple")]
+        [HttpDelete(Name = "DeleteMultiple")]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [Authorize(Policy = "permissions:write")]
-        public async Task<IActionResult> DeleteMultiple(Guid[] ids)
+        public async Task<IActionResult> DeleteMultiple([FromQuery]Guid[] ids)
         {
             try
             {
-                foreach(var id in ids) 
+                foreach (var id in ids)
                 {
                     var command = new DeletePermissionCommand() { Id = id };
                     await _mediator.Send(command);
@@ -166,7 +195,6 @@ namespace AuthorizationServer.Controllers
             {
                 return BadRequest(argumentException.Message);
             }
-
         }
     }
 }

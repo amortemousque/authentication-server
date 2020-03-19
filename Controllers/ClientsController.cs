@@ -40,7 +40,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "authentications:read")]
-        public async Task<IActionResult> GetClient(Guid id)
+        public async Task<IActionResult> GetClient([FromRoute]Guid id)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [Authorize(Policy = "authentications:read")]
-        public async Task<IActionResult> GetClients(string name, bool? enabled)
+        public async Task<IActionResult> GetClients([FromQuery]string name, [FromQuery]bool? enabled)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "authentications:write")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] UpdateClientCommand command)
+        public async Task<IActionResult> Put([FromRoute]Guid id, [FromBody]UpdateClientCommand command)
         {
             try
             {
@@ -128,7 +128,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "authentications:write")]
-        public async Task<IActionResult> UpdateClientSecret(Guid id, [FromBody] UpdateClientSecretCommand command)
+        public async Task<IActionResult> UpdateClientSecret([FromRoute]Guid id, [FromBody] UpdateClientSecretCommand command)
         {
             try
             {
@@ -153,10 +153,11 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "authentications:write")]
-        public async Task<IActionResult> Delete(DeleteClientCommand command)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             try
             {
+                var command = new DeleteClientCommand { Id = id };
                 var client = await _mediator.Send(command);
                 return Ok();
             }

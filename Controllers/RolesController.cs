@@ -24,17 +24,21 @@ namespace AuthorizationServer.Controllers
 
         private readonly RoleManager<Model.IdentityRole> _roleManager;
         private readonly RoleQueries _roleQueries;
+        private readonly PermissionQueries _permissionQueries;
+
         private readonly IAuthorizationService _authorizationService;
 
         public RolesController(
             IMediator mediator,
             IAuthorizationService authorizationService,
             RoleQueries roleQueries,
+            PermissionQueries permissionQueries,
             RoleManager<Model.IdentityRole> roleManager)
         {
             _roleManager = roleManager;
             _mediator = mediator;
             _roleQueries = roleQueries;
+            _permissionQueries = permissionQueries;
             _authorizationService = authorizationService;
         }
 
@@ -44,7 +48,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "roles:read")]
-        public async Task<IActionResult> GetRole(Guid id)
+        public async Task<IActionResult> GetRole([FromRoute]Guid id)
         {
             try
             {
@@ -65,7 +69,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [Authorize(Policy = "roles:read")]
-        public async Task<IActionResult> GetRoles(string name)
+        public async Task<IActionResult> GetRoles([FromQuery]string name)
         {
             try
             {
@@ -110,7 +114,7 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [Authorize(Policy = "roles:write")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] UpdateRoleCommand command)
+        public async Task<IActionResult> Put([FromRoute] Guid id, [FromBody] UpdateRoleCommand command)
         {
             try
             {
@@ -134,10 +138,11 @@ namespace AuthorizationServer.Controllers
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [Authorize(Policy = "roles:write")]
-        public async Task<IActionResult> Delete(DeleteRoleCommand command)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             try
             {
+                var command = new DeleteRoleCommand { Id = id };
                 await _mediator.Send(command);
                 return Ok();
             }
@@ -156,17 +161,17 @@ namespace AuthorizationServer.Controllers
 
         // permission
 
-        [HttpGet("{roleId}/permissions", Name = "GetRolePermissions")]
+        [HttpGet("{id}/permissions", Name = "GetRolePermissions")]
         [ProducesResponseType(typeof(Permission[]), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "permissions:read")]
-        public async Task<IActionResult> GetRolePermissions(Guid roleId)
+        public async Task<IActionResult> GetRolePermissions([FromRoute]Guid id)
         {
             try
             {
-                var permissions = await _roleQueries.GetRolePermissionsAsync(roleId);
+                var permissions = await _permissionQueries.GetRolePermissionsAsync(id);
                 return Ok(permissions);
             }
             catch (KeyNotFoundException)
@@ -180,16 +185,17 @@ namespace AuthorizationServer.Controllers
         }
 
 
-        [HttpPost("{roleId}/permissions", Name = "PostPermissionRole")]
+        [HttpPost("{id}/permissions", Name = "PostPermissionRole")]
         [ProducesResponseType(typeof(void), 201)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "permissions:write")]
-        public async Task<IActionResult> PostPermissionRole([FromBody]AddPermissionsToRoleCommand command)
+        public async Task<IActionResult> PostPermissionRole([FromRoute]Guid id, [FromBody] AddPermissionsToRoleCommand command)
         {
             try
             {
+                command.RoleId = id;
                 await _mediator.Send(command);
                 return Ok();
             }
@@ -204,16 +210,17 @@ namespace AuthorizationServer.Controllers
         }
 
 
-        [HttpDelete("{roleId}/permissions/{permissionId}", Name = "DeletePermissionRole")]
+        [HttpDelete("{id}/permissions/{permissionId}", Name = "DeletePermissionRole")]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 404)]
         [Authorize(Policy = "permissions:write")]
-        public async Task<IActionResult> DeletePermissionRole(RemovePermissionToRoleCommand command)
+        public async Task<IActionResult> DeletePermissionRole([FromRoute]Guid id, [FromRoute]Guid permissionId)
         {
             try
             {
+                var command = new RemovePermissionToRoleCommand { RoleId = id, PermissionId = permissionId };
                 await _mediator.Send(command);
                 return Ok();
             }
