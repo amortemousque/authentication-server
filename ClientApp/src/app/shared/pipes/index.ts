@@ -1,3 +1,3 @@
 export { ReferencePipe } from './reference.pipe';
-export { ReferencesPipe } from './references.pipe';
+export { TenantPipe } from './tenant.pipe';
 export { ParenthesisPipe } from './parenthesis.pipe';

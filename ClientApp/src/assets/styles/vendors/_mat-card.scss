@@ -13,21 +13,21 @@
     }
     .mat-card-header-text {
       margin: 0;
-       padding-bottom: 16px;
+      padding-bottom: 16px;
     }
 
     .mat-card.card-indicator {
-        flex: 1 1 100%;
-        padding-top: 12px;
-        padding-bottom: 14px;
-        max-width: 200px;
-        .indicator {
-            font-weight: bold;
-        }
+      flex: 1 1 100%;
+      padding-top: 12px;
+      padding-bottom: 14px;
+      max-width: 200px;
+      .indicator {
+        font-weight: bold;
+      }
 
-        .indicator-info {
-            margin: 0;
-        }
+      .indicator-info {
+        margin: 0;
+      }
     }
   }
 }

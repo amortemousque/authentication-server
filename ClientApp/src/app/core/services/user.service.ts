@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { User } from '../models';
 import { SearchUserQuery } from '../../user/list/user-list.state';
 import { AccessTokenHolder } from '../auth/access-token-holder';
+import { changeTenant } from '../utils/global.utils';
 
 
 @Injectable({
@@ -50,7 +51,6 @@ export class UserService {
     return this.http.put<any>(`${this.userApiUrl}/users/${user.id}`, user, {
       headers: new HttpHeaders().set('Authorization', this._authHeader)
     })
-
   }
 
   deleteUser(id) {

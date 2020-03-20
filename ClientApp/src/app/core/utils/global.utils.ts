@@ -173,24 +173,22 @@ export function getHost(withPort = true) {
   return `${protocol}//${host}`;
 };
 
-export function reload() {
-  window.location.reload();
+export function changeTenant(url, tenant) {
+  const urlO = new URL(url);
+  if (tenant) {
+    let hostname = urlO.hostname;
+    let domains = hostname.split('.');
+
+    let currentTenant = domains.length > 1 ? hostname.split('.')[0] : '';
+    if (currentTenant)
+      urlO.hostname = hostname.replace(currentTenant, tenant);
+    else
+      urlO.hostname = `${tenant}.${hostname}`
+
+  }
+  return urlO.toString();
 }
 
-export function getServiceUri(host) {
-  let environments = ['training', 'staging'];
-  let env = environments.find(env => host.includes(env));
-
-  if (host.indexOf('localhost') > -1 && host.indexOf('komeo') == -1) return 'http://test-api.mock'; // for unit testing
-
-  /*  
-  Matches examples :
-  - match('https://komeo.qupdev.com') = [0:'https://komeo.qupdev.com', 1: 'komeo', 2: 'qupdev.com']
-  - match('https://training-komeo.qupdev.com:4200') = [0:'https://training-komeo.qupdev.com:4200', 1: 'komeo', 2: 'qupdev.com']
-  */
-  let matches = host.match(new RegExp(`.*?\\/\\/${env ? env + '-' : ''}(.+?).([\\w]+\\.[\\w]+)\\:?[\\d]*$`));
-  let domain = matches[2]
-  let tenant = matches[1];
-
-  return `https://service-${tenant}${env ? '-' + env : ''}.${domain}`;
+export function reload() {
+  window.location.reload();
 }

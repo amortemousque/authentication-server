@@ -5,7 +5,7 @@
     </mat-card-header>
     <mat-form-field class="mb-1 pb-1" appearance="fill">
       <mat-label i18n>Tenant</mat-label>
-      <input matInput [value]="user.tenantId | reference:'tenants' | async" disabled>
+      <input matInput [value]="user.tenantId | tenant | async" disabled>
     </mat-form-field>
     <mat-form-field class="mb-0">
       <mat-label i18n>Email</mat-label>
@@ -39,7 +39,7 @@
     </mat-form-field>
     <mat-card-actions>
       <button mat-button mat-dialog-close i18n>Cancel</button>
-      <button mat-raised-button color="acceprimarynt" type="submit">
+      <button mat-raised-button color="primary" type="submit">
         <mat-spinner diameter="20"></mat-spinner>
         <ng-container i18n>Save</ng-container>
       </button>

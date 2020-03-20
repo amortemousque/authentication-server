@@ -1,4 +1,4 @@
-import { User } from "../../core/models";
+import { User, Tenant } from "../../core/models";
 import { Injectable } from "@angular/core";
 import { State, Store, StateContext, Action } from "@ngxs/store";
 import { UserService } from "../../core/services";

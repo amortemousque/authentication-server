@@ -32,7 +32,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppMessageModule } from './message/message.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { LoadingFormDirective } from './loading-form/loading-form.directive';
-import { ReferencePipe, ReferencesPipe, ParenthesisPipe } from './pipes';
+import { ReferencePipe, ParenthesisPipe, TenantPipe } from './pipes';
 import { LayoutModule } from './layout/layout.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppPageHeaderModule } from './layout/page-header/page-header.module';
@@ -40,9 +40,8 @@ import { AppPageHeaderModule } from './layout/page-header/page-header.module';
 @NgModule({
   declarations: [
     LoadingFormDirective,
-    // pipesTenantService
     ReferencePipe,
-    ReferencesPipe,
+    TenantPipe,
     ParenthesisPipe,
   ],
   imports: [
@@ -117,8 +116,8 @@ import { AppPageHeaderModule } from './layout/page-header/page-header.module';
     NgxDatatableModule,
     LoadingFormDirective,
     ReferencePipe,
-    ReferencesPipe,
     ParenthesisPipe,
+    TenantPipe,
     LayoutModule,
     AppPageHeaderModule,
     FlexLayoutModule
