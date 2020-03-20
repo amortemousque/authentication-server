@@ -30,7 +30,6 @@ namespace AuthorizationServer.Controllers
     {
         private readonly UserManager<Model.IdentityUser> _userManager;
         private readonly SignInManager<Model.IdentityUser> _signInManager;
-        private readonly IInvitesQueries _invitesQueries;
         private readonly IStringLocalizer<SharedResource> _localizer;
 
         private readonly IEmailSender _emailSender;
@@ -47,8 +46,8 @@ namespace AuthorizationServer.Controllers
             ISmsSender smsSender,
             ILoggerFactory loggerFactory,
             TenantQueries tenantQueries,
-            IStringLocalizer<SharedResource> localizer,
-            IMediator mediator, IInvitesQueries invitesQueries)
+            IMediator mediator,
+            IStringLocalizer<SharedResource> localizer)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -57,7 +56,6 @@ namespace AuthorizationServer.Controllers
             _tenantQueries = tenantQueries;
             _localizer = localizer;
             _mediator = mediator;
-            _invitesQueries = invitesQueries;
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
@@ -135,10 +133,10 @@ namespace AuthorizationServer.Controllers
         // GET: /Account/Register
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Register(Guid inviteId, string returnUrl = null)
+        public IActionResult Register(string returnUrl = null)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View(new RegisterViewModel { InviteId = inviteId });
+            return View(new RegisterViewModel());
         }
 
         //
@@ -153,19 +151,13 @@ namespace AuthorizationServer.Controllers
             if (ModelState.IsValid)
             {
                 var rqf = Request.HttpContext.Features.Get<IRequestCultureFeature>();
-                var invite = await _invitesQueries.GetById(model.InviteId);
-                if (invite == null) return NotFound();
-                if (invite.IsAccepted) return BadRequest();
 
                 var createUserCommand = new CreateUserCommand
                 {
-                    Email = invite.Email,
-                    PersonId = invite.InviteeId,
+                    Email = model.Email,
                     Password = model.Password,
                     EmailConfirmed = true,
-                    Culture = rqf.RequestCulture.Culture.Name,
-                    Roles = new List<string> { invite.Role },
-                    InviteId = model.InviteId
+                    Culture = rqf.RequestCulture.Culture.Name
                 };
                 try
                 {
@@ -200,7 +192,6 @@ namespace AuthorizationServer.Controllers
             return RedirectToAction(nameof(Login));
         }
 
-        //
         // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]

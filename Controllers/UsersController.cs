@@ -52,31 +52,21 @@ namespace AuthorizationServer.Controllers
         [Authorize]
         public async Task<IActionResult> GetUser([FromRoute]Guid id)
         {
-            try
-            {
-                var userAuthorize = await _authorizationService.AuthorizeAsync(User, "users:read");
-                var applicationAuthorize = await _authorizationService.AuthorizeAsync(User, "application(users:read)");
+            
+            var userAuthorize = await _authorizationService.AuthorizeAsync(User, "users:read");
+            var applicationAuthorize = await _authorizationService.AuthorizeAsync(User, "application(users:read)");
 
-                if (userAuthorize.Succeeded || applicationAuthorize.Succeeded)
-                {
-                    var user = await _userManager.FindByIdAsync(id.ToString());
-                    if (user == null)
-                        throw new KeyNotFoundException();
-                    if (!await _securityService.CanReadUser(id, user.TenantId)) return StatusCode(403);
-
-                    return Ok(user);
-                }
-
-                return StatusCode(401);
-            }
-            catch (KeyNotFoundException)
+            if (userAuthorize.Succeeded || applicationAuthorize.Succeeded)
             {
-                return NotFound();
+                var user = await _userManager.FindByIdAsync(id.ToString());
+                if (user == null)
+                    throw new KeyNotFoundException();
+                if (!await _securityService.CanReadUser(id, user.TenantId)) return StatusCode(403);
+
+                return Ok(user);
             }
-            catch (ForbbidenException)
-            {
-                return StatusCode(403);
-            }
+
+            return StatusCode(401);
         }
 
         [HttpGet]

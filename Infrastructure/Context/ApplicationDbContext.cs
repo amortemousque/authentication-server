@@ -12,8 +12,6 @@ using AuthorizationServer.Domain.UserAggregate;
 using AuthorizationServer.Infrastructure.IdentityServer;
 using MongoDB.Driver;
 using System;
-using System.Threading.Tasks;
-using AuthorizationServer.Domain.AccountInviteAggregate;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace AuthorizationServer.Infrastructure.Context
@@ -22,37 +20,10 @@ namespace AuthorizationServer.Infrastructure.Context
     {
         private readonly IMongoDatabase _database;
 
-
-        public ApplicationDbContext(IMongoDatabase database)
+        public ApplicationDbContext(IApplicationDbSettings settings)
         {
-	        _database = database;
-        }
-
-        public ApplicationDbContext(string connectionString)
-        {
-            if (connectionString == null) 
-                throw new ArgumentNullException(nameof(connectionString), "MongoDBConfiguration cannot be null."); 
- 
-            var mongoDbMementoDatabaseName = MongoUrl.Create(connectionString).DatabaseName;
-            var databaseName = MongoUrl.Create(connectionString).DatabaseName; 
- 
-            var client = new MongoClient(connectionString);
-            _database = client.GetDatabase(databaseName);
-        }
-
-        public async Task AddClient(Client entity)
-        {
-            await Clients.InsertOneAsync(entity);
-        }
-
-        public async Task AddIdentityResource(IdentityResource entity)
-        {
-            await IdentityResources.InsertOneAsync(entity);
-        }
-
-        public async Task AddApiResource(ApiResource entity)
-        {
-            await ApiResources.InsertOneAsync(entity);
+            var client = new MongoClient(settings.ConnectionString);
+            _database = client.GetDatabase(settings.DatabaseName);
         }
 
 
@@ -122,13 +93,6 @@ namespace AuthorizationServer.Infrastructure.Context
             {
                 return _database.GetCollection<Permission>("Permissions");
             }
-        }
-
-        public IMongoCollection<AccountInvite> Invites => _database.GetCollection<AccountInvite>("AccountInvites");
-
-        public void Dispose()
-        {
-            //Todo
         }
     }
 }    

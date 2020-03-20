@@ -9,11 +9,10 @@ namespace AuthorizationServer.Application.Commands
 {
     public class CreateUserCommand : IRequest<IdentityUser>
     {
+        public Guid? TenantId { get; set; }
+
         [Required]
         public string Email { get; set; }
-
-		[Required]
-        public Guid PersonId { get; set; }
 
         public bool EmailConfirmed { get; set; }
 
@@ -23,7 +22,6 @@ namespace AuthorizationServer.Application.Commands
         public string Culture { get; set; }
         public string GivenName { get; set; }
         public string FamilyName { get; set; }
-        public Guid InviteId { get; set; }
         
         [JsonIgnore]
         public List<string> Roles { get; set; }

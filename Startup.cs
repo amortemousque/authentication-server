@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using AuthorizationServer.Application.CommandHandlers;
 using AuthorizationServer.Application.Events;
@@ -18,6 +19,7 @@ using AuthorizationServer.Infrastructure.Repositories;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
+using IntegrationEvents;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -36,6 +38,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
@@ -74,15 +77,15 @@ namespace AuthorizationServer
             // register the scope authorization handler
             services.AddSingleton<IAuthorizationHandler, HasPermissionHandler>();
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
-            // services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            // .AddCookie();
+
+            var authority = Configuration.GetValue<string>("AuthenticationSettings:Authority");
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(o =>
             {
-                o.Authority = Configuration.GetValue<string>("JWT_AUTHORITY");
-                o.Audience = Configuration.GetValue<string>("JWT_AUDIENCE");
+                o.Authority = authority;
+                o.Audience = Configuration.GetValue<string>("AuthenticationSettings:Audience");
                 o.SaveToken = true;
-                o.RequireHttpsMetadata = false;
+                o.RequireHttpsMetadata = true;
                 o.TokenValidationParameters = new TokenValidationParameters
                 {
                     // dont check issuer because of wildcard domain
@@ -95,62 +98,55 @@ namespace AuthorizationServer
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("permissions:read", policy => policy.Requirements.Add(new HasPermissionRequirement("permissions:read", Configuration.GetValue<string>("JWT_AUTHORITY"))));
-                options.AddPolicy("permissions:write", policy => policy.Requirements.Add(new HasPermissionRequirement("permissions:write", Configuration.GetValue<string>("JWT_AUTHORITY"))));
+                options.AddPolicy("permissions:read", policy => policy.Requirements.Add(new HasPermissionRequirement("permissions:read", authority)));
+                options.AddPolicy("permissions:write", policy => policy.Requirements.Add(new HasPermissionRequirement("permissions:write", authority)));
 
-                options.AddPolicy("authentications:read", policy => policy.Requirements.Add(new HasPermissionRequirement("authentications:read", Configuration.GetValue<string>("JWT_AUTHORITY"))));
-                options.AddPolicy("authentications:write", policy => policy.Requirements.Add(new HasPermissionRequirement("authentications:write", Configuration.GetValue<string>("JWT_AUTHORITY"))));
+                options.AddPolicy("authentications:read", policy => policy.Requirements.Add(new HasPermissionRequirement("authentications:read", authority)));
+                options.AddPolicy("authentications:write", policy => policy.Requirements.Add(new HasPermissionRequirement("authentications:write", authority)));
 
-                options.AddPolicy("tenants:read", policy => policy.Requirements.Add(new HasPermissionRequirement("tenants:read", Configuration.GetValue<string>("JWT_AUTHORITY"))));
-                options.AddPolicy("tenants:write", policy => policy.Requirements.Add(new HasPermissionRequirement("tenants:write", Configuration.GetValue<string>("JWT_AUTHORITY"))));
+                options.AddPolicy("tenants:read", policy => policy.Requirements.Add(new HasPermissionRequirement("tenants:read", authority)));
+                options.AddPolicy("tenants:write", policy => policy.Requirements.Add(new HasPermissionRequirement("tenants:write", authority)));
 
-                options.AddPolicy("users:read", policy => policy.Requirements.Add(new HasPermissionRequirement("users:read", Configuration.GetValue<string>("JWT_AUTHORITY"))));
-                options.AddPolicy("users:write", policy => policy.Requirements.Add(new HasPermissionRequirement("users:write", Configuration.GetValue<string>("JWT_AUTHORITY"))));
+                options.AddPolicy("users:read", policy => policy.Requirements.Add(new HasPermissionRequirement("users:read", authority)));
+                options.AddPolicy("users:write", policy => policy.Requirements.Add(new HasPermissionRequirement("users:write", authority)));
 
-                options.AddPolicy("users:read", policy => policy.Requirements.Add(new HasPermissionRequirement("users:read", Configuration.GetValue<string>("JWT_AUTHORITY"))));
-                options.AddPolicy("users:write", policy => policy.Requirements.Add(new HasPermissionRequirement("users:write", Configuration.GetValue<string>("JWT_AUTHORITY"))));
+                options.AddPolicy("users:read", policy => policy.Requirements.Add(new HasPermissionRequirement("users:read", authority)));
+                options.AddPolicy("users:write", policy => policy.Requirements.Add(new HasPermissionRequirement("users:write", authority)));
 
-                options.AddPolicy("roles:read", policy => policy.Requirements.Add(new HasPermissionRequirement("roles:read", Configuration.GetValue<string>("JWT_AUTHORITY"))));
-                options.AddPolicy("roles:write", policy => policy.Requirements.Add(new HasPermissionRequirement("roles:write", Configuration.GetValue<string>("JWT_AUTHORITY"))));
+                options.AddPolicy("roles:read", policy => policy.Requirements.Add(new HasPermissionRequirement("roles:read", authority)));
+                options.AddPolicy("roles:write", policy => policy.Requirements.Add(new HasPermissionRequirement("roles:write", authority)));
 
-                options.AddPolicy("roles:read:root", policy => policy.Requirements.Add(new HasPermissionRequirement("roles:read:root", Configuration.GetValue<string>("JWT_AUTHORITY"))));
-                options.AddPolicy("users:write:root", policy => policy.Requirements.Add(new HasPermissionRequirement("users:write:root", Configuration.GetValue<string>("JWT_AUTHORITY"))));
-                options.AddPolicy("users:read:root", policy => policy.Requirements.Add(new HasPermissionRequirement("users:read:root", Configuration.GetValue<string>("JWT_AUTHORITY"))));
+                options.AddPolicy("roles:read:root", policy => policy.Requirements.Add(new HasPermissionRequirement("roles:read:root", authority)));
+                options.AddPolicy("users:write:root", policy => policy.Requirements.Add(new HasPermissionRequirement("users:write:root", authority)));
+                options.AddPolicy("users:read:root", policy => policy.Requirements.Add(new HasPermissionRequirement("users:read:root", authority)));
 
-                options.AddPolicy("users:write:tenant", policy => policy.Requirements.Add(new HasPermissionRequirement("users:write:tenant", Configuration.GetValue<string>("JWT_AUTHORITY"))));
-                options.AddPolicy("users:read:tenant", policy => policy.Requirements.Add(new HasPermissionRequirement("users:read:tenant", Configuration.GetValue<string>("JWT_AUTHORITY"))));
+                options.AddPolicy("users:write:tenant", policy => policy.Requirements.Add(new HasPermissionRequirement("users:write:tenant", authority)));
+                options.AddPolicy("users:read:tenant", policy => policy.Requirements.Add(new HasPermissionRequirement("users:read:tenant", authority)));
 
-                options.AddPolicy("users:write:user", policy => policy.Requirements.Add(new HasPermissionRequirement("users:write:user", Configuration.GetValue<string>("JWT_AUTHORITY"))));
-                options.AddPolicy("users:read:user", policy => policy.Requirements.Add(new HasPermissionRequirement("users:read:user", Configuration.GetValue<string>("JWT_AUTHORITY"))));
+                options.AddPolicy("users:write:user", policy => policy.Requirements.Add(new HasPermissionRequirement("users:write:user", authority)));
+                options.AddPolicy("users:read:user", policy => policy.Requirements.Add(new HasPermissionRequirement("users:read:user", authority)));
 
-                options.AddPolicy("application(tenants:read)", policy => policy.Requirements.Add(new HasScopeRequirement("tenants:read", Configuration.GetValue<string>("JWT_AUTHORITY"))));
-                options.AddPolicy("application(tenants:write)", policy => policy.Requirements.Add(new HasScopeRequirement("tenants:write", Configuration.GetValue<string>("JWT_AUTHORITY"))));
+                options.AddPolicy("application(tenants:read)", policy => policy.Requirements.Add(new HasScopeRequirement("tenants:read", authority)));
+                options.AddPolicy("application(tenants:write)", policy => policy.Requirements.Add(new HasScopeRequirement("tenants:write", authority)));
 
-                options.AddPolicy("application(users:read)", policy => policy.Requirements.Add(new HasScopeRequirement("users:read", Configuration.GetValue<string>("JWT_AUTHORITY"))));
-                options.AddPolicy("application(users:write)", policy => policy.Requirements.Add(new HasScopeRequirement("users:write", Configuration.GetValue<string>("JWT_AUTHORITY"))));
+                options.AddPolicy("application(users:read)", policy => policy.Requirements.Add(new HasScopeRequirement("users:read", authority)));
+                options.AddPolicy("application(users:write)", policy => policy.Requirements.Add(new HasScopeRequirement("users:write", authority)));
             });
-
 
 
             //Application - Db Context
-            var connectionString = Configuration.GetValue<string>("MONGO_URL");
-            var databaseName = MongoUrl.Create(connectionString).DatabaseName;  
-            var _mongoDb = new MongoClient(connectionString).GetDatabase(databaseName);
-            services.AddSingleton(_mongoDb);
-            services.AddSingleton<ApplicationDbContext, ApplicationDbContext>(cw => new ApplicationDbContext(cw.GetService<IMongoDatabase>()));
-            //services.AddDbContext<ApplicationDbContext>(options => options.UseApplicationServiceProvider() ("Data Source=blog.db"));
-            //services.AddDbContext(option => option.)
+            services.Configure<ApplicationDbSettings>(
+                Configuration.GetSection(nameof(ApplicationDbSettings)));
 
-            //Helpers
+            services.AddSingleton<IApplicationDbSettings>(sp =>
+                sp.GetRequiredService<IOptions<ApplicationDbSettings>>().Value);
+
+            services.AddSingleton<ApplicationDbContext, ApplicationDbContext>();
+
+
+            //Application - IdentityService to get current user from token
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IIdentityService, HttpRequestIdentityService>();
-            services.AddScoped<IUrlHelper>(x =>
-            {
-                var actionContext = x.GetService<IActionContextAccessor>().ActionContext;
-                //actionContext.HttpContext.Request.PathBase = new PathString("/user");
-                return new UrlHelper(actionContext);
-            });
 
             // Application - Repositories
             services.AddScoped<IApiResourceRepository, ApiResourceRepository>();
@@ -161,7 +157,6 @@ namespace AuthorizationServer
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IPermissionRepository, PermissionRepository>();
-            services.AddScoped<IAccountInviteRepository, AccountInviteRepository>();
 
             // Application - Queries
             services.AddScoped<ApiQueries, ApiQueries>();
@@ -171,7 +166,6 @@ namespace AuthorizationServer
             services.AddScoped<RoleQueries, RoleQueries>();
             services.AddScoped<PermissionQueries, PermissionQueries>();
             services.AddScoped<IdentityResourceQueries, IdentityResourceQueries>();
-            services.AddScoped<IInvitesQueries, InvitesQueries>();
 
             // Application - Security
             services.AddScoped<SecurityService, SecurityService>();
@@ -203,36 +197,17 @@ namespace AuthorizationServer
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 
-
             // Rebus - Integration event 
-            var destinationAddress = nameof(IntegrationEvents.Directory);
             services.AddRebus(configure => configure
                             .Serialization(s => s.UseNewtonsoftJson(new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.None }))
                             .Logging(l => l.Console())
-                            .Sagas(configurer => configurer.StoreInMongoDb(_mongoDb))
                             .Transport(x => x.UseInMemoryTransport(new InMemNetwork(), "bus"))
                             .Subscriptions(x => x.StoreInMemory())
-                            .Routing(r =>
-                            {
-                                var builder = r.TypeBased();
-                                //typeof(IntegrationEvent).Assembly.GetTypes()
-                                //    .Where(eventType => eventType.Namespace.Contains(destinationAddress))
-                                //    .ToList()
-                                //    .ForEach(eventType => builder.Map(eventType, destinationAddress));
-                                builder.Map<UserCreated>(nameof(IntegrationEvents.User));
-                            })
+                            .Routing(r => r.TypeBased().MapAssemblyOf<IntegrationEvent>("bus"))
                         );
-
-            // Rebus - Sagas
-            services.AddScoped<ISagaStorage, MongoDbSagaStorage>();
-            services.AddScoped(sp => (IRebusLoggerFactory)new ConsoleLoggerFactory(true));
-            services.AddScoped<ISagaStorage, MongoDbSagaStorage>();
-            services.AddScoped(sp => (IRebusLoggerFactory)new ConsoleLoggerFactory(true));
-            services.AddScoped<ISagaStorage, MongoDbSagaStorage>();
 
             // Identity sever configuration
             services.AddScoped<ICustomTokenRequestValidator, CustomClaimInjection>();
-
 
             //Identity server persistance
             services.AddTransient<IClientStore, ClientStore>();
@@ -260,15 +235,10 @@ namespace AuthorizationServer
             .AddProfileService<CustomProfileService>()
             .AddResourceOwnerValidator<CustomResourceOwnerPasswordValidator>();
 
-
-            services.AddRazorPages();
-
-
             services.AddControllersWithViews()
            .AddViewLocalization(
                LanguageViewLocationExpanderFormat.Suffix,
                opts => { opts.ResourcesPath = "Resources"; });
-           //.AddDataAnnotationsLocalization();
 
             // API versionning
             services.AddApiVersioning(o =>
@@ -308,19 +278,13 @@ namespace AuthorizationServer
                 app.UseSpaStaticFiles();
             }
 
-            //app.UseCors(
-            //    options => options.AllowAnyOrigin()
-            //    .AllowAnyHeader()
-            //    .AllowAnyMethod()
-            //);
-
             var supportedCultures = new[]
             {
                 new CultureInfo("en"),
                 new CultureInfo("fr")
             };
 
-            app.UseExceptiontMiddleware();
+            //app.UseExceptiontMiddleware();
 
 
             app.UseRouting();
@@ -332,17 +296,11 @@ namespace AuthorizationServer
 
             });
             app.UseAuthentication();
-
             app.UseAuthorization();
-
             app.UseIdentityServer();
-
-    
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapRazorPages();
-
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action}/{id?}");
@@ -351,9 +309,6 @@ namespace AuthorizationServer
 
             app.UseSpa(spa =>
             {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
                 spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())

@@ -24,9 +24,6 @@
         public Guid TenantId { get; set; }
 
         [PersonalData]
-        public Guid? PersonId { get; set; }
-
-        [PersonalData]
         public string GivenName { get; set; }
 
         [PersonalData]
@@ -181,7 +178,7 @@
         public static class Factory
         {
             public static async Task<IdentityUser> CreateNewEntry(
-                Guid personId,
+                Guid? tenantId,
                 string email,
                 string givenName,
                 string familyName,
@@ -190,14 +187,10 @@
                 bool emailConfirmed
             )
             {
-                if (personId == Guid.Empty)
-                    throw new ArgumentNullException(nameof(personId));
-
                 var user = new IdentityUser
                 {
-					PersonId = personId,
-					Id = personId.ToString(),
-                    UserName = email,
+					Id = Guid.NewGuid().ToString(),
+					UserName = email,
                     Email = email,
                     EmailConfirmed = emailConfirmed,
                     GivenName = givenName,
@@ -209,7 +202,10 @@
                     Logins = new List<IdentityUserLogin>(),
                     Tokens = new List<IdentityUserToken>()
                 };
-                return user;
+				if (tenantId != null)
+					user.TenantId = tenantId.Value;
+
+				return user;
             }
         }
     }

@@ -14,7 +14,11 @@
     <section class="card-content">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        <input asp-for="InviteId" class="mdc-text-field__input" style="display: none">
+        <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+            <input asp-for="Email" type="text" class="mdc-text-field__input">
+            <label asp-for="Email" class="mdc-floating-label">@Localizer["Email"]</label>
+            <div class="mdc-line-ripple"></div>
+        </div>
 
         <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg">
             <span asp-validation-for="Password" class="text-danger"></span>

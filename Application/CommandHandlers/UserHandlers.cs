@@ -7,14 +7,11 @@ using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Rebus.Bus;
 using IntegrationEvents.User.Account;
-using IntegrationEvents.User.Invitation;
 using AuthorizationServer.Application.Events;
 using AuthorizationServer.Domain.Contracts;
 using AuthorizationServer.Domain.Services;
 using AuthorizationServer.Application.Security;
 using AuthorizationServer.Exceptions;
-using AuthorizationServer.Infrastructure.Context;
-using Rebus.Sagas;
 using IdentityUser = AuthorizationServer.Domain.UserAggregate.IdentityUser;
 using AuthorizationServer.Infrastructure;
 
@@ -29,23 +26,19 @@ namespace AuthorizationServer.Application.CommandHandlers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserRepository _userRepository;
-        private readonly IAccountInviteRepository _inviteRepository;
         private readonly SecurityService _securityService;
         private readonly IBus _bus;
         private readonly IEmailSender _emailSender;
         private readonly IIdentityService _identityService;
-        private readonly ISagaStorage _sagaStorage;
 		
 
         public UserHandlers(UserManager<IdentityUser> userManager, IUserRepository userRepository,
-            SecurityService securityService, IEmailSender emailSender, IBus bus, IIdentityService identityService, IAccountInviteRepository inviteRepository, ISagaStorage sagaStorage)
+            SecurityService securityService, IEmailSender emailSender, IBus bus, IIdentityService identityService)
         {
             _userManager = userManager;
             _userRepository = userRepository;
             _bus = bus;
             _identityService = identityService;
-            _inviteRepository = inviteRepository;
-            _sagaStorage = sagaStorage;
             _emailSender = emailSender;
             _securityService = securityService;
         }
@@ -54,17 +47,12 @@ namespace AuthorizationServer.Application.CommandHandlers
         {
             if (!await _securityService.CanCreateUser()) throw new ForbbidenException();
 
-            var tenantId = _identityService.GetTenantIdentity();
-            var tenantName = _identityService.GetTenantName();
 
-            if (!await _userRepository.HasUniqEmail(message.Email, tenantId))
+            if (!await _userRepository.HasUniqEmail(message.Email))
 	            throw new ConflictException("Another user has the same email.");
 
-			if (!await _userRepository.HasUniqPersonId(message.PersonId, tenantId))
-				throw new ConflictException("Another user has been already created for this person");
-
             var user = await IdentityUser.Factory.CreateNewEntry(
-                message.PersonId,
+                message.TenantId, //root user can create user anywhere
                 message.Email,
                 message.GivenName,
                 message.FamilyName,
@@ -92,16 +80,7 @@ namespace AuthorizationServer.Application.CommandHandlers
                 await _emailSender.SendEmailForUserCreation(user, code);
             }
 
-            if (message.InviteId != Guid.Empty)
-			{
-				var invite = await _inviteRepository.GetById(message.InviteId, tenantId) ?? throw new ArgumentException(nameof(message.InviteId));
-				invite.Accept();
-				await _inviteRepository.SaveAsync(invite);
-				await _bus.Publish(new InviteAccepted { InviteeId = message.PersonId, TenantName = tenantName, TenantId = tenantId,
-					InitiatorId = message.PersonId});
-			}
-
-            await _bus.Publish(new UserCreated {PersonId = message.PersonId});
+            await _bus.Publish(new UserCreated {PersonId = Guid.Parse(user.Id)});
 
             return user;
         }
@@ -148,15 +127,6 @@ namespace AuthorizationServer.Application.CommandHandlers
             var result = await _userManager.DeleteAsync(user);
             if (!result.Succeeded)
                 throw new ArgumentException(result.Errors.First().Description, nameof(user));
-            
-
-            //var ev = new UserDeletedEvent
-            //{
-            //    UserId = Guid.Parse(user.Id),
-            //    TenantId = user.TenantId
-            //};
-
-            //await _bus.Send(ev);
 
             return true;
 

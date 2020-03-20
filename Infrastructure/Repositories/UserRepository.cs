@@ -42,8 +42,6 @@ namespace AuthorizationServer.Infrastructure.Repositories
             return _context.Users.AsQueryable();
         }
 
-
-
         public virtual void Dispose()
         {
             // no need to dispose of anything, mongodb handles connection pooling automatically
@@ -51,7 +49,7 @@ namespace AuthorizationServer.Infrastructure.Repositories
 
         public virtual async Task<IdentityResult> CreateAsync(IdentityUser user, CancellationToken token)
         {
-	      //  user.TenantId = _tenantId;
+            user.TenantId = user.TenantId == Guid.Empty ? _identityService.GetTenantIdentity() : user.TenantId;
             user.FullName = user.GivenName + " " + user.FamilyName;
             user.CreatedAt = DateTime.Now;
             user.UpdatedAt = DateTime.Now;
@@ -299,14 +297,9 @@ namespace AuthorizationServer.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<bool> HasUniqEmail(string email, Guid tenantId)
+        public async Task<bool> HasUniqEmail(string email)
         {
-            return !await _context.Users.AsQueryable().AnyAsync(a =>  a.NormalizedEmail == email.ToUpper() && a.TenantId == tenantId);
-        }
-
-        public async Task<bool> HasUniqPersonId(Guid personId, Guid tenantId)
-        {
-            return !await _context.Users.AsQueryable().AnyAsync(a =>  a.PersonId == personId && a.TenantId == tenantId);
+            return !await _context.Users.AsQueryable().AnyAsync(a =>  a.NormalizedEmail == email.ToUpper() && a.TenantId == _identityService.GetTenantIdentity());
         }
     }
 }

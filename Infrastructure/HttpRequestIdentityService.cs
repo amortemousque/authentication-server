@@ -1,7 +1,9 @@
 ﻿
 using System;
 using System.Security.Claims;
+using AuthorizationServer.Application.Queries;
 using AuthorizationServer.Domain;
+using AuthorizationServer.Infrastructure.IdentityServer.Extensions;
 using IdentityModel;
 using Microsoft.AspNetCore.Http;
 
@@ -11,9 +13,12 @@ namespace AuthorizationServer.Infrastructure
     {
         private readonly IHttpContextAccessor _context;
 
-        public HttpRequestIdentityService(IHttpContextAccessor context)
+        private readonly TenantQueries _tenantQuery;
+
+        public HttpRequestIdentityService(IHttpContextAccessor context, TenantQueries tenantQuery)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _tenantQuery = tenantQuery;
         }
 
         public Guid GetUserIdentity()
@@ -24,12 +29,13 @@ namespace AuthorizationServer.Infrastructure
 
         public Guid GetTenantIdentity()
         {
-            return Guid.Parse(_context.HttpContext.User.FindFirst(CustomClaimTypes.TenantId).Value);
+            var tenant = _tenantQuery.GetTenantByNameAsync(this.GetTenantName()).Result;
+            return tenant.Id;
         }
 
         public string GetTenantName()
         {
-            return _context.HttpContext.User.FindFirst(CustomClaimTypes.TenantName).Value;
+            return _context.HttpContext.Request.GetTenantNameFromHost();
         }
     }
 }

@@ -5,8 +5,10 @@ namespace AuthorizationServer.Models.AccountViewModels
 {
     public class RegisterViewModel
     {
-		[Required(ErrorMessage = "&nbsp;")]
-        public Guid InviteId { get; set; }
+        [Required(ErrorMessage = "&nbsp;")]
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
 
 
         [Required(ErrorMessage = "&nbsp;")]

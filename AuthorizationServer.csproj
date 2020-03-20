@@ -46,6 +46,7 @@
     <Content Remove="mono_crash.42f6ec13c.0.json" />
     <Content Remove="wwwroot\css\style.css" />
     <Content Remove="mono_crash.345041f552.0.json" />
+    <None Remove="ClientApp\src\app\core\models\domainError.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,6 +61,7 @@
   <ItemGroup>
     <Compile Remove="Infrastructure\Storage\AzureStorageManager.cs" />
     <Compile Remove="SharedResources.Designer.cs" />
+    <Compile Remove="Models\CustomTokenRequestValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\Resources.SharedResource.Designer.cs">

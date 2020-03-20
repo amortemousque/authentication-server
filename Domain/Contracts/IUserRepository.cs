@@ -9,8 +9,6 @@ namespace AuthorizationServer.Domain.Contracts
     {
         Task<IQueryable<IdentityUser>> GetAll();
 
-        Task<bool> HasUniqEmail(string email, Guid tenantId);
-
-        Task<bool> HasUniqPersonId(Guid personId, Guid tenantId);
+        Task<bool> HasUniqEmail(string email);
     }
 }
